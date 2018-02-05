@@ -144,25 +144,25 @@ switch:
           entity_id: script.front_door_alarm_off_script
 
 
-automation:
-    ##### ADDED TO PRESENCE AUTOMATION
-  - alias: 'set_alarm_when_nobody_home'
-    trigger:
-      - platform: state
-        entity_id: input_boolean.away #, input_boolean.vacation
-        to: 'on'
-    action:
-      - service: script.turn_on
-        entity_id: script.alarm_on_script
+# automation:
+#     ##### ADDED TO PRESENCE AUTOMATION
+#   - alias: 'set_alarm_when_nobody_home'
+#     trigger:
+#       - platform: state
+#         entity_id: input_boolean.away #, input_boolean.vacation
+#         to: 'on'
+#     action:
+#       - service: script.turn_on
+#         entity_id: script.alarm_on_script
 
-  - alias: 'cancel_alarm_when_arrive_home'
-    trigger:
-      - platform: state
-        entity_id: input_boolean.away #, input_boolean.vacation
-        to: 'off'
-    action:
-      - service: script.turn_on
-        entity_id: script.alarm_off_script
+#   - alias: 'cancel_alarm_when_arrive_home'
+#     trigger:
+#       - platform: state
+#         entity_id: input_boolean.away #, input_boolean.vacation
+#         to: 'off'
+#     action:
+#       - service: script.turn_on
+#         entity_id: script.alarm_off_script
 
 
 script:
