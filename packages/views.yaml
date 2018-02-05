@@ -1,0 +1,94 @@
+################################################################
+## Packages / Groups & Views
+################################################################
+group:
+#Views------------------------------------------------------------------
+  default_view:
+    name: Default View
+    icon: mdi:home-assistant
+    view: yes
+    entities:
+      - group.hue_light_bulbs
+      - group.blink
+      - group.hue_color_bulbs
+      - group.thermostat
+      - group.presence
+      - group.usps_mail_card
+      - group.google_calendars
+      - group.all_speakers
+      - group.most_speakers
+      - group.living_room_speakers
+      - group.our_room
+      - group.family_room_home_main
+      - group.toshiba_main
+      - group.tv_speaker_main
+      - group.bedroom_mini_main
+      - group.master_bathroom_speaker_main
+      - group.kitchen_speaker_main
+      - group.office_speaker_main
+      - group.family_room_chromecast_main
+      - group.family_room_roku_main
+      - group.bedroom_chromecast_main
+      - group.bedroom_roku_main
+      - group.gpm_desktop_player_main
+  
+  security_view:
+    name: Security
+    icon: mdi:security
+    view: yes
+    entities:
+      - group.blink_inside
+      - group.blink_front_door
+      - group.blink_backyard
+      - group.door_sensors
+
+  sensor_tab:
+    name: Sensors
+    view: yes
+    icon: mdi:gauge
+    entities:
+      - group.weather
+      - group.stock_prices
+      - group.server_status
+      - group.motion_sensors
+      - group.lux
+      - group.all_temps
+      - group.sensor_battery_levels
+
+
+  system_view:
+    name: System Info
+    view: yes
+    icon: mdi:power
+    entities:
+      - group.ads_blocked
+      - group.network
+      - group.systeminfo
+      - group.hassctl
+
+  automations:
+    name: Overrides
+    icon: mdi:auto-fix
+    view: yes
+    entities:
+      - group.media_appear
+      - group.media_disappear
+      - group.light_automations
+      - group.theme_automations
+      - group.presence_automations
+  #    - group.motion_sensor_automations
+
+
+  # #Groups------------------------------------------------------------------
+  theme_automations:
+    name: Theme Automations
+    icon: mdi:auto-fix
+    entities:
+      - automation.set_default_theme_for_the_day
+      - automation.set_dark_theme_for_the_night
+  presence_automations:
+    name: Presence
+    entities:
+      - automation.house_mode_away
+      # - automation.house_mode_vacation
+

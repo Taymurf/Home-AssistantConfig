@@ -1,0 +1,15 @@
+
+##################################################
+## Group Order
+##################################################
+
+  # group.hue_light_bulbs:
+  #   order: "1"
+  # group.hue_color_bulbs:
+  #   order: "2"
+  # group.blink:
+  #   order: "3"
+  # group.presence:
+  #   order: "5"
+  # group.thermostat:
+  #   order: "4"

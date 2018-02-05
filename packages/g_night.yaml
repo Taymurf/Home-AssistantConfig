@@ -1,0 +1,32 @@
+################################################################
+## Packages / Good Night
+################################################################
+homeassistant:
+  customize:
+    script.good_night:
+      google_assistant: true
+      google_assistant_name: "Good Night"
+      friendly_name: Good Night
+      icon: mdi:sleep
+
+script:
+  good_night:
+    sequence:
+    - service: light.turn_off
+      entity_id: light.all
+    - service: climate.set_temperature
+      data:
+        entity_id: climate.entryway
+        operation_mode: Auto
+        target_temp_high: 74
+        target_temp_low: 69
+    - service: script.turn_on
+      entity_id: script.alarm_on_script
+    - service: media_player.volume_set
+      data:
+        entity_id: media_player.bedroom_mini
+        volume_level: '0.20'
+    - service: tts.google_say
+      data_template:
+        entity_id: media_player.bedroom_mini
+        message: "Temperature set and cameras armed, good night!"

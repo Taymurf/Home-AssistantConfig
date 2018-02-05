@@ -1,0 +1,567 @@
+################################################################
+## Packages / Media Players
+################################################################
+
+group:
+  ###### Visibility Override
+  media_disappear:
+    name: Media Players Disappear
+    icon: mdi:auto-fix
+    entities:
+      - automation.all_speakers_visible_false
+      - automation.most_speakers_visible_false
+      - automation.living_room_speakers_visible_false
+      - automation.our_room_visible_false
+      - automation.family_room_google_home_visible_false
+      - automation.family_room_tv_chromecast_audio_visible_false
+      - automation.bedroom_mini_visible_false
+      - automation.master_bathroom_mini_visible_false
+      - automation.kitchen_mini_visible_false
+      - automation.office_mini_visible_false
+      - automation.family_room_chromecast_visible_false
+      - automation.family_room_roku_visible_false
+      - automation.bedroom_chromecast_visible_false
+      - automation.bedroom_roku_visible_false
+      - automation.gpm_desktop_player_visible_false
+  media_appear:
+    name: Media Players Appear
+    icon: mdi:auto-fix
+    entities:
+      - automation.all_speakers_visible_true
+      - automation.most_speakers_visible_true
+      - automation.living_room_speakers_visible_true
+      - automation.our_room_visible_true
+      - automation.family_room_google_home_visible_true
+      - automation.family_room_tv_chromecast_audio_visible_true
+      - automation.bedroom_mini_visible_true
+      - automation.master_bathroom_mini_visible_true
+      - automation.kitchen_mini_visible_true
+      - automation.office_mini_visible_true
+      - automation.family_room_chromecast_visible_true
+      - automation.family_room_roku_visible_true
+      - automation.bedroom_chromecast_visible_true
+      - automation.bedroom_roku_visible_true
+      - automation.gpm_desktop_player_visible_true
+
+
+  all_speakers_main:
+    name: All Speakers
+    entities:
+      - media_player.family_room_home
+      - media_player.bedroom_mini
+      - media_player.family_room_speaker
+      - media_player.kitchen_mini
+      - media_player.master_bathroom_mini
+      - media_player.office_mini
+
+  most_speakers_main:
+    name: Most Speakers
+    entities:
+      - media_player.family_room_home
+      - media_player.bedroom_mini
+      - media_player.family_room_speaker
+      - media_player.kitchen_mini
+      - media_player.master_bathroom_mini
+
+  living_room_speakers_main:
+    name: Living Room Speakers
+    entities:
+      - media_player.family_room_home
+      - media_player.family_room_speaker
+      - media_player.kitchen_mini
+
+  our_room_main:
+    name: Our Room
+    entities:
+      - media_player.bedroom_mini
+      - media_player.master_bathroom_mini
+
+  master_bathroom_speaker_main:
+    name: Master Bathroom Mini
+    entities:
+      - media_player.master_bathroom_mini
+
+  bedroom_mini_main:
+    name: Bedroom Mini
+    entities:
+      - media_player.bedroom_mini
+
+  bedroom_chromecast_main:
+    name: Bedroom Chromecast
+    entities:
+      - media_player.bedroom_tv
+
+  bedroom_roku_main:
+    name: Bedroom Roku
+    entities:
+      - media_player.bedroom
+
+  family_room_home_main:
+    name: Family Room Google Home
+    entities:
+      - media_player.family_room_home
+
+  tv_speaker_main:
+    name: Family Room Chromecast Audio
+    entities:
+      - media_player.family_room_speaker
+
+  kitchen_speaker_main:
+    name: Kitchen Mini
+    entities:
+      - media_player.kitchen_mini
+
+  office_speaker_main:
+    name: Office Mini
+    entities:
+      - media_player.office_mini
+
+  family_room_chromecast_main:
+    name: Family Room Chromecast TV
+    entities:
+      - media_player.family_room_tv
+
+  family_room_roku_main:
+    name: Family Room Roku
+    entities:
+    - media_player.family_room
+
+  gpm_desktop_player_main:
+    name: Google Play Music (Desktop)
+    entities:
+      - media_player.gpm_desktop_player
+
+
+automation:
+
+  ####################################################
+  #                                                  #
+  #             Media Player Visibility              #
+  #                                                  #
+  ####################################################
+
+  ### Family Room Home ###
+  - alias: Family room google home visible true
+
+    trigger:
+      platform: template
+      value_template: "{{ not is_state('media_player.family_room_home', 'off') }}"
+
+    action:
+      service: group.set_visibility
+      entity_id: group.family_room_home_main
+      data:
+        visible: True
+
+  - alias: Family room google home visible false
+
+    trigger:
+      - platform: homeassistant
+        event: start
+      - platform: state
+        entity_id: media_player.family_room_home
+        to: 'off'
+
+    action:
+      service: group.set_visibility
+      entity_id: group.family_room_home_main
+      data:
+        visible: False
+
+
+  ### TV Chromecast Audio ###
+  - alias: Family room TV chromecast audio visible true
+
+    trigger:
+      platform: template
+      value_template: "{{ not is_state('media_player.family_room_speaker', 'off') }}"
+
+    action:
+      service: group.set_visibility
+      entity_id: group.tv_speaker_main
+      data:
+        visible: True
+
+  - alias: Family room TV chromecast audio visible false
+
+    trigger:
+      - platform: homeassistant
+        event: start
+      - platform: state
+        entity_id: media_player.family_room_speaker
+        to: 'off'
+
+    action:
+      service: group.set_visibility
+      entity_id: group.tv_speaker_main
+      data:
+        visible: False
+
+
+  ### Kitchen Mini ###
+  - alias: Kitchen mini visible true
+
+    trigger:
+      platform: template
+      value_template: "{{ not is_state('media_player.kitchen_mini', 'off') }}"
+
+    action:
+      service: group.set_visibility
+      entity_id: group.kitchen_speaker_main
+      data:
+        visible: True
+
+  - alias: Kitchen mini visible false
+
+    trigger:
+      - platform: homeassistant
+        event: start
+      - platform: state
+        entity_id: media_player.kitchen_mini
+        to: 'off'
+
+    action:
+      service: group.set_visibility
+      entity_id: group.kitchen_speaker_main
+      data:
+        visible: False
+
+###### Master Bathroom Mini Visibility ###
+  - alias: Master bathroom mini visible true
+
+    trigger:
+      platform: template
+      value_template: "{{ not is_state('media_player.master_bathroom_mini', 'off') }}"
+
+    action:
+      service: group.set_visibility
+      entity_id: group.master_bathroom_speaker_main
+      data:
+        visible: True
+
+  - alias: Master bathroom mini visible false
+
+    trigger:
+      - platform: homeassistant
+        event: start
+      - platform: state
+        entity_id: media_player.master_bathroom_mini
+        to: 'off'
+
+    action:
+      service: group.set_visibility
+      entity_id: group.master_bathroom_speaker_main
+      data:
+        visible: False
+
+  ### Our Room ###
+  - alias: Our room visible true
+
+    trigger:
+      platform: template
+      value_template: "{{ not is_state('media_player.our_room', 'off') }}"
+
+    action:
+      service: group.set_visibility
+      entity_id: group.our_room_main
+      data:
+        visible: True
+
+  - alias: Our room visible false
+
+    trigger:
+      - platform: homeassistant
+        event: start
+      - platform: state
+        entity_id: media_player.our_room
+        to: 'off'
+
+    action:
+      service: group.set_visibility
+      entity_id: group.our_room_main
+      data:
+        visible: False
+
+  ### Bedroom Mini ###
+  - alias: Bedroom mini visible true
+
+    trigger:
+      platform: template
+      value_template: "{{ not is_state('media_player.bedroom_mini', 'off') }}"
+
+    action:
+      service: group.set_visibility
+      entity_id: group.bedroom_mini_main
+      data:
+        visible: True
+
+  - alias: Bedroom mini visible false
+
+    trigger:
+      - platform: homeassistant
+        event: start
+      - platform: state
+        entity_id: media_player.bedroom_mini
+        to: 'off'
+
+    action:
+      service: group.set_visibility
+      entity_id: group.bedroom_mini_main
+      data:
+        visible: False
+
+  ### Bedroom Chromecast TV ###
+  - alias: Bedroom chromecast visible true
+
+    trigger:
+      platform: template
+      value_template: "{{ not is_state('media_player.bedroom_tv', 'off') }}"
+
+    action:
+      service: group.set_visibility
+      entity_id: group.bedroom_chromecast_main
+      data:
+        visible: True
+
+  - alias: Bedroom chromecast visible false
+
+    trigger:
+      - platform: homeassistant
+        event: start
+      - platform: state
+        entity_id: media_player.bedroom_tv
+        to: 'off'
+
+    action:
+      service: group.set_visibility
+      entity_id: group.bedroom_chromecast_main
+      data:
+        visible: False
+
+  ### Bedroom Roku TV ###
+  - alias: Bedroom roku visible true
+
+    trigger:
+      platform: template
+      value_template: "{{ not is_state('media_player.bedroom', 'off') }}"
+
+    action:
+      service: group.set_visibility
+      entity_id: group.bedroom_roku_main
+      data:
+        visible: True
+
+  - alias: Bedroom roku visible false
+
+    trigger:
+      - platform: homeassistant
+        event: start
+      - platform: state
+        entity_id: media_player.bedroom
+        to: 'off'
+
+    action:
+      service: group.set_visibility
+      entity_id: group.bedroom_roku_main
+      data:
+        visible: False
+        
+  ### Office Mini ###
+  - alias: Office mini visible true
+
+    trigger:
+      platform: template
+      value_template: "{{ not is_state('media_player.office_mini', 'off') }}"
+
+    action:
+      service: group.set_visibility
+      entity_id: group.office_speaker_main
+      data:
+        visible: True
+
+  - alias: Office mini visible false
+
+    trigger:
+      - platform: homeassistant
+        event: start
+      - platform: state
+        entity_id: media_player.office_mini
+        to: 'off'
+
+    action:
+      service: group.set_visibility
+      entity_id: group.office_speaker_main
+      data:
+        visible: False
+
+
+  ### Family Room Chromecast TV ###
+  - alias: Family room chromecast visible true
+
+    trigger:
+      platform: template
+      value_template: "{{ not is_state('media_player.family_room_tv', 'off') }}"
+
+    action:
+      service: group.set_visibility
+      entity_id: group.family_room_chromecast_main
+      data:
+        visible: True
+
+  - alias: Family room chromecast visible false
+
+    trigger:
+      - platform: homeassistant
+        event: start
+      - platform: state
+        entity_id: media_player.family_room_tv
+        to: 'off'
+
+    action:
+      service: group.set_visibility
+      entity_id: group.family_room_chromecast_main
+      data:
+        visible: False
+
+
+  ### Family Room Roku TV ###
+  - alias: Family room roku visible true
+
+    trigger:
+      platform: template
+      value_template: "{{ not is_state('media_player.family_room', 'off') }}"
+
+    action:
+      service: group.set_visibility
+      entity_id: group.family_room_roku_main
+      data:
+        visible: True
+
+  - alias: Family room roku visible false
+
+    trigger:
+      - platform: homeassistant
+        event: start
+      - platform: state
+        entity_id: media_player.family_room
+        to: 'off'
+
+    action:
+      service: group.set_visibility
+      entity_id: group.family_room_roku_main
+      data:
+        visible: False
+
+
+  ### Google Play Music Desktop Player ###
+  - alias: GPM desktop player visible true
+
+    trigger:
+      platform: template
+      value_template: "{{ not is_state('media_player.gpm_desktop_player', 'off') }}"
+
+    action:
+      service: group.set_visibility
+      entity_id: group.gpm_desktop_player_main
+      data:
+        visible: True
+
+  - alias: GPM desktop player visible false
+
+    trigger:
+      - platform: homeassistant
+        event: start
+      - platform: state
+        entity_id: media_player.gpm_desktop_player
+        to: 'off'
+
+    action:
+      service: group.set_visibility
+      entity_id: group.gpm_desktop_player_main
+      data:
+        visible: False
+
+  ### All Speakers ###
+  - alias: All speakers visible true
+
+    trigger:
+      platform: template
+      value_template: "{{ not is_state('media_player.all_speakers', 'off') }}"
+
+    action:
+      service: group.set_visibility
+      entity_id: group.all_speakers_main
+      data:
+        visible: True
+
+  - alias: All speakers visible false
+
+    trigger:
+      - platform: homeassistant
+        event: start
+      - platform: state
+        entity_id: media_player.all_speakers
+        to: 'off'
+
+    action:
+      service: group.set_visibility
+      entity_id: group.all_speakers_main
+      data:
+        visible: False
+
+  ### Most Speakers ###
+  - alias: Most speakers visible true
+
+    trigger:
+      platform: template
+      value_template: "{{ not is_state('media_player.most_speakers', 'off') }}"
+
+    action:
+      service: group.set_visibility
+      entity_id: group.most_speakers_main
+      data:
+        visible: True
+
+  - alias: Most speakers visible false
+
+    trigger:
+      - platform: homeassistant
+        event: start
+      - platform: state
+        entity_id: media_player.most_speakers
+        to: 'off'
+
+    action:
+      service: group.set_visibility
+      entity_id: group.most_speakers_main
+      data:
+        visible: False
+
+  ### Living Room Speakers ###
+  - alias: Living room speakers visible true
+
+    trigger:
+      platform: template
+      value_template: "{{ not is_state('media_player.living_room_speakers', 'off') }}"
+
+    action:
+      service: group.set_visibility
+      entity_id: group.living_room_speakers_main
+      data:
+        visible: True
+
+  - alias: Living room speakers visible false
+
+    trigger:
+      - platform: homeassistant
+        event: start
+      - platform: state
+        entity_id: media_player.living_room_speakers
+        to: 'off'
+
+    action:
+      service: group.set_visibility
+      entity_id: group.living_room_speakers_main
+      data:
+        visible: False
+

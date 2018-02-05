@@ -1,0 +1,125 @@
+################################################################
+## Packages / Weather
+## Dependencies: DARKSKY - https://darksky.net/dev/
+##               WUNDERGROUND - https://home-assistant.io/components/sensor.wunderground/
+################################################################
+homeassistant:
+  customize:
+    #DARKSKY
+    sensor.dark_sky_apparent_temperature:
+      friendly_name: 'Current Temperature'
+      icon: mdi:thermometer
+    sensor.dark_sky_daily_high_apparent_temperature:
+      friendly_name: 'Daily High'
+      icon: mdi:thermometer
+    sensor.dark_sky_daily_low_apparent_temperature:
+      friendly_name: 'Daily Low'
+      icon: mdi:thermometer
+    sensor.dark_sky_humidity:
+      friendly_name: 'Current Humidity'
+    sensor.dark_sky_temperature:
+      friendly_name: 'Current Temperature'
+    sensor.dark_sky_daily_summary:
+      friendly_name: 'Daily Summary'
+    # UV
+    sensor.dark_sky_uv_index:
+      friendly_name: 'UV Index'
+      icon: mdi:white-balance-sunny
+    sensor.uv_burn_time:
+      friendly_name: 'Burn Time'
+      icon: mdi:fire
+    # WEATHER report
+    script.weather_report:
+      friendly_name: 'Weather Report'
+      google_assistant: true
+      google_assistant_name: 'Weather Report'
+
+###### STATE CARD
+group:
+  weather:
+    name: Weather
+    control: hidden
+    entities:
+      - weather.openweathermap
+      - sensor.dark_sky_temperature
+      - sensor.dark_sky_daily_high_apparent_temperature
+      - sensor.dark_sky_daily_low_apparent_temperature
+      - sensor.dark_sky_precip_probability
+      - sensor.dark_sky_uv_index
+      - sensor.uv_burn_time
+      - camera.radar
+
+###### OPEN WEATHER COMPONENT
+weather:
+  - platform: openweathermap
+    api_key: !secret openweathermap
+    name: openweathermap
+
+###### WEATHER MAP
+camera:
+  - platform: generic
+    still_image_url: !secret radar_camera_url
+    name: Radar
+
+sensor:
+  # - platform: yr
+  ## Custom Weather Report
+  - platform: template
+    sensors:
+      weather_report:
+        value_template: >
+          The weather is {{states('sensor.dark_sky_minutely_summary')[:-1]|lower}} and {{states('sensor.dark_sky_apparent_temperature') | round}} degrees. Today's high is {{states('sensor.dark_sky_daily_high_temperature')| round}} with a low of {{states('sensor.dark_sky_daily_low_temperature') | round}}.
+      weather_inside_vs_outside:
+        value_template: >
+          {% if (states.sensor.average_whole_home.state | float) >  (states.sensor.dark_sky_apparent_temperature.state | float) %}
+          true
+          {% else %}
+          false
+          {% endif %}
+###### DARKSKY
+  - platform: darksky
+    api_key: !secret darksky_key
+    monitored_conditions:
+      - summary
+      - icon
+      - nearest_storm_distance
+      - nearest_storm_bearing
+      - precip_type
+      - precip_intensity
+      - precip_probability
+      - temperature
+      - apparent_temperature
+      - dew_point
+      - wind_speed
+      - wind_bearing
+      - cloud_cover
+      - humidity
+      - pressure
+      - visibility
+      - ozone
+      - minutely_summary
+      - hourly_summary
+      - daily_summary
+      - temperature_max
+      - temperature_min
+      - apparent_temperature_max
+      - apparent_temperature_min
+      - precip_intensity_max
+      - uv_index
+
+# ###### wunderground
+#   - platform: wunderground
+#     api_key: !secret wunderground_key
+#     pws_id: !secret wunderground_station
+#     monitored_conditions:
+#       - UV
+
+script:
+  weather_report:
+    sequence:
+    - service: tts.google_say
+      data_template:
+        entity_id: media_player.office_mini
+        message: >
+          {{states('sensor.weather_report')}}
+

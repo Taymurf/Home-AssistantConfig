@@ -1,0 +1,33 @@
+################################################################
+## Packages / Zones
+################################################################
+zone:
+- name: Home
+  latitude: !secret home_lat
+  longitude: !secret home_long
+  radius: 200
+  icon: mdi:account-multiple
+
+- name: School
+  latitude: !secret school_lat
+  longitude: !secret school_long
+  radius: 250
+  icon: mdi:school
+
+- name: Nemours
+  latitude: !secret nemours_lat
+  longitude: !secret nemours_long
+  radius: 150
+  icon: mdi:hospital
+
+- name: Florida Hospital East
+  latitude: !secret fhe_lat
+  longitude: !secret fhe_long
+  radius: 250
+  icon: mdi:hospital
+
+- name: Knights Clinic
+  latitude: !secret kc_lat
+  longitude: !secret kc_long
+  radius: 250
+  icon: mdi:hospital

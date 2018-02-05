@@ -1,0 +1,353 @@
+#######################################################################
+## Packages / Hue
+## Example resource: http://<Local-IP>/api/<API-Here>/sensors/<sensor#>
+#######################################################################
+
+homeassistant:
+  customize:
+    #philips hue motion sensors
+    ### Kitchen ###
+    sensor.kitchen_motion:
+      friendly_name: "Kitchen"
+      icon: mdi:run
+    sensor.kitchen_lux:
+      icon: mdi:theme-light-dark
+    sensor.kitchen_temperature:
+      icon: mdi:thermometer
+      friendly_name: Kitchen
+    sensor.kitchen_motion_sensor_battery_level:
+      friendly_name: Kitchen Sensor
+      icon: mdi:battery
+
+    ### Master Bathroom ###
+    sensor.master_bathroom_motion:
+      friendly_name: "Master Bathroom"
+      icon: mdi:run
+    sensor.master_bathroom_lux:
+      icon: mdi:theme-light-dark
+    sensor.master_bathroom_temperature:
+      icon: mdi:thermometer
+      friendly_name: Master Bathroom
+    sensor.master_bathroom_motion_sensor_battery_level:
+      friendly_name: Master Bathroom Sensor
+      icon: mdi:battery
+
+    ### Garage ###
+    sensor.garage_motion:
+      friendly_name: "Garage"
+      icon: mdi:run
+    sensor.garage_lux:
+      icon: mdi:theme-light-dark
+    sensor.garage_temperature:
+      icon: mdi:thermometer
+      friendly_name: Garage
+    sensor.garage_motion_sensor_battery_level:
+      friendly_name: Garage Sensor
+      icon: mdi:battery
+
+    ### Patio ###
+    sensor.patio_motion:
+      friendly_name: "Patio"
+      icon: mdi:run
+    sensor.patio_lux:
+      icon: mdi:theme-light-dark
+    sensor.patio_temperature:
+      icon: mdi:thermometer
+      friendly_name: Patio
+    sensor.patio_motion_sensor_battery_level:
+      friendly_name: Patio Sensor
+      icon: mdi:battery
+
+    ############ DIMMERS #################
+    sensor.master_bathroom_dimmer_battery:
+      icon: mdi:battery
+    sensor.master_bathroom_dimmer_last_update:
+      icon: mdi:clock
+    sensor.master_bathroom_dimmer_state:
+      icon: mdi:remote
+    sensor.kitchen_dimmer_battery:
+      icon: mdi:battery
+    sensor.kitchen_dimmer_last_update:
+      icon: mdi:clock
+    sensor.kitchen_dimmer_state:
+      icon: mdi:remote
+    sensor.master_bedroom_dimmer_battery:
+      icon: mdi:battery
+    sensor.master_bedroom_dimmer_last_update:
+      icon: mdi:clock
+    sensor.master_bedroom_dimmer_state:
+      icon: mdi:remote
+    sensor.family_room_dimmer_battery:
+      icon: mdi:battery
+    sensor.family_room_dimmer_last_update:
+      icon: mdi:clock
+    sensor.family_room_dimmer_state:
+      icon: mdi:remote
+    sensor.office_dimmer_battery:
+      icon: mdi:battery
+    sensor.office_dimmer_last_update:
+      icon: mdi:clock
+    sensor.office_dimmer_state:
+      icon: mdi:remote
+
+
+###### STATE CARDS
+group:
+  hue_light_bulbs:
+    name: Lights (Groups)
+    icon: mdi:lightbulb-on
+    entities:
+      - light.all
+      - light.all_except_entryway
+      - light.all_except_officelampentryway
+      - light.bedroom
+      - light.master_bathroom
+      - light.family_room
+      - light.living_room
+      - light.kitchen
+      - light.office
+      - light.patio
+      - light.garage_2
+
+  hue_color_bulbs:
+    name: Lights (Color)
+    icon: mdi:lightbulb-on
+    entities:
+      - light.entryway
+      - light.shower
+      - light.office_lightstrip
+      - light.kitchen_lightstrip
+      - light.kitchen_lightstrip_2
+      - light.lamp
+      - light.side_table
+
+  kitchen_lightstrips_only:
+    name: Kitchen Lightstrips
+    icon: mdi:lightbulb_on
+    entities:
+      - light.kitchen_lightstrip
+      - light.kitchen_lightstrip_2
+      
+  dimmers_status_card:
+    name: Dimmers
+    entities:
+      - sensor.master_bathroom_dimmer_state
+      - sensor.master_bathroom_dimmer_last_update
+      - sensor.master_bedroom_dimmer_state
+      - sensor.master_bedroom_dimmer_last_update
+      - sensor.kitchen_dimmer_state
+      - sensor.kitchen_dimmer_last_update
+      - sensor.office_dimmer_state
+      - sensor.office_dimmer_last_update
+      - sensor.family_room_dimmer_state
+      - sensor.family_room_dimmer_last_update
+
+  kitchen_motion_sensor:
+    name: Kitchen Sensor
+    icon: mdi:instagram
+    entities:
+      - sensor.kitchen_motion
+      - sensor.kitchen_motion_motion
+      - sensor.kitchen_lux
+      - sensor.kitchen_temperature
+
+  master_bathroom_motion_sensor:
+    name: Master Bathroom Sensor
+    icon: mdi:instagram
+    entities:
+      - sensor.master_bathroom_motion
+      - sensor.master_bathroom_motion_motion
+      - sensor.master_bathroom_lux
+      - sensor.master_bathroom_temperature
+
+  garage_motion_sensor:
+    name: Garage Sensor
+    icon: mdi:instagram
+    entities:
+      - sensor.garage_motion
+      - sensor.garage_motion_motion
+      - sensor.garage_lux
+      - sensor.garage_temperature
+
+  patio_motion_sensor:
+    name: Patio Sensor
+    icon: mdi:instagram
+    entities:
+      - sensor.patio_motion
+      - sensor.patio_motion_motion
+      - sensor.patio_lux
+      - sensor.patio_temperature
+
+  motion_sensors:
+    name: Motion Sensors
+    entities:
+     - sensor.kitchen_motion
+     - sensor.kitchen_motion_motion
+     - sensor.master_bathroom_motion
+     - sensor.master_bathroom_motion_motion
+     - sensor.garage_motion
+     - sensor.garage_motion_motion
+     - sensor.patio_motion
+     - sensor.patio_motion_motion
+
+  sensor_battery_levels:
+    name: Battery Levels
+    entities:
+     - sensor.taylor_battery
+     - sensor.marisa_battery
+     - input_label.taylor_battery
+     - input_label.marisa_battery
+     - sensor.kitchen_motion_sensor_battery_level
+     - sensor.master_bathroom_motion_sensor_battery_level
+     - sensor.garage_motion_sensor_battery_level
+     - sensor.patio_motion_sensor_battery_level
+     - sensor.kitchen_dimmer_battery
+     - sensor.master_bathroom_dimmer_battery
+     - sensor.master_bedroom_dimmer_battery
+     - sensor.office_dimmer_battery
+     - sensor.family_room_dimmer_battery
+
+  lux:
+    name: Light Level
+    entities:
+      - sensor.kitchen_lux
+      - sensor.master_bathroom_lux
+      - sensor.garage_lux
+      - sensor.patio_lux
+
+  light_automations:
+    name: Light Automations
+    icon: mdi:auto-fix
+    entities:
+      - automation.turn_off_lamp_at_bedtime
+      - automation.turn_on_the_lamp_at_night
+      - input_boolean.lamp_color_loop
+      - automation.turn_all_lights_off
+      - automation.forgot_lights
+
+
+###### BINARY SENSORS ------------------------------------------
+
+binary_sensor:
+  - platform: rest
+    resource: !secret hue_sensor_12
+    value_template: '{{ value_json.state.presence }}'
+    scan_interval: 1
+    name: 'Kitchen Motion'
+
+  - platform: rest
+    resource: !secret hue_sensor_6
+    value_template: '{{ value_json.state.presence }}'
+    scan_interval: 1
+    name: 'Master Bathroom Motion'
+
+  - platform: rest
+    resource: !secret hue_sensor_3
+    value_template: '{{ value_json.state.presence }}'
+    scan_interval: 1
+    name: 'Garage Motion'
+
+  - platform: rest
+    resource: !secret hue_sensor_9
+    value_template: '{{ value_json.state.presence }}'
+    scan_interval: 1
+    name: 'Patio Motion'
+
+
+###### SENSORS -------------------------------------------------
+sensor:
+  ### Hue API ###
+  # - platform: hue
+
+
+  ### Kitchen Motion Sensor ###
+  - platform: rest
+    resource: !secret hue_sensor_13
+    value_template: "{{(10 ** (float (value_json.state.lightlevel) / 10000) -1) | round (1)}} "
+    unit_of_measurement: Lux
+    name: 'Kitchen Lux'
+    scan_interval: 80
+
+  - platform: rest
+    resource: !secret hue_sensor_11
+    value_template: '{{ (value_json.state.temperature | float / 100 + 1.6) | round(1) }}'
+    unit_of_measurement: °C
+    name: 'Kitchen Temperature'
+    scan_interval: 120
+
+  - platform: rest
+    resource: !secret hue_sensor_12
+    value_template: '{{ value_json.config.battery }}'
+    unit_of_measurement: '%'
+    scan_interval: 1800
+    name: 'Kitchen Motion Sensor Battery Level'
+
+
+  ### Master Bathroom Motion Sensor ###
+  - platform: rest
+    resource: !secret hue_sensor_7
+    value_template: "{{(10 ** (float (value_json.state.lightlevel) / 10000) -1) | round (1)}} "
+    unit_of_measurement: Lux
+    name: 'Master Bathroom Lux'
+    scan_interval: 600
+
+  - platform: rest
+    resource: !secret hue_sensor_5
+    value_template: '{{ (value_json.state.temperature | float / 100 + 0.35) | round(1) }}'
+    unit_of_measurement: °C
+    name: 'Master Bathroom Temperature'
+    scan_interval: 120
+
+  - platform: rest
+    resource: !secret hue_sensor_6
+    value_template: '{{ value_json.config.battery }}'
+    unit_of_measurement: '%'
+    scan_interval: 1800
+    name: 'Master Bathroom Motion Sensor Battery Level'
+
+
+  ### Garage Motion Sensor ##
+  - platform: rest
+    resource: !secret hue_sensor_4
+    value_template: "{{(10 ** (float (value_json.state.lightlevel) / 10000) -1) | round (1)}} "
+    unit_of_measurement: Lux
+    name: 'Garage Lux'
+    scan_interval: 600
+
+  - platform: rest
+    resource: !secret hue_sensor_2
+    value_template: '{{ (value_json.state.temperature | float / 100) | round(1) }}'
+    unit_of_measurement: °C
+    name: 'Garage Temperature'
+    scan_interval: 120
+
+  - platform: rest
+    resource: !secret hue_sensor_3
+    value_template: '{{ value_json.config.battery }}'
+    unit_of_measurement: '%'
+    scan_interval: 1800
+    name: 'Garage Motion Sensor Battery Level'
+
+
+  ### Patio Motion Sensor ##
+  - platform: rest
+    resource: !secret hue_sensor_10
+    value_template: "{{(10 ** (float (value_json.state.lightlevel) / 10000) -1) | round (1)}} "
+    unit_of_measurement: Lux
+    name: 'Patio Lux'
+    scan_interval: 600
+
+  - platform: rest
+    resource: !secret hue_sensor_8
+    value_template: '{{ (value_json.state.temperature | float / 100) | round(1) }}'
+    unit_of_measurement: °C
+    name: 'Patio Temperature'
+    scan_interval: 120
+
+  - platform: rest
+    resource: !secret hue_sensor_9
+    value_template: '{{ value_json.config.battery }}'
+    unit_of_measurement: '%'
+    scan_interval: 1800
+    name: 'Patio Motion Sensor Battery Level'
+

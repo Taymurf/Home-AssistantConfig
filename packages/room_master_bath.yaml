@@ -1,0 +1,170 @@
+################################################################
+## Packages / Master Bathroom
+################################################################
+
+
+
+group:
+  room_bathroom:
+    name: Master Bathroom
+    icon: mdi:hotel
+    entities:
+      - group.master_bathroom_lights
+      - group.master_bathroom_motion_sensor
+      - group.master_bathroom_speaker_main
+      - group.master_bathroom_switches
+
+  master_bathroom_lights:
+    name: Master Bathroom Lights
+    icon: mdi:lightbulb-on
+    entities:
+      - light.master_bathroom
+      - light.shower
+
+  master_bathroom_switches:
+    name: Dimmer Switches
+    icon: mdi:nintendo-switch
+    entities:
+      - sensor.master_bathroom_dimmer_state
+      - sensor.master_bathroom_dimmer_last_update
+      - sensor.master_bathroom_dimmer_battery
+      
+
+
+sensor:
+##### Master Bathroom Dimmer Switch ###
+  - platform: rest
+    resource: !secret hue_sensor_20
+    value_template: '{{ value_json.state.buttonevent }}'
+    scan_interval: 2
+    name: 'Master Bathroom Dimmer State'
+  - platform: template
+    sensors:
+      master_bathroom_dimmer_state:
+        friendly_name: 'Master Bath Dimmer Last Button Push'
+        value_template: >-
+                      {% if states('sensor.master_bathroom_dimmer_state_2')[0] == "1" %}
+                        On
+                      {% elif states('sensor.master_bathroom_dimmer_state_2')[0] == "4" %}
+                        Off
+                      {% else %}
+                        None
+                      {% endif %}
+
+  - platform: rest
+    resource: !secret hue_sensor_20
+    value_template: '{{ value_json.state.lastupdated }}'
+    scan_interval: 10
+    name: 'Master Bathroom Dimmer Last Update'
+
+  - platform: template
+    sensors:
+      master_bathroom_dimmer_last_update:
+        friendly_name: 'Master Bath Last Used'
+        value_template: >-
+          {{ as_timestamp(strptime(states('sensor.master_bathroom_dimmer_last_update_2')[:19], "%Y-%m-%dT%X"))|timestamp_custom("%a, %B %d")}}
+
+  - platform: rest
+    resource: !secret hue_sensor_20
+    value_template: '{{ value_json.config.battery }}'
+    unit_of_measurement: '%'
+    scan_interval: 1800
+    name: 'Master Bathroom Dimmer Battery'
+
+
+
+automation:
+  ### MASTER BATHROOM Motion Sensor Lights ###
+###### Daytime On
+  - alias: 'master_bathroom_light_on_daytime'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.master_bathroom_motion
+        to: 'on'
+      - platform: numeric_state
+        entity_id: 'sensor.master_bathroom_lux'
+        below: 500
+    condition:
+      - condition: numeric_state
+        entity_id: 'sensor.master_bathroom_lux'
+        below: 500
+      - condition: state
+        entity_id: binary_sensor.master_bathroom_motion
+        state: 'on'
+      - condition: state
+        entity_id: light.master_bathroom
+        state: 'off'
+      - condition: state
+        entity_id: sun.sun
+        state: 'above_horizon'
+    action:
+      - service: light.turn_on
+        data:
+          entity_id: light.master_bathroom
+          brightness: 200
+      # - service: light.turn_on
+      #   data:
+      #     entity_id: light.shower
+      #     brightness: 254
+      #     rgb_color: [66,170,244]
+  
+###### Nighttime On
+  - alias: 'master_bathroom_light_on_nighttime'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.master_bathroom_motion
+        to: 'on'
+      - platform: numeric_state
+        entity_id: 'sensor.master_bathroom_lux'
+        below: 500
+    condition:
+      - condition: numeric_state
+        entity_id: 'sensor.master_bathroom_lux'
+        below: 500
+      - condition: state
+        entity_id: binary_sensor.master_bathroom_motion
+        state: 'on'
+      - condition: state
+        entity_id: light.master_bathroom
+        state: 'off'
+      - condition: state
+        entity_id: sun.sun
+        state: 'below_horizon'
+    action:
+      - service: light.turn_on
+        data:
+          entity_id: light.master_bathroom
+          brightness: 140
+      # - service: light.turn_on
+      #   data:
+      #     entity_id: light.shower
+      #     brightness: 255
+      #     rgb_color: [164,66,244]
+
+###### Light off after 10 minutes
+  - alias: 'master_bathroom_light_off'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.master_bathroom_motion
+        to: 'off'
+        for:
+          hours: 0
+          minutes: 10
+          seconds: 0
+    # condition:
+    #   - condition: state
+    #     entity_id: sensor.kitchen_switch
+    #     state: '[OFF_STATE_HERE]'
+    #     for:
+    #       hours: 0
+    #       minutes: 45
+    #       seconds: 0
+    action:
+      - service: light.turn_off
+        data:
+          entity_id: light.master_bathroom
+
+

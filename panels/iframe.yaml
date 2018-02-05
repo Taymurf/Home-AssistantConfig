@@ -1,0 +1,24 @@
+# pihole:
+#   title: Pi-hole
+#   icon: mdi:block-helper
+#   url: http://192.168.1.200:80/admin
+
+# nodered_flows:
+#   title: 'Node-RED Flows'
+#   url: 'https://taymurfhass.duckdns.org:1880'
+#   icon: mdi:nodejs
+
+# nodered_ui:
+#   title: 'Node-RED Dashboard'
+#   url: 'https://taymurfhass.duckdns.org:1880/ui'
+#   icon: mdi:nodejs
+
+#router:
+#  title: 'Router'
+#  url: 192.168.1.1 # Preferably https address
+#  icon: mdi:router-wireless
+
+# configurator:
+#   title: Configurator
+#   icon: mdi:wrench
+#   url: https://taymurfhass.duckdns.org:3218

@@ -1,0 +1,457 @@
+################################################################
+## Packages / Family Room and Living Room
+################################################################
+
+homeassistant:
+  # customize:
+  #   #Livingroom computer Switch
+  #   switch.tv:
+  #     icon: mdi:monitor
+  #     friendly_name: TV
+  #   switch.receiver:
+  #     icon: mdi:speaker
+  #     friendly_name: Receiver
+  #   automation.light_living_room_sunset:
+  #     friendly_name: Sunset Lights
+  #     icon: mdi:weather-sunset-down
+  #   light.living_room:
+  #     friendly_name: Lights
+  #   script.lr_dimmed:
+  #     emulated_hue: true
+  #     friendly_name: 'Dimmed'
+  #     icon: mdi:brightness-7
+  #   script.lr_relax:
+  #     emulated_hue: true
+  #     friendly_name: 'Relax'
+  #     icon: mdi:brightness-6
+  #   script.lr_read:
+  #     emulated_hue: true
+  #     friendly_name: 'Read'
+  #     icon: mdi:brightness-5
+  #   script.lr_concentrate:
+  #     emulated_hue: true
+  #     friendly_name: 'Bright'
+  #     icon: mdi:star-circle
+  #   script.lr_springblossom:
+  #     emulated_hue: true
+  #     friendly_name: 'Spring blossom'
+  #     icon: mdi:flower
+  #   script.beach:
+  #     emulated_hue: true
+  #     friendly_name: 'Beach'
+  #     icon: mdi:beach
+  #   script.river:
+  #     friendly_name: 'River'
+  #     icon: mdi:fire
+  #   script.kitchen_sink_bright:
+  #     emulated_hue: true
+  #     friendly_name: 'Kitchen Sink Bright'
+  #     icon: mdi:flower
+  #   script.tv:
+  #     emulated_hue_hidden: false
+  #     emulated_hue_name: "TV"
+  #     google_assistant: true
+  #     google_assistant_name: "TV"
+  #     friendly_name: TV
+
+###### STATE CARD
+group:
+  room_main_area:
+    name: Main Living Area
+    icon: mdi:home-heart
+    # view: yes
+    entities:
+      - group.main_area_lights
+      - climate.entryway
+      - group.family_room_home_main
+      - group.toshiba_main
+      - group.tv_speaker_main
+      - group.family_room_chromecast_main
+      - group.family_room_roku_main
+      - group.family_room_switch
+  #    - camera.living_room_camera
+
+
+  main_area_lights:
+    name: Main Room Lights
+    icon: mdi:lightbulb-on
+    entities:
+      - light.family_room
+      - light.living_room
+      - light.lamp
+      - light.entryway
+      - light.patio
+
+  family_room_switch:
+    name: Family Room Dimmer Switch
+    icon: mdi:table-column
+    entities:
+      - sensor.family_room_switch
+      - sensor.family_room_dimmer_battery
+      - sensor.family_room_dimmer_switch
+
+  livingroom:
+    name: Living Room
+    control: hidden
+    entities:
+    #  - switch.tv
+    #  - switch.receiver
+     - group.lr_lights
+     - automation.night_light
+     - automation.light_living_room_sunset
+     - input_select.light_living_room_scene
+     - input_select.live_scene
+  lr_lights:
+    name: Lights
+    icon: mdi:lightbulb
+    entities:
+     - light.lamp_2
+     - light.family_room
+     - light.living_room
+     - light.kitchen_sink
+
+
+sensor:
+###### Family Room Dimmer Switch ###
+  - platform: rest
+    resource: !secret hue_sensor_14
+    value_template: '{{ value_json.state.buttonevent }}'
+    scan_interval: 2
+    name: 'Family Room Dimmer State'
+  - platform: template
+    sensors:
+      family_room_dimmer_state:
+        friendly_name: 'Family Room Dimmer Last Button Push'
+        value_template: >-
+                      {% if states('sensor.family_room_dimmer_state_2')[0] == "1" %}
+                        On
+                      {% elif states('sensor.family_room_dimmer_state_2')[0] == "4" %}
+                        Off
+                      {% else %}
+                        None
+                      {% endif %}
+
+  - platform: rest
+    resource: !secret hue_sensor_14
+    value_template: '{{ value_json.state.lastupdated }}'
+    scan_interval: 10
+    name: 'Family Room Dimmer Last Update'
+
+  - platform: template
+    sensors:
+      family_room_dimmer_last_update:
+        friendly_name: 'Family Room Last Used'
+        value_template: >-
+          {{ as_timestamp(strptime(states('sensor.family_room_dimmer_last_update_2')[:19], "%Y-%m-%dT%X"))|timestamp_custom("%a, %B %d")}}
+
+  - platform: rest
+    resource: !secret hue_sensor_14
+    value_template: '{{ value_json.config.battery }}'
+    unit_of_measurement: '%'
+    scan_interval: 1800
+    name: 'Family Room Dimmer Battery'
+
+
+# light:
+#   - platform: tplink
+#     host: 192.168.1.108
+#     name: 'Couch'
+
+
+### Scripts ###
+# script:
+#   tv:
+#     sequence:
+#       - service_template: >
+#           {% if states.switch.tv.state == 'off' %} switch.turn_on
+#           {% elif states.switch.tv.state == 'on' %} switch.turn_off
+#           {% endif %}
+#         data:
+#           entity_id: switch.tv, switch.receiver
+
+#   living_room_pc_off:
+#     sequence:
+#       - service: script.kodi_stop
+#       - service: shell_command.living_room_pc_off
+
+#   light_living_room_off:
+#     sequence:
+#       - service: light.turn_off
+#         data:
+#           entity_id:
+#             light.hue_color_lamp_1:
+#             light.hue_color_lamp_2:
+#             light.hue_color_lamp_3:
+#             light.living_room_lamp:
+#             light.kitchen_sink:
+#             light.couch:
+#       - service: input_select.select_option
+#         data:
+#           entity_id: input_select.light_living_room_scene
+#           option: "off"
+
+#   kitchen_sink_bright:
+#     sequence:
+#       - service: light.turn_on
+#         data:
+#           entity_id:
+#             light.kitchen_sink:
+#           brightness: 255
+#           rgb_color: [255,241,199]
+#   lr_dimmed:
+#     sequence:
+#       - service: hue.hue_activate_scene
+#         data:
+#           group_name: "Living Room"
+#           scene_name: "Dimmed"
+#       - service: input_select.select_option
+#         data:
+#           entity_id: input_select.light_living_room_scene
+#           option: "Dimmed"
+#       - service: light.turn_on
+#         data:
+#           entity_id:
+#             - light.couch
+#           brightness: 77
+#           rgb_color: [174,140,79]
+#   lr_relax:
+#     sequence:
+#       - service: hue.hue_activate_scene
+#         data:
+#           group_name: "Living Room"
+#           scene_name: "Relax"
+#       - service: input_select.select_option
+#         data:
+#           entity_id: input_select.light_living_room_scene
+#           option: "Relax"
+#   lr_read:
+#     sequence:
+#       - service: hue.hue_activate_scene
+#         data:
+#           group_name: "Living Room"
+#           scene_name: "Read"
+#       - service: input_select.select_option
+#         data:
+#           entity_id: input_select.light_living_room_scene
+#           option: "Read"
+#   lr_concentrate:
+#     sequence:
+#       - service: hue.hue_activate_scene
+#         data:
+#           group_name: "Living Room"
+#           scene_name: "Concentrate"
+#       - service: input_select.select_option
+#         data:
+#           entity_id: input_select.light_living_room_scene
+#           option: "Bright"
+#       - service: light.turn_on
+#         data:
+#           entity_id:
+#             - light.couch
+#           brightness: 255
+#           rgb_color: [255,255,255]
+#   lr_springblossom:
+#     sequence:
+#       - service: hue.hue_activate_scene
+#         data:
+#           group_name: "Living Room"
+#           scene_name: "Spring blossom"
+#       - service: input_select.select_option
+#         data:
+#           entity_id: input_select.light_living_room_scene
+#           option: "Spring Blossom"
+#       - service: light.turn_on
+#         data:
+#           entity_id:
+#             - light.couch
+#           brightness: 255
+#           rgb_color: [238,132,255]
+#   beach:
+#     sequence:
+#       - service: light.hue_activate_scene
+#         data:
+#           group_name: "Living Room"
+#           scene_name: "Beach"
+#       - service: input_select.select_option
+#         data:
+#           entity_id: input_select.light_living_room_scene
+#           option: "Beach"
+#   river:
+#     sequence:
+#       - service: hue.hue_activate_scene
+#         data:
+#           group_name: "Living Room"
+#           scene_name: "river"
+#       - service: input_select.select_option
+#         data:
+#           entity_id: input_select.light_living_room_scene
+#           option: "River"
+
+automation:
+  ### Living Room Lamp ###
+  - alias: Turn on the lamp at night
+    trigger:
+      - platform: time
+        at: "18:15:00"
+    condition:
+      - condition: state
+        entity_id: input_boolean.away
+        state: 'off'
+    action:
+      - service: light.turn_on
+        entity_id: light.lamp_2
+        data:
+          effect: random
+          brightness: 254
+      - service: homeassistant.turn_on
+        data:
+          entity_id: input_boolean.lamp_color_loop
+
+  # Changes living room lamp every two minutes to random color if input boolean is set to on
+  - alias: 'Set Lamp to random color'
+    trigger:
+      - platform: time
+        minutes: '/15'
+        seconds: 0
+    condition:
+      - condition: state
+        entity_id: input_boolean.lamp_color_loop
+        state: 'on'
+      - condition: state
+        entity_id: light.office
+        state: 'on'
+    action:
+      - service: light.turn_on
+        entity_id: light.lamp_2
+        data:
+          effect: random
+          transition: 5
+          brightness: 254
+  
+  # Turn off lamp late at night
+  - alias: Turn off lamp at bedtime
+    trigger:
+      - platform: time
+        at: "00:30:00"
+    condition:
+      - condition: state
+        entity_id: light.lamp_2
+        state: 'on'
+    action:
+      - service: homeassistant.turn_off
+        entity_id: input_boolean.lamp_color_loop
+      - service: light.turn_off
+        data:
+          entity_id: light.lamp_2
+
+  #   - alias: 'light_living_room_sunset'
+  #     initial_state: 'on'
+  #     trigger:
+  #       - platform: sun
+  #         event: sunset
+  #     condition:
+  #       - condition: state
+  #         entity_id: 'input_boolean.away'
+  #         state: 'off'
+  #       - condition: state
+  #         entity_id: 'light.lamp_2'
+  #         state: 'off'
+  #     action:
+  #       - service: hue.hue_activate_scene
+  #         data:
+  #           group_name: "Living Room"
+  #           scene_name: "Spring blossom"
+  #       - service: input_select.select_option
+  #         data:
+  #           entity_id: input_select.light_living_room_scene
+  #           option: "Spring Blossom"
+
+  # - alias: 'light_living_room_scene'
+  #   initial_state: 'on'
+  #   trigger:
+  #     - platform: state
+  #       entity_id: input_select.light_living_room_scene
+  #   action:
+  #     service: script.turn_on
+  #     data_template:
+  #       entity_id: >-
+  #         {% if is_state("input_select.light_living_room_scene", "off") %} script.light_living_room_off
+  #         {% elif is_state("input_select.light_living_room_scene", "Bright") %} script.lr_concentrate
+  #         {% elif is_state("input_select.light_living_room_scene", "Read") %} script.lr_read
+  #         {% elif is_state("input_select.light_living_room_scene", "Relax") %} script.lr_relax
+  #         {% elif is_state("input_select.light_living_room_scene", "Dimmed") %} script.lr_dimmed
+  #         {% elif is_state("input_select.light_living_room_scene", "Spring Blossom") %} script.lr_springblossom
+  #         {% elif is_state("input_select.light_living_room_scene", "Beach") %} script.beach
+  #         {% elif is_state("input_select.light_living_room_scene", "River") %} script.river
+  #         {% endif %}
+
+  # - alias: 'light_living_room_scene'
+  #   initial_state: 'on'
+  #   trigger:
+  #     - platform: state
+  #       entity_id: light.living_room
+  #       to: "off"
+  #   action:
+  #     - service: input_select.select_option
+  #       data:
+  #         entity_id: input_select.light_living_room_scene
+  #         option: "off"
+
+  # - alias: 'light_living_room_off'
+  #   initial_state: 'on'
+  #   trigger:
+  #     - platform: numeric_state
+  #       entity_id: 'sensor.living_room_lux'
+  #       above: 45
+  #   action:
+  #     - service: light.turn_off
+  #       data:
+  #         entity_id: light.living_room
+
+input_select:
+  light_living_room_scene:
+    name: Scene
+    options:
+      - "off"
+      - "Bright"
+      - "Read"
+      - "Relax"
+      - "Dimmed"
+      - "Spring Blossom"
+      - "Beach"
+      - "River"
+    initial: "off"
+    icon: mdi:ceiling-light
+
+
+### Color Loop Boolean ###
+input_boolean:
+  lamp_color_loop:
+    name: Lamp Color Loop
+    initial: off
+    icon: mdi:spotlight
+
+
+# ######
+# switch:
+# ###### SONOFF DUAL 1
+#   - platform: mqtt
+#     name: "tv"
+#     state_topic: "stat/sonoff_dual/POWER1"
+#     command_topic: "cmnd/sonoff_dual/POWER1"
+#     payload_on: "ON"
+#     payload_off: "OFF"
+#     optimistic: false
+#     qos: 0
+#     retain: true
+# ###### SONOFF DUAL 2
+#   - platform: mqtt
+#     name: "receiver"
+#     state_topic: "stat/sonoff_dual/POWER2"
+#     command_topic: "cmnd/sonoff_dual/POWER2"
+#     payload_on: "ON"
+#     payload_off: "OFF"
+#     optimistic: false
+#     qos: 0
+#     retain: true
+

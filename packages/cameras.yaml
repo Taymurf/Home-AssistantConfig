@@ -1,0 +1,217 @@
+################################################################
+## Packages / Media Players    
+## More Info at: https://home-assistant.io/components/blink/
+################################################################
+
+
+homeassistant:
+  customize:
+    #Blink Cameras
+    switch.alarm:
+      friendly_name: 'Blink Alarm Toggle'
+      icon: mdi:cctv
+    switch.front_door_alarm:
+      friendly_name: 'Front Door Alarm Toggle'
+      icon: mdi:cctv
+    binary_sensor.blink_armed_status:
+      friendly_name: 'Armed?'
+      icon: mdi:alarm-check
+    binary_sensor.blink_inside_motion_enabled:
+      friendly_name: 'Motion Enabled?'
+      icon: mdi:alarm-check
+    binary_sensor.blink_front_door_motion_enabled:
+      friendly_name: 'Motion Enabled?'
+      icon: mdi:alarm-check
+    binary_sensor.blink_backyard_motion_enabled:
+      friendly_name: 'Motion Enabled?'
+      icon: mdi:alarm-check
+    sensor.blink_inside_notifications:
+      friendly_name: 'Blink Notifications'
+      icon: mdi:message-alert
+    sensor.blink_front_door_notifications:
+      friendly_name: 'Blink Notifications'
+      icon: mdi:message-alert
+    sensor.blink_backyard_notifications:
+      friendly_name: 'Blink Notifications'
+      icon: mdi:message-alert
+    sensor.blink_inside_temperature:
+      friendly_name: 'Blink Temperature'
+      icon: mdi:thermometer
+    sensor.blink_front_door_temperature:
+      friendly_name: 'Blink Temperature'
+      icon: mdi:thermometer
+    sensor.blink_backyard_temperature:
+      friendly_name: 'Blink Temperature'
+      icon: mdi:thermometer
+    script.blink_capture_inside_script:
+      friendly_name: 'Update Picture'
+      icon: mdi:update
+    script.blink_capture_front_door_script:
+      friendly_name: 'Update Picture'
+      icon: mdi:update
+    script.blink_capture_backyard_script:
+      friendly_name: 'Update Picture'
+      icon: mdi:update
+    sensor.blink_inside_battery:
+      friendly_name: 'Battery'
+      icon: mdi:battery-positive
+    sensor.blink_front_door_battery:
+      friendly_name: 'Battery'
+      icon: mdi:battery-positive
+    sensor.blink_backyard_battery:
+      friendly_name: 'Battery'
+      icon: mdi:battery-positive    
+
+    ### Front Door ###
+
+    ### Backyard ###
+
+group:
+  blink_inside:
+    name: Inside Camera
+    icon: mdi:cctv
+    control: hidden
+    entities:
+      - camera.inside
+      - sensor.blink_inside_notifications
+      - switch.alarm
+      - binary_sensor.blink_inside_motion_enabled
+      # - binary_sensor.blink_armed_status
+      - sensor.blink_inside_temperature
+      - script.blink_capture_inside_script
+      - sensor.blink_inside_battery
+
+  blink_front_door:
+    name: Front Door Camera
+    icon: mdi:cctv
+    control: hidden
+    entities:
+      - camera.front_door
+      - sensor.blink_front_door_notifications
+      - switch.alarm
+      - switch.front_door_alarm
+      - binary_sensor.blink_front_door_motion_enabled
+      # - binary_sensor.blink_armed_status
+      - sensor.blink_front_door_temperature
+      - script.blink_capture_front_door_script
+      - sensor.blink_front_door_battery
+
+  blink_backyard:
+    name: Backyard Camera
+    icon: mdi:cctv
+    control: hidden
+    entities:
+      - camera.backyard
+      - sensor.blink_backyard_notifications
+      - switch.alarm
+      - binary_sensor.blink_backyard_motion_enabled
+      # - binary_sensor.blink_armed_status
+      - sensor.blink_backyard_temperature
+      - script.blink_capture_backyard_script
+      - sensor.blink_backyard_battery
+
+
+# # services for automations
+# - service: 
+# - blink.arm_system
+# - blink.arm_camera
+# - blink.snap_picture
+
+
+switch:
+  - platform: template
+    switches:
+      alarm:
+        friendly_name: 'Blink Alarm Toggle'
+        value_template: "{{ is_state('binary_sensor.blink_armed_status', 'on') }}"
+        turn_on:
+          service: script.turn_on
+          entity_id: script.alarm_on_script
+        turn_off:
+          service: script.turn_on
+          entity_id: script.alarm_off_script
+
+  - platform: template
+    switches:
+      front_door_alarm:
+        friendly_name: 'Front Door Alarm Toggle'
+        value_template: "{{ is_state('binary_sensor.blink_front_door_motion_enabled', 'on') }}"
+        turn_on:
+          service: script.turn_on
+          entity_id: script.front_door_alarm_on_script
+        turn_off:
+          service: script.turn_on
+          entity_id: script.front_door_alarm_off_script
+
+
+automation:
+    ##### ADDED TO PRESENCE AUTOMATION
+  - alias: 'set_alarm_when_nobody_home'
+    trigger:
+      - platform: state
+        entity_id: input_boolean.away #, input_boolean.vacation
+        to: 'on'
+    action:
+      - service: script.turn_on
+        entity_id: script.alarm_on_script
+
+  - alias: 'cancel_alarm_when_arrive_home'
+    trigger:
+      - platform: state
+        entity_id: input_boolean.away #, input_boolean.vacation
+        to: 'off'
+    action:
+      - service: script.turn_on
+        entity_id: script.alarm_off_script
+
+
+script:
+  alarm_on_script:
+    sequence:
+      - service: blink.arm_system
+        data:
+          device_armed: "True"
+      # - service: notify.ios_taylors_iphone
+      #   data:
+      #     message: 'Nobody home, alarm activated'
+
+  alarm_off_script:
+    sequence:
+      - service: blink.arm_system
+        data:
+          device_armed: "False"
+      # - service: notify.ios_taylors_iphone
+      #   data:
+      #     message: 'Alarm de-activated'
+
+  front_door_alarm_on_script:
+    sequence:
+      - service: blink.arm_camera
+        data:
+          friendly_name: "Front Door"
+          device_armed: "True"
+
+  front_door_alarm_off_script:
+    sequence:
+      - service: blink.arm_camera
+        data:
+          friendly_name: "Front Door"
+          device_armed: "False"
+
+  blink_capture_inside_script:
+    sequence:
+      - service: blink.snap_picture
+        data:
+          friendly_name: "Inside"
+
+  blink_capture_front_door_script:
+    sequence:
+      - service: blink.snap_picture
+        data:
+          friendly_name: "Front Door"
+
+  blink_capture_backyard_script:
+    sequence:
+      - service: blink.snap_picture
+        data:
+          friendly_name: "Backyard"

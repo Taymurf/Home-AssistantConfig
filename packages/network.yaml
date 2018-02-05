@@ -1,0 +1,61 @@
+################################################################
+## Packages / internet_usage
+## @norien - https://github.com/Norien/Home-Assistant-Config
+################################################################
+
+homeassistant:
+  customize:
+    sensor.external_ip:
+      friendly_name: External IP
+      icon: mdi:earth
+
+
+###### STATE CARD
+group:
+  network:
+    name: Network
+    entities:
+      # - sensor.hassuptime
+      - sensor.ipv6_address_eno1
+      - sensor.external_ip
+      - sensor.speedtest_ping
+      - sensor.speedtest_download
+      - sensor.speedtest_upload
+      - sensor.packets_received_eno1
+      - sensor.packets_sent_eno1
+      - sensor.received_eno1
+      - sensor.sent_eno1
+      - script.update_speedtest
+      
+
+sensor:
+###### EXTERNAL IP FOR NOTIFY
+  - platform: rest
+    resource: https://api.ipify.org/?format=json
+    #resource: http://ip.jsontest.com
+    name: external_ip
+    value_template: '{{ value_json.ip }}'
+    scan_interval: 14400
+###### SPEEDTEST
+  - platform: speedtest
+    minute:
+      - 0
+      - 15
+    monitored_conditions:
+      - ping
+      - download
+      - upload
+    server_id: 15780
+###### TIME & DATE
+  - platform: time_date
+    display_options:
+      - 'time_date'
+###### UPTIME
+  - platform: uptime
+    unit_of_measurement: minutes
+
+
+script:
+  update_speedtest:
+    sequence:
+      - service: sensor.update_speedtest

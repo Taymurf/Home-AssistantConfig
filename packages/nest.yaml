@@ -1,0 +1,116 @@
+# ################################################################
+# ## Packages / Nest
+# ################################################################
+homeassistant:
+  customize:
+#Nest Thermostat
+    climate.entryway:
+      friendly_name: Nest Thermostat
+      entity_picture: /local/custom_icons/nest.png
+    binary_sensor.entryway_thermostat_fan:
+      friendly_name: Thermostat Fan
+      icon: mdi:fan
+    sensor.entryway_thermostat_humidity:
+      friendly_name: Entryway Humidity
+      icon: mdi:water-percent
+    sensor.entryway_thermostat_temperature:
+      friendly_name: Entryway
+    sensor.entryway_thermostat_hvac_state:
+      friendly_name: Thermostat HVAC State
+    sensor.entryway_thermostat_operation_mode:
+      friendly_name: Thermostat Operation Mode
+
+###### STATE CARD
+group:
+  thermostat:
+    name: Thermostat
+    entities:
+     - climate.entryway
+     - sensor.entrywaythermostat
+     - binary_sensor.entryway_thermostat_fan
+     - script.fan
+     - sensor.entryway_thermostat_hvac_state
+     - sensor.entryway_thermostat_operation_mode
+
+  climate:
+    name: Climate
+    icon: mdi:weather-partlycloudy
+    # view: yes
+    entities:
+      - group.sun_and_moon
+      - group.weather
+      - group.thermostat
+
+  all_temps:
+    name: Temperature
+    entities:
+     - sensor.dark_sky_temperature
+     - sensor.entryway_thermostat_temperature
+     - sensor.kitchen_temperature
+     - sensor.master_bathroom_temperature
+     - sensor.garage_temperature
+     - sensor.patio_temperature
+     - sensor.average_whole_home
+
+  sun_and_moon:
+    name: Quick Facts
+    icon: mdi:weather-partlycloudy
+    entities:
+      - sensor.entrywaythermostat
+      - sun.sun
+      - sensor.moon
+
+
+sensor:
+###### AVERAGE TEMPERATURE
+  - platform: min_max
+    type: mean
+    name: Average Whole Home
+    entity_ids:
+      - sensor.entryway_thermostat_temperature
+      - sensor.kitchen_temperature
+      - sensor.master_bathroom_temperature
+      # - sensor.garage_temperature
+      # - sensor.patio_temperature
+
+
+script:
+  fan:
+    sequence:
+      - service: climate.set_fan_mode
+        data:
+          entity_id: climate.entryway
+          fan_mode: 'on'
+
+automation:
+  - alias: 'nest open a window'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: sensor.weather_inside_vs_outside
+        from: 'Unknown'
+        to: 'true'
+    condition:
+      - condition: time
+        after: '09:00:00'
+        before: '21:00:00'
+      - condition: or
+        conditions:
+          - condition: state
+            entity_id: climate.entryway
+            state: 'cool'
+          - condition: state
+            entity_id: climate.entryway
+            state: 'auto'
+    action:
+      - service: tts.google_say
+        data:
+          entity_id: media_player.office_mini
+          message: 'It is cooler outside than inside and the AC is on. You should open a window!'
+      - service: automation.turn_off
+        data:
+          entity_id: automation.nest_open_a_window
+      - delay: '04:00:00'
+      - service: automation.turn_on
+        data:
+          entity_id: automation.nest_open_a_window

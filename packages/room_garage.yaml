@@ -1,0 +1,46 @@
+################################################################
+## Packages / Garage
+################################################################
+
+
+automation:
+  ### Garage Motion Sensor ###
+  - alias: 'garage_light_on'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.garage_motion
+        to: 'on'
+      - platform: numeric_state
+        entity_id: 'sensor.garage_lux'
+        below: 45
+    condition:
+      - condition: numeric_state
+        entity_id: 'sensor.garage_lux'
+        below: 45
+      - condition: state
+        entity_id: binary_sensor.garage_motion
+        state: 'on'
+    action:
+      - service: light.turn_on
+        data:
+          entity_id: light.garage
+          brightness: 250
+
+  - alias: 'garage_light_off'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.garage_motion
+        to: 'off'
+        for:
+          hours: 0
+          minutes: 5
+          seconds: 0
+      - platform: numeric_state
+        entity_id: 'sensor.garage_lux'
+        above: 45
+    action:
+      - service: light.turn_off
+        data:
+          entity_id: light.garage

@@ -1,0 +1,324 @@
+################################################################
+## Packages / Presence
+################################################################
+homeassistant:
+  customize:
+    # GOOGLE TRAVEL TIME SENSORS
+    sensor.marisa_phone_to_home:
+      friendly_name: 'Marisa Phone to Home'
+      icon: mdi:car
+
+###### STATE CARD
+group:
+  presence:
+    control: hidden
+    name: Presence
+    entities:
+      - group.taylor
+      - group.marisa
+      - input_boolean.guest
+      - input_boolean.away
+      - sensor.holiday
+  taylor:
+    name: Taylor
+    icon: mdi:human
+    entities:
+      - input_boolean.taylor
+      - device_tracker.taylor_bt_rpi3
+      - device_tracker.taylorsiphone
+  marisa:
+    name: Marisa
+    icon: mdi:human-female
+    entities:
+      - input_boolean.marisa
+      - device_tracker.marisa_bt_rpi3
+      - device_tracker.marisasiphone
+      - sensor.marisa_phone_to_home
+
+  taylor_presence:
+    name: Taylor's Presence
+    icon: mdi:cellphone-iphone
+    entities:
+      - device_tracker.taylor_bt_rpi3
+      - device_tracker.taylorsiphone
+      - device_tracker.taylorsapple_watch
+  marisa_presence:
+    name: Marisa's Presence
+    icon: mdi:cellphone-iphone
+    entities:
+      - device_tracker.marisa_bt_rpi3
+      - device_tracker.marisasiphone
+
+
+automation:
+  - alias: house_mode_away
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: group.taylor, group.marisa, input_boolean.guest
+    action:
+      - service_template: >
+          {% if states.group.taylor.state == 'off' and states.group.marisa.state == 'off' and states.input_boolean.guest.state == 'off' and states.input_boolean.away.state == 'off' %} homeassistant.turn_on
+          {% elif states.group.taylor.state == 'on' or states.group.marisa.state == 'on' or states.input_boolean.guest.state == 'on' and states.input_boolean.away.state == 'on' %} homeassistant.turn_off
+          {% endif %}
+        entity_id: input_boolean.away
+      - service_template: >
+          {% if states.input_boolean.away.state == 'on' %} script.house_mode_away
+          {% endif %}
+      - service_template: >
+            {% if (as_timestamp(now()) - as_timestamp(states.input_boolean.away.last_changed)) < 60 %} notify.ios_taylors_iphone
+            {% endif %}
+        data_template:
+          message: >
+           {% if states.input_boolean.away.state == 'off' and states.input_boolean.guest.state == 'off' %} Alarm Deactivated, Welcome Home
+           {% elif states.input_boolean.away.state == 'on' and states.input_boolean.guest.state == 'off' %} Nobody Home, Alarm Activated
+           {% endif %}
+
+  - alias: house_mode_user_taylor
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: device_tracker.taylor_bt_rpi3
+        to: 'not_home'
+      - platform: state
+        entity_id: device_tracker.taylorsiphone
+    action:
+      - service_template: >
+          {% if states.device_tracker.taylor_bt_rpi3.state == 'home' or states.device_tracker.taylorsiphone.state == 'home' and states.input_boolean.taylor.state == 'off' %} homeassistant.turn_on
+          {% elif states.device_tracker.taylor_bt_rpi3.state != 'home' or states.device_tracker.taylorsiphone.state == 'home' and states.input_boolean.taylor.state == 'off' and states.device_tracker.taylorsiphone.attributes.battery | int > 7 %} homeassistant.turn_off
+          {% endif %}
+        entity_id: input_boolean.taylor
+
+
+  - alias: house_mode_user_marisa
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: device_tracker.marisa_bt_rpi3
+        to: 'not_home'
+      - platform: state
+        entity_id: device_tracker.marisasiphone
+    action:
+      - service_template: >
+          {% if states.device_tracker.marisa_bt_rpi3.state == 'home' or states.device_tracker.marisasiphone.state == 'home' and states.input_boolean.marisa.state == 'off' %} homeassistant.turn_on
+          {% elif states.device_tracker.marisa_bt_rpi3.state != 'home' or states.device_tracker.marisasiphone.state == 'home' and states.input_boolean.marisa.state == 'off' and states.device_tracker.marisasiphone.attributes.battery | int > 7%} homeassistant.turn_off
+          {% endif %}
+        entity_id: input_boolean.marisa
+
+
+  ### Update iCloud Tracking ###
+  - alias: marisa_update_icloud_when_leaving
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: device_tracker.marisa_bt_rpi3, device_tracker.marisas_iphone
+        to: 'not_home'
+        for:
+            seconds: 45
+    action:
+      - service: device_tracker.icloud_update
+        data:
+          account_name: marisas_icloud
+      - delay: '00:00:30'
+      - service: device_tracker.icloud_set_interval
+        data:
+          account_name: marisas_icloud
+          interval: 2
+      - delay: '01:00:00'
+      - service: device_tracker.icloud_set_interval
+        data:
+          account_name: marisas_icloud
+          interval: 30
+
+  - alias: taylor_update_icloud_when_leaving
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: device_tracker.taylor_bt_rpi3, device_tracker.taylors_iphone
+        to: 'not_home'
+        for:
+            seconds: 45
+    action:
+      - service: device_tracker.icloud_update
+        data:
+          account_name: taylors_icloud
+      - delay: '00:00:30'
+      - service: device_tracker.icloud_set_interval
+        data:
+          account_name: taylors_icloud
+          interval: 2
+      - delay: '01:00:00'
+      - service: device_tracker.icloud_set_interval
+        data:
+          account_name: taylors_icloud
+          interval: 30
+
+###### Track Phones
+  - alias: Marisa is home
+    trigger:
+      platform: zone
+      entity_id: device_tracker.marisasiphone
+      zone: zone.home
+      event: enter
+    action:
+      service: notify.ios_taylors_iphone
+      data:
+        message: "Marisa is home"
+
+  - alias: Marisa leaves home
+    trigger:
+      platform: zone
+      entity_id: device_tracker.marisasiphone
+      zone: zone.home
+      event: leave
+    condition:
+      condition: state
+      entity_id: input_boolean.away
+      state: 'on'
+    action:
+      service: notify.ios_taylors_iphone
+      data:
+        message: "Marisa left home"
+
+  - alias: Marisa is at school
+    trigger:
+      platform: zone
+      entity_id: device_tracker.marisasiphone
+      zone: zone.school
+      event: enter
+    action:
+      service: notify.ios_taylors_iphone
+      data:
+        message: "Marisa is at school"
+
+  - alias: Marisa leaves school
+    trigger:
+      platform: zone
+      entity_id: device_tracker.marisasiphone
+      zone: zone.school
+      event: leave
+    action:
+      service: notify.ios_taylors_iphone
+      data:
+        message: "Marisa left school"
+      
+  - alias: Marisa is at nemours
+    trigger:
+      platform: zone
+      entity_id: device_tracker.marisasiphone
+      zone: zone.nemours
+      event: enter
+    action:
+      service: notify.ios_taylors_iphone
+      data:
+        message: "Marisa is at Nemour's"
+
+  - alias: Marisa leaves nemours
+    trigger:
+      platform: zone
+      entity_id: device_tracker.marisasiphone
+      zone: zone.nemours
+      event: leave
+    action:
+      service: notify.ios_taylors_iphone
+      data:
+        message: "Marisa left Nemour's"
+
+  - alias: Marisa is at knights clinic
+    trigger:
+      platform: zone
+      entity_id: device_tracker.marisasiphone
+      zone: zone.knights_clinic
+      event: enter
+    action:
+      service: notify.ios_taylors_iphone
+      data:
+        message: "Marisa is at KNIGHTs Clinic"
+
+  - alias: Marisa leaves knights clinic
+    trigger:
+      platform: zone
+      entity_id: device_tracker.marisasiphone
+      zone: zone.knights_clinic
+      event: leave
+    action:
+      service: notify.ios_taylors_iphone
+      data:
+        message: "Marisa left KNIGHTs Clinic"
+
+  ### Welcome Home ###
+  - alias: 'welcome_home'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: input_boolean.away
+        to: 'off'
+    action:
+      - service: script.turn_on
+        entity_id: script.alarm_off_script
+      - service: climate.set_away_mode
+        data:
+          entity_id: climate.entryway
+          away_mode: 'false'
+      - wait_template: "{{ states.sensor.front_door_state.state == 'open' }}"
+      - service: tts.google_say
+        data_template:
+          entity_id: media_player.family_room_home
+          message: "Alarm disarmed, welcome Home"
+
+  ### Entryway Light on when someone arrives home at night
+  - alias: 'entry_way_light_night_arrival'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: input_boolean.taylor, input_boolean.marisa
+        to: 'on'
+    condition:
+      - condition: state
+        entity_id: sun.sun
+        state: 'below_horizon'
+    action:
+      - service: light.turn_on
+        data:
+          entity_id: light.entryway
+          brightness: 254
+          color_temp: 370
+
+
+script:
+  house_mode_away:
+    sequence:
+      - service: light.turn_off
+        data:
+          entity_id: light.all_except_entryway
+      - service: script.turn_on
+        entity_id: script.alarm_on_script
+      - service: climate.set_away_mode
+        data:
+          entity_id: climate.entryway
+          away_mode: 'true'
+
+sensor:
+###### GOOGLE TRAVEL TIME
+  - platform: google_travel_time
+    name: Marisa Phone To Home
+    api_key: !secret travel_time_key
+    origin: device_tracker.marisasiphone
+    destination: zone.home
+
+###### MODES / PEOPLE
+input_boolean:
+  guest:
+    name: Guest
+    icon: mdi:account-box
+    initial: off
+  away:
+    name: Away
+    icon: mdi:account-off
+    initial: off
+  taylor:
+    name: Taylor
+    icon: mdi:account
+  marisa:
+    name: Marisa
+    icon: mdi:account

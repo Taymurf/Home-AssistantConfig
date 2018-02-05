@@ -1,0 +1,93 @@
+################################################################
+## Packages / hassctl
+## Add HASSCTL to sudoers File
+## homeassistant ALL=(ALL) NOPASSWD: /usr/local/bin/hassctl
+## update_ha.sh - https://github.com/Norien/Home-Assistant-Config/blob/master/shell/update_ha.sh
+################################################################
+homeassistant:
+  customize:
+    script.hassctl_update_ha:
+      friendly_name: Update Home Assistant
+      icon: mdi:package-variant
+    script.hassctl_update:
+      friendly_name: Update hassctl
+      icon: mdi:package-variant
+    script.hassctl_restart_ha:
+      friendly_name: Restart Home Assistant
+      icon: mdi:restart
+    sensor.hassctl_version:
+      friendly_name: Hassctl Version
+    script.backup_config:
+      friendly_name: Update GitHub
+      icon: mdi:backup-restore
+    script.clear_tts_cache:
+      friendly_name: Clear TTS cache
+      icon: mdi:shredder
+###### STATE CARD #######################################################
+group:
+  hassctl:
+    name: HA Maintenance
+    control: hidden
+    entities:
+      - script.hassctl_restart_ha
+      - sensor.last_commit
+      - script.backup_config
+      - sensor.ha_version
+      - script.hassctl_update_ha
+      - sensor.hassctl_version
+      - script.hassctl_update
+      - input_select.log_level
+      - weblink.release_log
+#########################################################################
+script:
+  hassctl_restart_ha:
+    sequence:
+      - service: tts.clear_cache
+      - service: shell_command.hassctl_restart_ha
+  hassctl_update_ha:
+    sequence:
+      - service: tts.clear_cache
+      - service: shell_command.hassctl_update_ha
+  hassctl_update:
+    sequence:
+      - service: shell_command.hassctl_update
+  backup_config:
+     sequence:
+       - service: tts.clear_cache
+       - service: shell_command.backup_config
+  clear_tts_cache:
+    sequence:
+      - service: tts.clear_cache
+#########################################################################
+shell_command:
+  backup_config: 'sudo bash /home/hass/.homeassistant/shell/gitupdate.sh'
+  hassctl_restart_ha: 'sudo hassctl restart'
+  hassctl_update_ha: 'sudo bash /home/homeassistant/.homeassistant/shell/update_ha.sh </dev/null >> /home/homeassistant/.homeassistant/update_ha.log 2>&1 &'
+  hassctl_update: 'sudo hassctl update-hassctl'
+#########################################################################
+sensor:
+  ###### VERSIONS
+  - platform: command_line
+    name: hassctl Current Version
+    command: curl -s  https://raw.githubusercontent.com/dale3h/hassctl/master/hassctl 2> /dev/null | head -3 | tail -1 | cut -d# -f2
+    value_template: '{{value[17:-1]}}'
+  - platform: command_line
+    name: hassctl Installed Version
+    command: cat /usr/local/bin/hassctl | head -3 | tail -1 | cut -d# -f2
+    value_template: '{{value[17:-1]}}'
+  ###### Single line Version
+  - platform: template
+    sensors:
+      hassctl_version:
+        value_template: "{%- if states.sensor.hassctl_current_version.state == states.sensor.hassctl_installed_version.state-%}{{states.sensor.hassctl_installed_version.state}} {% else %}{{states.sensor.hassctl_current_version.state}} Available{% endif%}"
+        icon_template: >-
+          {% if states.sensor.hassctl_current_version.state == states.sensor.hassctl_installed_version.state %}
+            mdi:checkbox-marked
+          {% else %}
+            mdi:checkbox-blank-outline
+          {% endif %}
+  ###### Latest github Commit
+  - platform: command_line
+    command: "python /home/hass/.homeassistant/python_scripts/latest_commit.py"
+    name: 'Last Commit'
+    scan_interval: 60

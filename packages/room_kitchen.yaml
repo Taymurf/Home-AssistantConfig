@@ -1,0 +1,232 @@
+################################################################
+## Packages / Kitchen
+################################################################
+
+
+group:
+  room_kitchen:
+    name: Kitchen
+    icon: mdi:food
+    entities:
+      - group.kitchen_lights
+      - group.kitchen_motion_sensor
+      - group.kitchen_speaker_main
+      - group.kitchen_switch
+
+
+  kitchen_lights:
+    name: Kitchen Lights
+    icon: mdi:lightbulb-on
+    entities:
+      - light.kitchen
+      - light.kitchen_lightstrip
+      - light.dining_room
+      - lights.garage_2
+
+  kitchen_switch:
+    name: Kitchen Dimmer Switch
+    icon: mdi:table-column
+    entities:
+      - sensor.kitchen_switch
+      - sensor.kitchen_dimmer_battery
+      - sensor.kitchen_dimmer_switch
+
+
+
+sensor:
+##### Kitchen Dimmer Switch ###
+  - platform: rest
+    resource: !secret hue_sensor_16
+    value_template: '{{ value_json.state.buttonevent }}'
+    scan_interval: 2
+    name: 'Kitchen Dimmer State'
+  - platform: template
+    sensors:
+      kitchen_dimmer_state:
+        friendly_name: 'Kitchen Dimmer Last Button Push'
+        value_template: >-
+                      {% if states('sensor.kitchen_dimmer_state_2')[0] == "1" %}
+                        On
+                      {% elif states('sensor.kitchen_dimmer_state_2')[0] == "4" %}
+                        Off
+                      {% else %}
+                        None
+                      {% endif %}
+
+  - platform: rest
+    resource: !secret hue_sensor_16
+    value_template: '{{ value_json.state.lastupdated }}'
+    scan_interval: 10
+    name: 'Kitchen Dimmer Last Update'
+
+  - platform: template
+    sensors:
+      kitchen_dimmer_last_update:
+        friendly_name: 'Kitchen Last Used'
+        value_template: >-
+          {{ as_timestamp(strptime(states('sensor.kitchen_dimmer_last_update_2')[:19], "%Y-%m-%dT%X"))|timestamp_custom("%a, %B %d")}}
+
+  - platform: rest
+    resource: !secret hue_sensor_16
+    value_template: '{{ value_json.config.battery }}'
+    unit_of_measurement: '%'
+    scan_interval: 1800
+    name: 'Kitchen Dimmer Battery'
+
+
+
+automation:
+  ### Motion Sensor Lights ###
+  # Daytime On Low Lux
+  - alias: 'kitchen_low_lux_on_daytime'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.kitchen_motion
+        to: 'on'
+      - platform: numeric_state
+        entity_id: 'sensor.kitchen_lux'
+        below: 105
+    condition:
+      - condition: numeric_state
+        entity_id: 'sensor.kitchen_lux'
+        below: 105
+      - condition: state
+        entity_id: binary_sensor.kitchen_motion
+        state: 'on'
+      - condition: state
+        entity_id: light.kitchen
+        state: 'off'
+      - condition: state
+        entity_id: sun.sun
+        state: 'above_horizon'
+    action:
+      - service: light.turn_on
+        data:
+          entity_id: light.kitchen
+          brightness: 254
+          color_temp: 250
+  
+  # Nighttime On
+  - alias: 'kitchen_low_lux_on_nighttime'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.kitchen_motion
+        to: 'on'
+      - platform: numeric_state
+        entity_id: 'sensor.kitchen_lux'
+        below: 105
+    condition:
+      - condition: numeric_state
+        entity_id: 'sensor.kitchen_lux'
+        below: 105
+      - condition: state
+        entity_id: binary_sensor.kitchen_motion
+        state: 'on'
+      - condition: state
+        entity_id: light.kitchen
+        state: 'off'
+      - condition: state
+        entity_id: sun.sun
+        state: 'below_horizon'
+    action:
+      - service: light.turn_on
+        data:
+          entity_id: light.kitchen
+          brightness: 200
+          color_temp: 370
+
+  # Daytime On
+  - alias: 'kitchen_high_lux_on_daytime'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.kitchen_motion
+        to: 'on'
+      - platform: numeric_state
+        entity_id: 'sensor.kitchen_lux'
+        above: 105
+    condition:
+      - condition: numeric_state
+        entity_id: 'sensor.kitchen_lux'
+        above: 105
+      - condition: state
+        entity_id: binary_sensor.kitchen_motion
+        state: 'on'
+      - condition: state
+        entity_id: light.kitchen
+        state: 'off'
+      - condition: state
+        entity_id: sun.sun
+        state: 'above_horizon'
+    action:
+      - service: light.turn_on
+        data:
+          entity_id: light.kitchen_lightstrip_2
+          brightness: 254
+          color_temp: 250
+      - service: light.turn_on
+        data:
+          entity_id: light.kitchen_lightstrip
+          brightness: 254
+          color_temp: 250
+
+  # Nighttime On
+  - alias: 'kitchen_high_lux_nighttime'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.kitchen_motion
+        to: 'on'
+      - platform: numeric_state
+        entity_id: 'sensor.kitchen_lux'
+        above: 105
+    condition:
+      - condition: numeric_state
+        entity_id: 'sensor.kitchen_lux'
+        above: 105
+      - condition: state
+        entity_id: binary_sensor.kitchen_motion
+        state: 'on'
+      - condition: state
+        entity_id: light.kitchen
+        state: 'off'
+      - condition: state
+        entity_id: sun.sun
+        state: 'below_horizon'
+    action:
+      - service: light.turn_on
+        data:
+          entity_id: light.kitchen_lightstrip_2
+          brightness: 200
+          color_temp: 370
+      - service: light.turn_on
+        data:
+          entity_id: light.kitchen_lightstrip
+          brightness: 200
+          color_temp: 370
+
+  # Light off after 5 minutes
+  - alias: 'kitchen_light_off'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.kitchen_motion
+        to: 'off'
+        for:
+          hours: 0
+          minutes: 5
+          seconds: 0
+    # condition:
+    #   - condition: state
+    #     entity_id: sensor.kitchen_switch
+    #     state: '[OFF_STATE_HERE]'
+    #     for:
+    #       hours: 0
+    #       minutes: 45
+    #       seconds: 0
+    action:
+      - service: light.turn_off
+        data:
+          entity_id: light.kitchen

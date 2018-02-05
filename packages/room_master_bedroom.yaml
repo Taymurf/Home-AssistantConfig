@@ -1,0 +1,73 @@
+################################################################
+## Packages / Master Bedroom
+################################################################
+
+group:
+  room_bedroom:
+    name: Master Bedroom
+    icon: mdi:hotel
+    # view: yes
+    entities:
+      - group.master_bedroom_lights
+      - group.our_room
+      - group.bedroom_mini_main
+      - group.bedroom_chromecast_main
+      - group.bedroom_roku_main
+      - group.master_bedroom_switch
+
+  master_bedroom_lights:
+    name: Master Bedroom Lights
+    icon: mdi:lightbulb-on
+    entities:
+      - light.bedroom
+      - light.side_table
+
+  master_bedroom_switches:
+    name: Dimmer Switches
+    icon: mdi:nintendo-switch
+    entities:
+      - sensor.bedroom_switch
+      - sensor.bedroom_dimmer_switch
+      - sensor.bedroom_dimmer_battery
+
+
+sensor:
+###### Master Bedroom Dimmer Switch ###
+  - platform: rest
+    resource: !secret hue_sensor_18
+    value_template: '{{ value_json.state.buttonevent }}'
+    scan_interval: 2
+    name: 'Master Bedroom Dimmer State'
+  - platform: template
+    sensors:
+      master_bedroom_dimmer_state:
+        friendly_name: 'Master Bedroom Dimmer Last Button Push'
+        value_template: >-
+                      {% if states('sensor.master_bedroom_dimmer_state_2')[0] == "1" %}
+                        On
+                      {% elif states('sensor.master_bedroom_dimmer_state_2')[0] == "4" %}
+                        Off
+                      {% else %}
+                        None
+                      {% endif %}
+
+  - platform: rest
+    resource: !secret hue_sensor_18
+    value_template: '{{ value_json.state.lastupdated }}'
+    scan_interval: 10
+    name: 'Master Bedroom Dimmer Last Update'
+
+  - platform: template
+    sensors:
+      master_bedroom_dimmer_last_update:
+        friendly_name: 'Master Bedroom Last Used'
+        value_template: >-
+          {{ as_timestamp(strptime(states('sensor.master_bedroom_dimmer_last_update_2')[:19], "%Y-%m-%dT%X"))|timestamp_custom("%a, %B %d")}}
+
+  - platform: rest
+    resource: !secret hue_sensor_18
+    value_template: '{{ value_json.config.battery }}'
+    unit_of_measurement: '%'
+    scan_interval: 1800
+    name: 'Master Bedroom Dimmer Battery'
+

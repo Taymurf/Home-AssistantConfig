@@ -1,0 +1,45 @@
+################################################################
+## Packages / Patio
+################################################################
+
+
+automation:
+  - alias: 'Patio Light On'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.patio_motion
+        to: 'on'
+      - platform: numeric_state
+        entity_id: 'sensor.patio_lux'
+        below: 100
+    condition:
+      - condition: numeric_state
+        entity_id: 'sensor.patio_lux'
+        below: 100
+      - condition: state
+        entity_id: binary_sensor.patio_motion
+        state: 'on'
+    action:
+      - service: light.turn_on
+        data:
+          entity_id: light.patio
+          brightness: 250
+
+  - alias: 'Patio Light Off'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.patio_motion
+        to: 'off'
+        for:
+          hours: 0
+          minutes: 10
+          seconds: 0
+      - platform: numeric_state
+        entity_id: 'sensor.patio_lux'
+        above: 100
+    action:
+      - service: light.turn_off
+        data:
+          entity_id: light.patio

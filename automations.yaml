@@ -1,0 +1,26 @@
+####################################################
+#                                                  #
+#                     Themes                       #
+#                                                  #
+####################################################
+
+- alias: Set default theme for the day
+  initial_state: True
+  trigger:
+    - platform: time
+      at: '5:00'
+  action:
+    - service: frontend.set_theme
+      data:
+        name: default
+
+
+# - alias: Set night theme for the night
+#   initial_state: True
+#   trigger:
+#     - platform: time
+#       at: '19:00'
+#   action:
+#     - service: frontend.set_theme
+#       data:
+#         name: Night_Theme

@@ -1,0 +1,98 @@
+################################################################
+## Packages / Office
+################################################################
+
+group:
+  room_office:
+    name: Office
+    icon: mdi:briefcase
+    # view: yes
+    entities:
+      - group.office_lights
+      - group.default_info
+      - group.office_speaker_main
+      - group.gpm_desktop_player_main
+      - group.system_stats
+      - group.office_switch
+
+
+  office_lights:
+    name: Office Lights
+    control: hidden
+    icon: mdi:lightbulb-on
+    entities:
+      - light.all_except_officelampentryway
+      - light.office
+      - light.office_lightstrip
+
+  office_switch:
+    name: Office Dimmer Switch
+    icon: mdi:table-column
+    entities:
+      - sensor.office_dimmer_switch
+      - sensor.office_dimmer_switch_battery
+
+
+sensor:
+##### Office Dimmer Switch ###
+  - platform: rest
+    resource: !secret hue_sensor_22
+    value_template: '{{ value_json.state.buttonevent }}'
+    scan_interval: 2
+    name: 'Office Dimmer State'
+  - platform: template
+    sensors:
+      office_dimmer_state:
+        friendly_name: 'Office Dimmer Last Button Push'
+        value_template: >-
+                      {% if states('sensor.office_dimmer_state_2')[0] == "1" %}
+                        on
+                      {% elif states('sensor.office_dimmer_state_2')[0] == "4" %}
+                        off
+                      {% else %}
+                        None
+                      {% endif %}
+
+  - platform: rest
+    resource: !secret hue_sensor_22
+    value_template: '{{ value_json.state.lastupdated }}'
+    scan_interval: 10
+    name: 'Office Dimmer Last Update'
+
+  - platform: template
+    sensors:
+      office_dimmer_last_update:
+        friendly_name: 'Office Last Used'
+        value_template: >-
+          {{ as_timestamp(strptime(states('sensor.office_dimmer_last_update_2')[:19], "%Y-%m-%dT%X"))|timestamp_custom("%a, %B %d")}}
+
+  - platform: rest
+    resource: !secret hue_sensor_22
+    value_template: '{{ value_json.config.battery }}'
+    unit_of_measurement: '%'
+    scan_interval: 1800
+    name: 'Office Dimmer Battery'
+
+
+# automation:
+#   - alias: 'office_morning_weather_report'
+#     initial_state: 'on'
+#     trigger:
+#       - platform: state
+#         entity_id: sensor.office_dimmer_state
+#         from: 'off'
+#         to: 'on'
+#     condition:
+#       - condition: time
+#         after: '05:00:00'
+#         before: '09:00:00'
+#     action:
+#       - service: script.turn_on
+#         entity_id: script.weather_report
+#       - service: automation.turn_off
+#         data:
+#           entity_id: automation.office_morning_weather_report
+#       - delay: '04:00:00'
+#       - service: automation.turn_on
+#         data:
+#           entity_id: automation.office_morning_weather_report

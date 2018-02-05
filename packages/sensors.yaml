@@ -1,0 +1,178 @@
+################################################################
+## Packages / Sensors
+################################################################
+
+
+###### BINARY SENSORS ------------------------------------------
+binary_sensor:
+  - platform: workday
+    country: US
+
+
+###### TEMPLATE SENSORS ----------------------------------------
+sensor:
+### Phone Batteries ###
+  # Taylor
+  - platform: template
+    sensors:
+      taylor_battery:
+        friendly_name: Taylor's Phone Battery
+        unit_of_measurement: '%'
+        # entity_id: device_tracker.taylors_iphone
+        value_template: "{{ states('sensor.taylors_iphone_battery_level')|int(-1) }}"
+        icon_template: >-
+          {% if states('sensor.taylors_iphone_battery_level') != "unknown" %}
+            {% set battery_level = states('sensor.taylors_iphone_battery_level')|int (-1)%}
+            {% set battery_round = (battery_level|int / 10)|int * 10 %}
+            {% if states.sensor.taylors_iphone_battery_state.state | lower == "charging" %}
+              {% if battery_level == -1 %}
+                mdi:battery-unknown
+              {% else %}
+                {% if battery_round >= 100 %}
+                  mdi:battery-charging-100
+                {% elif battery_round > 0 %}
+                  mdi:battery-charging-{{ battery_round }}
+                {% else %}
+                  mdi:battery-alert
+                {% endif %}
+              {% endif %}
+            {% else %}
+              {% if battery_level == -1 %}
+                mdi:battery-unknown
+              {% else %}
+                {% if battery_round >= 100 %}
+                  mdi:battery
+                {% elif battery_round > 0 %}
+                  mdi:battery-{{ battery_round }}
+                {% else %}
+                  mdi:battery-alert
+                {% endif %}
+              {% endif %}
+            {% endif %}
+          {% else %}
+            mdi:battery-alert
+          {% endif %}
+      # Marisa    
+      marisa_battery:
+        friendly_name: Marisa's Phone Battery
+        unit_of_measurement: '%'
+        # entity_id: device_tracker.marisasiphone
+        value_template: "{{ states('sensor.marisas_iphone_battery_level')|int(-1) }}"
+        icon_template: >-
+          {% if states('sensor.marisas_iphone_battery_level') != "unknown" %}
+            {% set battery_level = states('sensor.marisas_iphone_battery_level')|int (-1)%}
+            {% set battery_round = (battery_level|int / 10)|int * 10 %}
+            {% if states.sensor.marisas_iphone_battery_state.state | lower == "charging" %}
+              {% if battery_level == -1 %}
+                mdi:battery-unknown
+              {% else %}
+                {% if battery_round >= 100 %}
+                  mdi:battery-charging-100
+                {% elif battery_round > 0 %}
+                  mdi:battery-charging-{{ battery_round }}
+                {% else %}
+                  mdi:battery-alert
+                {% endif %}
+              {% endif %}
+            {% else %}
+              {% if battery_level == -1 %}
+                mdi:battery-unknown
+              {% else %}
+                {% if battery_round >= 100 %}
+                  mdi:battery
+                {% elif battery_round > 0 %}
+                  mdi:battery-{{ battery_round }}
+                {% else %}
+                  mdi:battery-alert
+                {% endif %}
+              {% endif %}
+            {% endif %}
+          {% else %}
+            mdi:battery-alert
+          {% endif %}
+
+###### DAY OF THE WEEK
+  - platform: template
+    sensors:
+      date_weekday:
+        value_template: "{{as_timestamp(now())|timestamp_custom('%A', True)}}"
+
+###### MONTH OF THE YEAR
+  - platform: template
+    sensors:
+      date_month:
+        value_template: "{{as_timestamp(now())|timestamp_custom('%B', True)}}"
+
+###### BATTERY LEVELS 
+  - platform: template
+    sensors:
+      # bedroom_dimmer_battery: ### Bedroom dimmer battery level ###
+      #   friendly_name: "Battery Level"
+      #   value_template: '{{ states.sensor.bedroom_switch.attributes.battery }}'
+      #   unit_of_measurement: '%'
+      # master_bathroom_dimmer_battery: ### Master bathroom dimmer battery level ###
+      #   friendly_name: "Battery Level"
+      #   value_template: '{{ states.sensor.master_bathroom_switch.attributes.battery }}'
+      #   unit_of_measurement: '%'
+      # kitchen_dimmer_battery: ### Kitchen dimmer battery level ###
+      #   friendly_name: "Battery Level"
+      #   value_template: '{{ states.sensor.kitchen_switch.attributes.battery }}'
+      #   unit_of_measurement: '%'
+      # family_room_dimmer_battery: ### Family room dimmer battery level ###
+      #   friendly_name: "Battery Level"
+      #   value_template: '{{ states.sensor.family_room_switch.attributes.battery }}'
+      #   unit_of_measurement: '%'
+      # office_dimmer_switch_battery: ### Office dimmer battery level ###
+      #   friendly_name: "Battery Level"
+      #   value_template: '{{ states.sensor.office_dimmer_switch.attributes.battery }}'
+      #   unit_of_measurement: '%'
+      battery_status: ### Battery Status ###
+        friendly_name: "Battery Status"
+        value_template: >-
+          {%- set threshold = 25 -%}
+          {%- set domains = ['light', 'switch', 'sensor', 'zwave', 'binary_sensor', 'camera'] -%}
+          {%- for domain in domains -%}
+          {%- for item in states[domain] if ((item.attributes.battery_low is defined and item.attributes['battery_low'] == true) or (item.attributes.battery_level is defined and item.attributes['battery_level'] | int < threshold)) -%}
+              {{ item.name }}{%- if not loop.last %}, {% endif -%}
+          {%- endfor -%}
+          {%- endfor -%}
+
+      hassuptime: ### Home Assistant Uptime ###
+        friendly_name: "HASS Uptime"
+        value_template: >-
+          {% set uptime = states.sensor.uptime.state | round %}
+          {% set minutes = (uptime % 60) | int %}
+          {% set hours = ((uptime / 60) % 24) | int %}
+          {% set days = (uptime / 1440) | int %}
+          {%- if days > 0 -%}
+            {%- if days == 1 -%}
+              1 day
+            {%- else -%}
+              {{ days }} days
+            {%- endif -%}
+            {{ ', ' }}
+          {%- endif -%}
+          {{ '%02d' % hours }}:{{ '%02d' % minutes }} hrs
+          
+      entrywaythermostat: ### Entryway Thermostat ###
+        friendly_name: "Entryway Thermostat"
+        value_template: >-
+            {%- if states.climate.entryway != None -%}
+              {{ states.climate.entryway.attributes.operation_mode }}
+            {%- else -%}
+              unknown
+            {%- endif -%}
+        icon_template: >-
+          {%- if states.climate.entryway.attributes.operation_mode == "heat" -%}
+            mdi:fire
+          {%- elif states.climate.entryway.attributes.operation_mode == "cool" -%}
+            mdi:snowflake
+          {%- elif states.climate.entryway.attributes.operation_mode == "auto" -%}
+            mdi:format-align-middle
+          {%- elif states.climate.entryway.attributes.operation_mode == "eco" -%}
+            mdi:leaf
+          {%- else -%}
+            mdi:fan
+          {%- endif -%}
+
+          

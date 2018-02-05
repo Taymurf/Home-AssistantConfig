@@ -1,0 +1,198 @@
+####################################################
+#                                                  #
+#                  Basic Settings                  #
+#                                                  #
+####################################################
+
+###  Global configuration  ###
+homeassistant:
+  # Name of the location where Home Assistant is running
+  name: Home
+  # Location required to calculate the time the sun rises and sets
+  latitude: !secret latitude
+  longitude: !secret longitude
+  # Impacts weather/sunrise data (altitude above sea level)
+  elevation: !secret elevation
+  # 'metric' for Metric, 'imperial' for Imperial
+  unit_system: imperial
+  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  time_zone: !secret time_zone
+  # Customization file
+  customize: !include customize.yaml
+  # Packages
+  packages: !include_dir_named packages
+
+config:
+python_script:
+conversation:
+map:
+updater:
+sun:
+sensor moon:
+  - platform: moon
+# discovery:
+automation: !include automations.yaml
+scene: !include scenes.yaml
+script: !include scripts.yaml
+panel_iframe: !include panels/iframe.yaml
+frontend:
+  javascript_version: latest
+  themes: !include themes.yaml
+
+http:
+  api_password: !secret http_password
+  # ssl_certificate: !secret http_ssl_cert_old
+  ssl_certificate: !secret http_ssl_cert
+  # ssl_key: !secret http_ssl_key_old
+  ssl_key: !secret http_ssl_key
+  base_url: !secret http_base_url
+  trusted_networks:
+    - 192.168.1.0/24
+    - 172.0.0.1
+  ip_ban_enabled: True
+  login_attempts_threshold: 5
+
+duckdns:
+  domain: !secret duck_domain
+  access_token: !secret duck_token
+
+tts:
+  - platform: google
+
+ifttt:
+  key: !secret iftt_key
+
+### Philips Hue ###
+hue:
+  bridges:
+    - host: 192.168.1.202
+      allow_unreachable: True
+
+nest:
+  client_id: !secret nest_id
+  client_secret: !secret nest_secret
+
+blink:
+  username: !secret blink_user
+  password: !secret blink_pw
+
+xiaomi_aqara:
+  discovery_retry: 5
+  gateways:
+    - key: !secret xiaomi_key
+
+# vacuum:
+#   - platform: xiaomi_miio
+#     host: 192.168.1.221
+#     token: !secret vac_token
+
+google:
+  client_id: !secret g_cal_id
+  client_secret: !secret g_cal_secret
+
+google_assistant:
+  project_id: !secret g_proj_id
+  client_id: !secret g_client
+  access_token: !secret g_token
+  agent_user_id: !secret g_user
+  api_key: !secret g_api
+  exposed_domains:
+    - script
+    # - media_player
+    # - group
+    # - climate
+    - switch
+
+influxdb:
+  host: 127.0.0.1
+
+ios:
+
+device_tracker:
+  # - platform: nmap_tracker
+  #   hosts: 
+  #     - 192.168.1. # Marisa's iPhone
+  #     - 192.168.1.205 # Taylor's iPhone
+  #     - 192.168.1.202 # Philips Hue Hub
+  #     - 192.168.1.200 # NUC
+  #     - 192.168.1.201 # Taylor's Desktop
+  #     - 192.168.1.208 # FR CC Audio
+  #     - 192.168.1.209 # Google Home
+  #     - 192.168.1.210 # Google Home
+  #     - 192.168.1.211 # Google Home
+  #     - 192.168.1.215 # Google Home
+  #     - 192.168.1.216 # Google Home
+  #   # scan_options: " --privileged -sP "
+  #   home_interval: 10
+  #   consider_home: 400
+  #   interval_seconds: 60
+
+  #- platform: owntracks_http
+  #  max_gps_accuracy: 200
+
+  - platform: tile
+    username: !secret tile_user
+    password: !secret tile_pw
+
+  # - platform: bluetooth_tracker
+  #   interval_seconds: 15
+  #   consider_home: 150
+  #   track_new_devices: yes
+
+  - platform: netgear
+    host: !secret ng_host
+    username: !secret ng_user
+    password: !secret ng_pw
+    port: !secret ng_port
+
+  - platform: icloud
+    username: !secret icloud_t_user
+    password: !secret icloud_t_pw
+    account_name: !secret icloud_t_account
+
+  - platform: icloud
+    username: !secret icloud_m_user
+    password: !secret icloud_m_pw
+    account_name: !secret icloud_m_account
+
+  - platform: mqtt
+    devices:
+      taylor_bt_rpi3: !secret dt_mqtt_taylor_phone
+      marisa_bt_rpi3: !secret dt_mqtt_marisa_phone
+
+media_player:
+###### Google Play Music
+  # - platform: gpmdp
+  #   host: 192.168.1.201
+###### Chromecast
+  - platform: cast 
+    host: 192.168.1.208 # Family Room CC Audio
+  - platform: cast
+    host: 192.168.1.213 # Family Room TV
+  - platform: cast
+    host: 192.168.1.214 # Bedroom TV
+###### Google Home
+  - platform: cast
+    host: 192.168.1.209 # Family Room Home
+  - platform: cast
+    host: 192.168.1.210 # Office Mini
+  - platform: cast
+    host: 192.168.1.211 # Master Bathroom Mini
+  - platform: cast
+    host: 192.168.1.215 # Kitchen Mini
+  - platform: cast
+    host: 192.168.1.216 # Master Bedroom Mini
+# ###### Roku
+#   - platform: roku
+#     host: 192.168.1. # Family Room TV
+#   - platform: roku
+#     host: 192.168.1. # Master Bedroom TV
+
+mqtt:
+  broker: !secret mqtt_broker
+  port: !secret mqtt_port
+  client_id: !secret mqtt_client_id
+  keepalive: 60
+  username: !secret mqtt_user
+  password: !secret mqtt_pw
+

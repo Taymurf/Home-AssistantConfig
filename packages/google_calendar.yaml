@@ -1,0 +1,48 @@
+# Calendars HASS Module
+#
+# Provides access to Google Calendars
+
+
+
+group:
+  google_calendars:
+    name: Google Calendar
+    entities:
+      - calendar.main_account
+      - calendar.ticktick
+      - calendar.contacts
+      # - sensor.template_calendar_main_account
+      # - sensor.template_calendar_ticktick
+      # - sensor.template_calendar_contacts
+
+
+# sensor:
+
+#   - platform: template
+#     sensors:
+#       template_calendar_main_account:
+#         #{{ states.calendar.main_account.attributes.start_time }}:
+#         value_template: >
+#           {{ strptime(states.calendar.main_account.attributes.start_time, "%Y-%m-%d %H:%M:%S").strftime("%A, %d de %B, a las %H:%M") }}:
+#           {{ states.calendar.main_account.attributes.message }}
+#         friendly_name: Main
+#         unit_of_measurement: ''
+#         # TODO: entity_id (to trigger changes)
+
+#   - platform: template
+#     sensors:
+#       template_calendar_ticktick:
+#         value_template: >
+#           {{ strptime(states.calendar.ticktick.start_time, "%Y-%m-%d %H:%M:%S").strftime("%A, %d de %B, a las %H:%M") }}:
+#           {{ states.calendar.ticktick.attributes.message }}
+#         friendly_name: TickTick
+#         unit_of_measurement: ''
+
+#   - platform: template
+#     sensors:
+#       template_calendar_contacts:
+#         value_template: >
+#           {{ strptime(states.calendar.contacts.attributes.start_time, "%Y-%m-%d %H:%M:%S").strftime("%A, %d de %B, a las %H:%M") }}:
+#           {{ states.calendar.contacts.attributes.message }}
+#         friendly_name: Contacts
+#         unit_of_measurement: ''

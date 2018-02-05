@@ -1,0 +1,34 @@
+logger:
+  default: warning
+  logs:
+    pychromecast.socket_client: fatal
+    urllib3.connectionpool: error
+    homeassistant.components.media_player: error
+
+
+  ################### Logger level
+input_select:
+  log_level:
+    name: Log Level
+    options:
+     - warn
+     - fatal
+     - error
+     - warning
+     - warn
+     - info
+     - debug
+     - notset
+    initial: warning
+
+
+  ############################# Sets Logging Level
+automation:
+  - alias: Log Level
+    trigger:
+      - platform: state
+        entity_id: input_select.log_level
+    action:
+      - service: logger.set_level
+        data_template:
+          homeassistant.components: "{{ trigger.to_state.state }}"
