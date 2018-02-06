@@ -5,7 +5,7 @@ zone:
 - name: Home
   latitude: !secret home_lat
   longitude: !secret home_long
-  radius: 200
+  radius: 125
   icon: mdi:account-multiple
 
 - name: School

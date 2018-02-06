@@ -165,6 +165,10 @@ automation:
         entity_id: input_boolean.away
         state: 'off'
     action:
+      - service: media_player.volume_set
+        data:
+          entity_id: media_player.family_room_home
+          volume_level: '0.80'
       - service: tts.google_say
         data_template:
           entity_id: media_player.family_room_home
@@ -181,6 +185,10 @@ automation:
         entity_id: input_boolean.away
         state: 'off'
     action:
+      - service: media_player.volume_set
+        data:
+          entity_id: media_player.family_room_home
+          volume_level: '0.80'
       - service: tts.google_say
         data_template:
           entity_id: media_player.family_room_home
@@ -197,6 +205,10 @@ automation:
         entity_id: input_boolean.away
         state: 'off'
     action:
+      - service: media_player.volume_set
+        data:
+          entity_id: media_player.family_room_home
+          volume_level: '0.80'
       - service: tts.google_say
         data_template:
           entity_id: media_player.family_room_home
