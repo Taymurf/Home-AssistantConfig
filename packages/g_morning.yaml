@@ -34,14 +34,26 @@ script:
       data:
         entity_id: media_player.master_bathroom_mini
         volume_level: '0.60'
-    - wait_template: "{{ states.binary_sensor.master_bathroom_motion.state == 'on' }}"
+    - service: media_player.volume_set
+      data:
+        entity_id: media_player.office_mini
+        volume_level: '0.60'
+    - service: media_player.volume_set
+      data:
+        entity_id: media_player.kitchen_mini
+        volume_level: '0.70'
+    - service: media_player.volume_set
+      data:
+        entity_id: media_player.family_room_home
+        volume_level: '0.80'
+    - wait_template: "{{ states.binary_sensor.kitchen_motion.state == 'on' }}"
     - service: script.good_morning_tts
 
   good_morning_tts:
     sequence:
       - service: tts.google_say
         data_template:
-          entity_id: media_player.master_bathroom_mini
+          entity_id: media_player.family_room_home
           message: >
             {% set weather = states('sensor.weather_report') %}
             {%- if states.sensor.holiday_data.state != "" -%}

@@ -9,13 +9,25 @@ homeassistant:
       icon: mdi:car
     script.icloud_snapshot_m:
       friendly_name: 'Update Location'
-      icon: mdi:cloud-sync
+      icon: mdi:cloud-upload
     script.icloud_snapshot_t:
       friendly_name: 'Update Location'
-      icon: mdi:cloud-sync
+      icon: mdi:cloud-upload
     script.arrive_home_at_night:
       friendly_name: 'Night Arrival'
-      icon: mdi:weather-sunset-down  
+      icon: mdi:weather-sunset-down 
+    script.icloud_reset_interval_t:
+      friendly_name: 'Scan Interval 30'
+      icon: mdi:cloud-sync 
+    script.icloud_reset_interval_m:
+      friendly_name: 'Scan Interval 30'
+      icon: mdi:cloud-sync
+    script.t_scan_interval_2:
+      friendly_name: 'Scan Interval 2'
+      icon: mdi:cloud-sync
+    script.m_scan_interval_2:
+      friendly_name: 'Scan Interval 2'
+      icon: mdi:cloud-sync
 
 ###### STATE CARD
 group:
@@ -36,6 +48,8 @@ group:
       - device_tracker.taylor_bt_rpi3
       - device_tracker.taylorsiphone
       - script.icloud_snapshot_t
+      - script.icloud_reset_interval_t
+      - script.t_scan_interval_2
   marisa:
     name: Marisa
     icon: mdi:human-female
@@ -45,7 +59,8 @@ group:
       - device_tracker.marisasiphone
       - sensor.marisa_phone_to_home
       - script.icloud_snapshot_m
-
+      - script.icloud_reset_interval_m
+      - script.t_scan_interval_2
   taylor_presence:
     name: Taylor's Presence
     icon: mdi:cellphone-iphone
@@ -102,7 +117,6 @@ automation:
           {% endif %}
         entity_id: input_boolean.taylor
 
-
   - alias: house_mode_user_marisa
     initial_state: 'on'
     trigger:
@@ -120,40 +134,39 @@ automation:
           {% endif %}
         entity_id: input_boolean.marisa
 
-
   ### Update iCloud Tracking ###
   ###### Marisa
   - alias: marisa_update_icloud_when_leaving
     initial_state: 'on'
     trigger:
       - platform: state
-        entity_id: device_tracker.marisa_bt_rpi3, device_tracker.marisas_iphone
+        entity_id: device_tracker.marisa_bt_rpi3, device_tracker.marisas_iphone, device_tracker.marisasiphone
         to: 'not_home'
-        # for:
-        #     minutes: 2
+        for:
+            minutes: 1
     action:
-      # - service: device_tracker.icloud_update
-      #   data:
-      #     account_name: marisas_icloud
-      # - delay: '00:02:00'
+      - service: device_tracker.icloud_update
+        data:
+          account_name: marisas_icloud
+      - delay: '00:01:00'
       - service: device_tracker.icloud_set_interval
         data:
           account_name: marisas_icloud
           interval: 2
 
-  - alias: marisa_update_icloud_when_gone_for_hour
-    initial_state: 'on'
-    trigger:
-      - platform: state
-        entity_id: device_tracker.marisa_bt_rpi3, device_tracker.marisas_iphone
-        to: 'not_home'
-        for:
-            minutes: 60
-    action:
-      - service: device_tracker.icloud_set_interval
-        data:
-          account_name: marisas_icloud
-          interval: 30
+  # - alias: marisa_update_icloud_when_gone_for_hour
+  #   initial_state: 'on'
+  #   trigger:
+  #     - platform: state
+  #       entity_id: device_tracker.marisa_bt_rpi3, device_tracker.marisas_iphone
+  #       to: 'not_home'
+  #       for:
+  #           minutes: 60
+  #   action:
+  #     - service: device_tracker.icloud_set_interval
+  #       data:
+  #         account_name: marisas_icloud
+  #         interval: 30
 
   - alias: marisa_update_icloud_when_home
     initial_state: 'on'
@@ -170,33 +183,33 @@ automation:
     initial_state: 'on'
     trigger:
       - platform: state
-        entity_id: device_tracker.taylor_bt_rpi3, device_tracker.taylors_iphone
+        entity_id: device_tracker.taylor_bt_rpi3, device_tracker.taylors_iphone, device_tracker.taylorsiphone
         to: 'not_home'
-        # for:
-        #     minutes: 2
+        for:
+            minutes: 1
     action:
-      # - service: device_tracker.icloud_update
-      #   data:
-      #     account_name: taylors_icloud
-      # - delay: '00:02:00'
+      - service: device_tracker.icloud_update
+        data:
+          account_name: taylors_icloud
+      - delay: '00:01:00'
       - service: device_tracker.icloud_set_interval
         data:
           account_name: taylors_icloud
           interval: 2
 
-  - alias: taylor_update_icloud_when_gone_for_hour
-    initial_state: 'on'
-    trigger:
-      - platform: state
-        entity_id: device_tracker.taylor_bt_rpi3, device_tracker.taylors_iphone
-        to: 'not_home'
-        for:
-            minutes: 60
-    action:
-      - service: device_tracker.icloud_set_interval
-        data:
-          account_name: taylors_icloud
-          interval: 30
+  # - alias: taylor_update_icloud_when_gone_for_hour
+  #   initial_state: 'on'
+  #   trigger:
+  #     - platform: state
+  #       entity_id: device_tracker.taylor_bt_rpi3, device_tracker.taylors_iphone
+  #       to: 'not_home'
+  #       for:
+  #           minutes: 60
+  #   action:
+  #     - service: device_tracker.icloud_set_interval
+  #       data:
+  #         account_name: taylors_icloud
+  #         interval: 30
 
   - alias: taylor_update_icloud_when_home
     initial_state: 'on'
@@ -253,9 +266,11 @@ automation:
       zone: zone.school
       event: leave
     action:
-      service: notify.ios_taylors_iphone
-      data:
-        message: "Marisa left school"
+      - service: notify.ios_taylors_iphone
+        data:
+          message: "Marisa left school"
+      - service: script.turn_on
+        entity_id: script.m_scan_interval_2
       
   - alias: Marisa is at nemours
     trigger:
@@ -275,9 +290,11 @@ automation:
       zone: zone.nemours
       event: leave
     action:
-      service: notify.ios_taylors_iphone
-      data:
-        message: "Marisa left Nemour's"
+      - service: notify.ios_taylors_iphone
+        data:
+          message: "Marisa left Nemour's"
+      - service: script.turn_on
+        entity_id: script.m_scan_interval_2
 
   - alias: Marisa is at knights clinic
     trigger:
@@ -297,9 +314,11 @@ automation:
       zone: zone.knights_clinic
       event: leave
     action:
-      service: notify.ios_taylors_iphone
-      data:
-        message: "Marisa left KNIGHTs Clinic"
+      - service: notify.ios_taylors_iphone
+        data:
+          message: "Marisa left KNIGHTs Clinic"
+      - service: script.turn_on
+        entity_id: script.m_scan_interval_2
 
   ### Welcome Home ###
   - alias: 'welcome_home'
@@ -362,21 +381,41 @@ script:
     sequence:
       - service: device_tracker.icloud_update
         data:
-          account_name: taylors_icloud 
+          account_name: taylors_icloud
+
+  icloud_reset_interval_t: 
+    sequence:
       - service: device_tracker.icloud_set_interval
         data:
           account_name: taylors_icloud
-          interval: 30      
+          interval: 30
+
+  t_scan_interval_2: 
+    sequence:
+      - service: device_tracker.icloud_set_interval
+        data:
+          account_name: taylors_icloud
+          interval: 2
 
   icloud_snapshot_m:
     sequence:
       - service: device_tracker.icloud_update
         data:
           account_name: marisas_icloud 
+  
+  icloud_reset_interval_m:
+    sequence:
       - service: device_tracker.icloud_set_interval
         data:
           account_name: marisas_icloud
           interval: 30
+
+  m_scan_interval_2:
+    sequence:
+      - service: device_tracker.icloud_set_interval
+        data:
+          account_name: marisas_icloud
+          interval: 2
 
   arrive_home_at_night:
     sequence:

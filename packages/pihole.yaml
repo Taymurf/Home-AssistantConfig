@@ -1,8 +1,8 @@
 ################################################################
 ## Packages / Pi-Hole
-## @norien - https://github.com/Norien/Home-Assistant-Config
+## @Taymurf - https://github.com/Taymurf/Home-AssistantConfig
 ## #!secret_example
-#pi_hole_url: http://192.168.1.200/admin/api.php
+#pi_hole_url: http://192.168.1.220/admin/api.php
 #Authorization & Token required (see WEBPASSWORD in /etc/pihole/setupVars.conf)
 #pi_hole_switch_on: /usr/bin/curl -k "localhost/admin/api.php?enable&auth=webkey"
 #pi_hole_switch_off: /usr/bin/curl -k "localhost/admin/api.php?disable=600&auth=webkey"
@@ -18,7 +18,8 @@ homeassistant:
     sensor.ads_percentage_today:
       friendly_name: Percentage of Ad Traffic Blocked
       unit_of_measurement: '%'
-      icon: mdi:ticket-percent
+      entity_picture: /local/custom_icons/pihole.png
+      # icon: mdi:ticket-percent
 
     sensor.domains_being_blocked:
       friendly_name: Total Domains Blocking
@@ -193,42 +194,42 @@ sensor:
   #         {% else %}
   #           False
   #         {% endif %}
-###############################################################################
-#  Switch
-###############################################################################
-switch:
-  - platform: template
-    switches:
-      pihole:
-        value_template: '{{ states.sensor.pihole_status.state }}'
-        turn_on:
-          service: script.turn_on
-          entity_id: script.pihole_on
-        turn_off:
-          service: script.turn_on
-          entity_id: script.pihole_off
-###############################################################################
-#  Scripts
-###############################################################################
-script:
-  # this script is just for alexa to toggle on/off
-  ad_blocker:
-    sequence:
-      - service: switch.toggle
-        entity_id: switch.pihole
-  pihole_on:
-    sequence:
-       - service: shell_command.pihole_on
-  pihole_off:
-    sequence:
-       - service: shell_command.pihole_off
-  # pihole_update:
-  #   sequence:
-  #      - service: shell_command.pihole_update
-###############################################################################
-#  Shell Command
-###############################################################################
-shell_command:
-  pihole_on: !secret pi_hole_switch_on
-  pihole_off: !secret pi_hole_switch_off
-  # pihole_update: "pihole -up"
+# ###############################################################################
+# #  Switch
+# ###############################################################################
+# switch:
+#   - platform: template
+#     switches:
+#       pihole:
+#         value_template: '{{ states.sensor.pihole_status.state }}'
+#         turn_on:
+#           service: script.turn_on
+#           entity_id: script.pihole_on
+#         turn_off:
+#           service: script.turn_on
+#           entity_id: script.pihole_off
+# ###############################################################################
+# #  Scripts
+# ###############################################################################
+# script:
+#   # this script is just for alexa to toggle on/off
+#   ad_blocker:
+#     sequence:
+#       - service: switch.toggle
+#         entity_id: switch.pihole
+#   pihole_on:
+#     sequence:
+#        - service: shell_command.pihole_on
+#   pihole_off:
+#     sequence:
+#        - service: shell_command.pihole_off
+#   # pihole_update:
+#   #   sequence:
+#   #      - service: shell_command.pihole_update
+# ###############################################################################
+# #  Shell Command
+# ###############################################################################
+# shell_command:
+#   pihole_on: !secret pi_hole_switch_on
+#   pihole_off: !secret pi_hole_switch_off
+#   pihole_update: "pihole -up"
