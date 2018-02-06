@@ -6,8 +6,6 @@
 #Authorization & Token required (see WEBPASSWORD in /etc/pihole/setupVars.conf)
 #pi_hole_switch_on: /usr/bin/curl -k "localhost/admin/api.php?enable&auth=webkey"
 #pi_hole_switch_off: /usr/bin/curl -k "localhost/admin/api.php?disable=600&auth=webkey"
-# the .SH file I am using is here
-#https://github.com/Norien/Home-Assistant-Config/blob/master/shell/pihole.sh
 ################################################################
 homeassistant:
   customize:
@@ -18,8 +16,7 @@ homeassistant:
     sensor.ads_percentage_today:
       friendly_name: Percentage of Ad Traffic Blocked
       unit_of_measurement: '%'
-      entity_picture: /local/custom_icons/pihole.png
-      # icon: mdi:ticket-percent
+      icon: mdi:ticket-percent
 
     sensor.domains_being_blocked:
       friendly_name: Total Domains Blocking
@@ -27,7 +24,8 @@ homeassistant:
 
     sensor.ads_blocked_today:
       friendly_name: Ads Blocked Today
-      icon: mdi:do-not-disturb
+      entity_picture: /local/custom_icons/pihole.png
+      # icon: mdi:do-not-disturb
 
     sensor.dns_queries_today:
       friendly_name: DNS Queries Today
