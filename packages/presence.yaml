@@ -13,6 +13,9 @@ homeassistant:
     script.icloud_snapshot_t:
       friendly_name: 'Update Location'
       icon: mdi:cloud-sync
+    script.arrive_home_at_night:
+      friendly_name: 'Night Arrival'
+      icon: mdi:weather-sunset-down  
 
 ###### STATE CARD
 group:
@@ -88,12 +91,14 @@ automation:
       - platform: state
         entity_id: device_tracker.taylor_bt_rpi3
         to: 'not_home'
+        # for:
+        #   minutes: 3
       - platform: state
         entity_id: device_tracker.taylorsiphone
     action:
       - service_template: >
-          {% if states.device_tracker.taylor_bt_rpi3.state == 'home' or states.device_tracker.taylorsiphone.state == 'home' and states.input_boolean.taylor.state == 'off' %} homeassistant.turn_on
-          {% elif states.device_tracker.taylor_bt_rpi3.state != 'home' or states.device_tracker.taylorsiphone.state == 'home' and states.input_boolean.taylor.state == 'off' and states.device_tracker.taylorsiphone.attributes.battery | int > 7 %} homeassistant.turn_off
+          {% if states.device_tracker.taylorsiphone.state == 'home' or states.device_tracker.taylor_bt_rpi3.state == 'home' and states.input_boolean.taylor.state == 'off' %} homeassistant.turn_on
+          {% elif states.device_tracker.taylorsiphone.state != 'home' or states.device_tracker.taylor_bt_rpi3.state == 'home' and states.input_boolean.taylor.state == 'off' and states.device_tracker.taylorsiphone.attributes.battery | int > 7 %} homeassistant.turn_off
           {% endif %}
         entity_id: input_boolean.taylor
 
@@ -104,35 +109,47 @@ automation:
       - platform: state
         entity_id: device_tracker.marisa_bt_rpi3
         to: 'not_home'
+        # for:
+        #   minutes: 3
       - platform: state
         entity_id: device_tracker.marisasiphone
     action:
       - service_template: >
-          {% if states.device_tracker.marisa_bt_rpi3.state == 'home' or states.device_tracker.marisasiphone.state == 'home' and states.input_boolean.marisa.state == 'off' %} homeassistant.turn_on
-          {% elif states.device_tracker.marisa_bt_rpi3.state != 'home' or states.device_tracker.marisasiphone.state == 'home' and states.input_boolean.marisa.state == 'off' and states.device_tracker.marisasiphone.attributes.battery | int > 7%} homeassistant.turn_off
+          {% if states.device_tracker.marisasiphone.state == 'home' or states.device_tracker.marisa_bt_rpi3.state == 'home' and states.input_boolean.marisa.state == 'off' %} homeassistant.turn_on
+          {% elif states.device_tracker.marisasiphone.state != 'home' or states.device_tracker.marisa_bt_rpi3.state == 'home' and states.input_boolean.marisa.state == 'off' and states.device_tracker.marisasiphone.attributes.battery | int > 7%} homeassistant.turn_off
           {% endif %}
         entity_id: input_boolean.marisa
 
 
   ### Update iCloud Tracking ###
+  ###### Marisa
   - alias: marisa_update_icloud_when_leaving
     initial_state: 'on'
     trigger:
       - platform: state
         entity_id: device_tracker.marisa_bt_rpi3, device_tracker.marisas_iphone
         to: 'not_home'
-        for:
-            minutes: 2
+        # for:
+        #     minutes: 2
     action:
-      - service: device_tracker.icloud_update
-        data:
-          account_name: marisas_icloud
-      - delay: '00:01:00'
+      # - service: device_tracker.icloud_update
+      #   data:
+      #     account_name: marisas_icloud
+      # - delay: '00:02:00'
       - service: device_tracker.icloud_set_interval
         data:
           account_name: marisas_icloud
           interval: 2
-      - delay: '01:00:00'
+
+  - alias: marisa_update_icloud_when_gone_for_hour
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: device_tracker.marisa_bt_rpi3, device_tracker.marisas_iphone
+        to: 'not_home'
+        for:
+            minutes: 60
+    action:
       - service: device_tracker.icloud_set_interval
         data:
           account_name: marisas_icloud
@@ -148,24 +165,34 @@ automation:
       - service: script.turn_on
         entity_id: script.icloud_snapshot_m
 
+  ###### Taylor
   - alias: taylor_update_icloud_when_leaving
     initial_state: 'on'
     trigger:
       - platform: state
         entity_id: device_tracker.taylor_bt_rpi3, device_tracker.taylors_iphone
         to: 'not_home'
-        for:
-            minutes: 2
+        # for:
+        #     minutes: 2
     action:
-      - service: device_tracker.icloud_update
-        data:
-          account_name: taylors_icloud
-      - delay: '00:01:00'
+      # - service: device_tracker.icloud_update
+      #   data:
+      #     account_name: taylors_icloud
+      # - delay: '00:02:00'
       - service: device_tracker.icloud_set_interval
         data:
           account_name: taylors_icloud
           interval: 2
-      - delay: '01:00:00'
+
+  - alias: taylor_update_icloud_when_gone_for_hour
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: device_tracker.taylor_bt_rpi3, device_tracker.taylors_iphone
+        to: 'not_home'
+        for:
+            minutes: 60
+    action:
       - service: device_tracker.icloud_set_interval
         data:
           account_name: taylors_icloud
@@ -282,6 +309,11 @@ automation:
         entity_id: input_boolean.away
         to: 'off'
     action:
+      - service_template: >
+          {% if states.sensor.kitchen_lux.state | float < 45 %}
+          script.arrive_home_at_night
+          {% endif %}
+        entity_id: script.arrive_home_at_night
       - service: script.turn_on
         entity_id: script.alarm_off_script
       - service: climate.set_away_mode
@@ -331,12 +363,34 @@ script:
       - service: device_tracker.icloud_update
         data:
           account_name: taylors_icloud 
+      - service: device_tracker.icloud_set_interval
+        data:
+          account_name: taylors_icloud
+          interval: 30      
 
   icloud_snapshot_m:
     sequence:
       - service: device_tracker.icloud_update
         data:
           account_name: marisas_icloud 
+      - service: device_tracker.icloud_set_interval
+        data:
+          account_name: marisas_icloud
+          interval: 30
+
+  arrive_home_at_night:
+    sequence:
+      - service: light.turn_on
+        data:
+          entity_id:
+            - light.entryway
+          brightness: 255
+          rgb_color: [255,255,255]
+      - service: light.turn_on
+        data:
+          entity_id:
+            - light.living_room
+          brightness: 200
 
 sensor:
 ###### GOOGLE TRAVEL TIME

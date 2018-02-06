@@ -234,38 +234,38 @@ sensor:
 #         data:
 #           entity_id: input_select.light_living_room_scene
 #           option: "Read"
-#   lr_concentrate:
-#     sequence:
-#       - service: hue.hue_activate_scene
-#         data:
-#           group_name: "Living Room"
-#           scene_name: "Concentrate"
-#       - service: input_select.select_option
-#         data:
-#           entity_id: input_select.light_living_room_scene
-#           option: "Bright"
-#       - service: light.turn_on
-#         data:
-#           entity_id:
-#             - light.couch
-#           brightness: 255
-#           rgb_color: [255,255,255]
-#   lr_springblossom:
-#     sequence:
-#       - service: hue.hue_activate_scene
-#         data:
-#           group_name: "Living Room"
-#           scene_name: "Spring blossom"
-#       - service: input_select.select_option
-#         data:
-#           entity_id: input_select.light_living_room_scene
-#           option: "Spring Blossom"
-#       - service: light.turn_on
-#         data:
-#           entity_id:
-#             - light.couch
-#           brightness: 255
-#           rgb_color: [238,132,255]
+  # lr_concentrate:
+  #   sequence:
+  #     - service: hue.hue_activate_scene
+  #       data:
+  #         group_name: "Living Room"
+  #         scene_name: "Concentrate"
+  #     - service: input_select.select_option
+  #       data:
+  #         entity_id: input_select.light_living_room_scene
+  #         option: "Bright"
+  #     - service: light.turn_on
+  #       data:
+  #         entity_id:
+  #           - light.couch
+  #         brightness: 255
+  #         rgb_color: [255,255,255]
+  # lr_springblossom:
+  #   sequence:
+  #     - service: hue.hue_activate_scene
+  #       data:
+  #         group_name: "Living Room"
+  #         scene_name: "Spring blossom"
+  #     - service: input_select.select_option
+  #       data:
+  #         entity_id: input_select.light_living_room_scene
+  #         option: "Spring Blossom"
+  #     - service: light.turn_on
+  #       data:
+  #         entity_id:
+  #           - light.couch
+  #         brightness: 255
+  #         rgb_color: [238,132,255]
 #   beach:
 #     sequence:
 #       - service: light.hue_activate_scene
@@ -430,28 +430,3 @@ input_boolean:
     name: Lamp Color Loop
     initial: off
     icon: mdi:spotlight
-
-
-# ######
-# switch:
-# ###### SONOFF DUAL 1
-#   - platform: mqtt
-#     name: "tv"
-#     state_topic: "stat/sonoff_dual/POWER1"
-#     command_topic: "cmnd/sonoff_dual/POWER1"
-#     payload_on: "ON"
-#     payload_off: "OFF"
-#     optimistic: false
-#     qos: 0
-#     retain: true
-# ###### SONOFF DUAL 2
-#   - platform: mqtt
-#     name: "receiver"
-#     state_topic: "stat/sonoff_dual/POWER2"
-#     command_topic: "cmnd/sonoff_dual/POWER2"
-#     payload_on: "ON"
-#     payload_off: "OFF"
-#     optimistic: false
-#     qos: 0
-#     retain: true
-

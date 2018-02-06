@@ -145,15 +145,15 @@ device_tracker:
     password: !secret ng_pw
     port: !secret ng_port
 
-  # - platform: icloud
-  #   username: !secret icloud_t_user
-  #   password: !secret icloud_t_pw
-  #   account_name: !secret icloud_t_account
+  - platform: icloud
+    username: !secret icloud_t_user
+    password: !secret icloud_t_pw
+    account_name: !secret icloud_t_account
 
-  # - platform: icloud
-  #   username: !secret icloud_m_user
-  #   password: !secret icloud_m_pw
-  #   account_name: !secret icloud_m_account
+  - platform: icloud
+    username: !secret icloud_m_user
+    password: !secret icloud_m_pw
+    account_name: !secret icloud_m_account
 
   - platform: icloud2
     username: !secret icloud_t_user
