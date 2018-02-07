@@ -175,4 +175,3 @@ sensor:
             mdi:fan
           {%- endif -%}
 
-          

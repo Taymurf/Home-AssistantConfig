@@ -65,6 +65,7 @@ group:
       - group.network
       - group.systeminfo
       - group.hassctl
+      - group.mini_fridge
 
   automations:
     name: Overrides

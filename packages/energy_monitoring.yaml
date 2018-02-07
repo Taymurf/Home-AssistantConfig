@@ -1,0 +1,87 @@
+################################################################
+## Packages / Energy Monitoring w/ smart plugs
+################################################################
+
+homeassistant:
+  customize:
+    #TP-Link 110
+    switch.mini_fridge:
+      friendly_name: 'Mini Fridge'
+    sensor.mini_fridge_amps:
+      friendly_name: 'Amps'
+      icon: mdi:clipboard-flow
+    sensor.mini_fridge_watts:
+      friendly_name: 'Watts'
+      icon: mdi:power
+    sensor.mini_fridge_today_kwh:
+      friendly_name: 'kWh (Today)'
+      icon: mdi:store-24-hour
+    sensor.mini_fridge_total_kwh:
+      friendly_name: 'kWh (Total)'
+      icon: mdi:all-inclusive
+    sensor.mini_fridge_volts:
+      friendly_name: 'Amps'
+      icon: mdi:flash
+
+
+group:
+  power_consumption:
+    name: Power Consumption
+    icon: mdi:flash-circle
+    entities:
+      - group.mini_fridge
+
+  mini_fridge:
+    name: Mini Fridge Consumption
+    icon: mdi:fridge-filled
+    entities:
+      - sensor.mini_fridge_state
+      - sensor.mini_fridge_watts
+      - sensor.mini_fridge_today_kwh
+      - sensor.mini_fridge_total_kwh
+      - sensor.mini_fridge_amps
+      - sensor.mini_fridge_volts
+
+
+switch:
+  ###### Mini Fridge Energy Monitor
+  - platform: tplink
+    host: 192.168.1.222
+    enable_leds: 'off'
+
+
+sensor:
+  - platform: template
+    sensors:
+      mini_fridge_amps:
+        value_template: '{{ states.switch.mini_fridge.attributes["current_a"] | replace(" A", "") | float }}'
+        unit_of_measurement: 'A'
+      mini_fridge_watts:
+        value_template: '{{ states.switch.mini_fridge.attributes["current_power_w"] | replace(" W", "") | float }}'
+        unit_of_measurement: 'W'
+      mini_fridge_today_kwh:
+        value_template: '{{ states.switch.mini_fridge.attributes["today_energy_kwh"] | replace(" kWh", "") | float }}'
+        unit_of_measurement: 'kWh'      
+      mini_fridge_total_kwh:
+        value_template: '{{ states.switch.mini_fridge.attributes["total_energy_kwh"] | replace(" kWh", "") | float }}'
+        unit_of_measurement: 'kWh'
+      mini_fridge_volts:
+        value_template: '{{ states.switch.mini_fridge.attributes["voltage"] | replace(" V", "") | float }}'
+        unit_of_measurement: 'V'
+
+  - platform: template
+    sensors:
+      mini_fridge_state:
+        friendly_name: "Mini Fridge State"
+        value_template: >-
+          {% if is_state('switch.mini_fridge', 'on') %}
+            power-on
+          {% else %}
+            power-off
+          {% endif %}
+        icon_template: >-
+          {% if is_state('switch.mini_fridge', 'on') %}
+            mdi:power-plug
+          {% else %}
+            mdi:power-plug-off
+          {% endif %}
