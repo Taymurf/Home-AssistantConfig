@@ -20,7 +20,7 @@ homeassistant:
       friendly_name: 'kWh (Total)'
       icon: mdi:all-inclusive
     sensor.mini_fridge_volts:
-      friendly_name: 'Amps'
+      friendly_name: 'Volts'
       icon: mdi:flash
 
 
