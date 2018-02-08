@@ -22,6 +22,12 @@ homeassistant:
     sensor.mini_fridge_volts:
       friendly_name: 'Volts'
       icon: mdi:flash
+    sensor.mini_fridge_cost_today:
+      friendly_name: 'Daily Cost'
+      icon: mdi:currency-usd
+    sensor.mini_fridge_cost_total:
+      friendly_name: 'Total Cost'
+      icon: mdi:currency-usd
 
 
 group:
@@ -38,7 +44,9 @@ group:
       - sensor.mini_fridge_state
       - sensor.mini_fridge_watts
       - sensor.mini_fridge_today_kwh
+      - sensor.mini_fridge_cost_today
       - sensor.mini_fridge_total_kwh
+      - sensor.mini_fridge_cost_total
       - sensor.mini_fridge_amps
       - sensor.mini_fridge_volts
 
@@ -85,3 +93,15 @@ sensor:
           {% else %}
             mdi:power-plug-off
           {% endif %}
+
+  - platform: template
+    sensors:
+      mini_fridge_cost_today:
+        value_template: '{{ (states.switch.mini_fridge.attributes.today_energy_kwh | multiply(0.098)) | round(2) | int }}'
+        unit_of_measurement: '$'
+
+  - platform: template
+    sensors:
+      mini_fridge_cost_total:
+        value_template: '{{ (states.sensor.mini_fridge_total_kwh.state | multiply(0.098)) | round(2) | int }}'
+        unit_of_measurement: '$'

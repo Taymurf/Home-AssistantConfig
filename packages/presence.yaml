@@ -28,6 +28,12 @@ homeassistant:
     script.m_scan_interval_2:
       friendly_name: 'Scan Interval 2'
       icon: mdi:cloud-sync
+    sensor.scan_interval_m:
+      friendly_name: 'Current Interval'
+      icon: mdi:exclamation
+    sensor.scan_interval_t:
+      friendly_name: 'Current Interval'
+      icon: mdi:exclamation
 
 ###### STATE CARD
 group:
@@ -48,6 +54,7 @@ group:
       - device_tracker.taylor_bt_rpi3
       - device_tracker.taylorsiphone
       - script.icloud_snapshot_t
+      - sensor.scan_interval_t
       - script.icloud_reset_interval_t
       - script.t_scan_interval_2
   marisa:
@@ -59,6 +66,7 @@ group:
       - device_tracker.marisasiphone
       - sensor.marisa_phone_to_home
       - script.icloud_snapshot_m
+      - sensor.scan_interval_m
       - script.icloud_reset_interval_m
       - script.t_scan_interval_2
   taylor_presence:
@@ -438,6 +446,19 @@ sensor:
     api_key: !secret travel_time_key
     origin: device_tracker.marisasiphone
     destination: zone.home
+
+  - platform: template
+    sensors:
+      scan_interval_m:
+        value_template: '{{ states.device_tracker.marisasiphone.attributes["interval"] | replace(" min", "") | float | int }}'
+        unit_of_measurement: 'min'
+
+  - platform: template
+    sensors:
+      scan_interval_t:
+        value_template: '{{ states.device_tracker.taylorsiphone.attributes["interval"] | replace(" min", "") | float | int }}'
+        unit_of_measurement: 'min'
+
 
 ###### MODES / PEOPLE
 input_boolean:

@@ -1,22 +1,26 @@
-
-
+###############################################################################
+# @Package : Deliveries Package - notifies me of mail and packages.
+# @USPS Workaround Author  : Mahasri Kalavala (https://skalavala.github.io/usps/)
+###############################################################################
 
 homeassistant:
   customize:
     sensor.usps_mail_mail:
       friendly_name: Mail
-
     sensor.deliveries_today:
       icon: mdi:package-variant
-
     sensor.packages_in_transit:
       icon: mdi:truck-fast
-
     sensor.fedex:
       icon: mdi:truck-fast
-
     camera.mail:
       friendly_name: Mail Scan's
+    sensor.usps_mail:
+      friendly_name: USPS Mail
+      icon: mdi:email-outline
+    sensor.usps_packages:
+      friendly_name: USPS Packages
+      icon: mdi:package-variant
 
 group:
   # mailscan_card:
@@ -27,13 +31,21 @@ group:
   usps_mail_card:
    name: Mail
    entities:
-     - sensor.usps_mail_mail
-     - sensor.usps_mail_packages
-     - sensor.packages_in_transit
-     - sensor.deliveries_today
+     - sensor.usps_mail
+     - sensor.usps_packages
+    #  - sensor.packages_in_transit
      - sensor.fedex
      - sensor.ups
+     - sensor.deliveries_today
+     - camera.usps_mail_pictures
+    #  - sensor.usps_mail_mail
+    #  - sensor.usps_mail_packages
 
+  USPS:
+    entities:
+      - sensor.usps_mail
+      - sensor.usps_packages
+      - camera.usps_mail_pictures
 
 # usps:
 #   username: !secret usps_user
@@ -41,10 +53,14 @@ group:
 #   name: Usps Mail
 # #  scan_interval: 1800
 
-# camera:
-#   - platform: usps
-#     name: Mail
-#     interval: 5
+camera:
+  - platform: generic
+    name: USPS Mail Pictures
+    still_image_url: !secret usps_camera_url
+  # - platform: usps
+  #   name: Mail
+  #   interval: 5
+
 
 ############### Mail Sensor   ###############################
 sensor:
@@ -52,18 +68,30 @@ sensor:
   #   username: !secret usps_sensor_user
   #   password: !secret usps_sensor_pw
   #   scan_interval: 1800
+  - platform: mqtt
+    name: 'USPS Mail'
+    state_topic: '/usps/mails'
+    value_template: "{{ value }}"
+
+  - platform: mqtt
+    name: USPS Packages
+    state_topic: '/usps/packages'
+    value_template: "{{ value }}"
+  
   - platform: ups
     username: !secret ups_user
     password: !secret ups_pw
     scan_interval: 1800
+  
   - platform: fedex
     username: !secret fedex_user
     password: !secret fedex_pw
     scan_interval: 1800
+  
   - platform: template
     sensors:
       packages_in_transit:
-        friendly_name: "Packages in Transit"
+        friendly_name: "Fedex/UPS Packages OTW"
         value_template: >
           {% macro in_transit(sensor) %}
             {{sensor.state|int - delivered(sensor)|int}}
@@ -75,7 +103,7 @@ sensor:
                0
             {% endif %}
           {% endmacro %}
-          {{in_transit(states.sensor.ups)|int  + in_transit(states.sensor.fedex)|int}}
+          {{in_transit(states.sensor.ups)|int + in_transit(states.sensor.fedex)|int}}
       deliveries_today:
         friendly_name: "Today's Deliveries"
         value_template: >
@@ -89,7 +117,63 @@ sensor:
           {{delivered(states.sensor.ups)|int + delivered(states.sensor.fedex)|int}}
 ############################################################
 
-# automation:
+
+automation:
+# Notify USPS mails via TTS, and iOS notification with attachment
+###############################################################################
+  - alias: Notify USPS Mail
+    initial_state: true
+    hide_entity: true
+    trigger:
+      - platform: state
+        entity_id: sensor.usps_mail
+    condition:
+      - condition: template
+        value_template: '{{ states.sensor.usps_mail.state | int > 0 }}'
+      - condition: template
+        value_template: '{{ ((now().hour | int) > 7) and ((now().hour | int) < 16) }}'
+    action:
+      # - service: script.voice_notify
+      #   data_template:
+      #     message: >
+      #       {%- if states.sensor.usps_mail.state | int == 1 -%}
+      #         Attention: USPS is delivering {{ states.sensor.usps_mail.state }} mail today.
+      #       {%- else -%}
+      #         Attention: USPS is delivering {{ states.sensor.usps_mail.state }} mails today.
+      #       {%- endif -%}
+      - service: notify.ios_taylors_iphone
+        data_template:
+          message: "USPS will be delivering {{ states.sensor.usps_mail.state }} mail(s) today."
+          data:
+            push:
+              category: camera
+            entity_id: "camera.usps_mail_pictures"
+            attachment:
+              url: "{{ states.camera.usps_mail_pictures.attributes.entity_picture }}"
+              content-type: jpg
+
+# Notify USPS packages via TTS. Usually there are no pictures for packages
+###############################################################################
+  - alias: Notify USPS Packages
+    initial_state: true
+    hide_entity: true
+    trigger:
+      - platform: state
+        entity_id: sensor.usps_packages
+    condition:
+      - condition: template
+        value_template: '{{ states.sensor.usps_packages.state | int > 0 }}'
+      - condition: template
+        value_template: '{{ ((now().hour | int) > 7) and ((now().hour | int) < 16) }}'
+    action:
+      - service: notify.ios_taylors_iphone
+        data_template:
+          message: >
+            {%- if states.sensor.usps_packages.state | int == 1 -%}
+              Attention: USPS is delivering {{ states.sensor.usps_packages.state }} package today.
+            {%- else -%}
+              Attention: USPS is delivering {{ states.sensor.usps_packages.state }} packages today.
+            {%- endif -%}
 #   - alias: Tell me I got Mail
 #     initial_state: 'on'
 #     trigger:
@@ -113,3 +197,8 @@ sensor:
 #         data:
 #           entity_id: media_player.office_mini
 #           message: 'You Have a Usps Package On the Way Check Dashboard'
+
+
+
+
+
