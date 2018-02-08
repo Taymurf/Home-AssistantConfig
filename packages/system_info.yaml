@@ -78,7 +78,7 @@ group:
   systeminfo:
     control: hidden
     icon: mdi:ethernet-cable
-    name: Systemstatus
+    name: NUC i5
     entities:
       - sensor.host_uptime_human
       - sensor.ha_uptime_human

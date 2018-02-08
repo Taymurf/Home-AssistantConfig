@@ -40,6 +40,7 @@ group:
       - group.blink_inside
       - group.blink_front_door
       - group.blink_backyard
+      - group.ads_blocked
       - group.door_sensors
 
   sensor_tab:
@@ -55,13 +56,11 @@ group:
       - group.all_temps
       - group.sensor_battery_levels
 
-
   system_view:
     name: System Info
     view: yes
     icon: mdi:power
-    entities:
-      - group.ads_blocked
+    entities:      
       - group.network
       - group.systeminfo
       - group.hassctl

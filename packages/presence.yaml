@@ -68,7 +68,7 @@ group:
       - script.icloud_snapshot_m
       - sensor.scan_interval_m
       - script.icloud_reset_interval_m
-      - script.t_scan_interval_2
+      - script.m_scan_interval_2
   taylor_presence:
     name: Taylor's Presence
     icon: mdi:cellphone-iphone
