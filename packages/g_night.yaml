@@ -12,6 +12,9 @@ homeassistant:
 script:
   good_night:
     sequence:
+    - service: input_boolean.turn_on
+      data:
+        entity_id: input_boolean.sleep
     - service: light.turn_off
       entity_id: light.all
     - service: climate.set_temperature
@@ -29,4 +32,4 @@ script:
     - service: tts.google_say
       data_template:
         entity_id: media_player.bedroom_mini
-        message: "Temperature set and cameras armed, good night!"
+        message: "Good night!"

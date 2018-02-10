@@ -6,6 +6,7 @@
 ##############################################################
 homeassistant:
   customize:
+  ###### NUC i5
     sensor.uname:
       icon: mdi:linux
       friendly_name: OS
@@ -70,11 +71,9 @@ homeassistant:
       friendly_name: Data Sent
       icon: mdi:upload-network
 
-
 ###### STATE CARD
 
 group:
-
   systeminfo:
     control: hidden
     icon: mdi:ethernet-cable
@@ -109,7 +108,9 @@ weblink:
     - name: release_log
       url: https://github.com/home-assistant/home-assistant/releases
 
+
 sensor:
+  ###### NUC i5
   - platform: systemmonitor
     resources:
       - type: disk_use_percent
@@ -145,33 +146,6 @@ sensor:
         arg: pi-hole
       - type: process
         arg: homebridge
-
-  - platform: synologydsm
-    host: !secret synology_host
-    username: !secret synology_user
-    password: !secret synology_pw
-    monitored_conditions:
-      - cpu_total_load
-      - cpu_user_load
-      - cpu_system_load
-      - memory_real_usage
-      - network_up
-      - network_down
-      - cpu_1min_load
-      - cpu_5min_load
-      - cpu_15min_load
-      - disk_name
-      - disk_smart_status
-      - disk_exceed_bad_sector_thr
-      - disk_below_remain_life_thr
-      - disk_temp
-      - volume_status
-      - volume_device_type
-      - volume_size_total
-      - volume_size_used
-      - volume_percentage_used
-      - volume_disk_temp_avg
-      - volume_disk_temp_max
 
   - platform: command_line
     name: CPU Temperature

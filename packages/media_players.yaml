@@ -2,6 +2,36 @@
 ## Packages / Media Players
 ################################################################
 
+
+media_player:
+###### Google Play Music
+  # - platform: gpmdp
+  #   host: 192.168.1.201
+###### Chromecast
+  - platform: cast 
+    host: 192.168.1.208 # Family Room CC Audio
+  - platform: cast
+    host: 192.168.1.213 # Family Room TV
+  - platform: cast
+    host: 192.168.1.214 # Bedroom TV
+###### Google Home
+  - platform: cast
+    host: 192.168.1.209 # Family Room Home
+  - platform: cast
+    host: 192.168.1.210 # Office Mini
+  - platform: cast
+    host: 192.168.1.211 # Master Bathroom Mini
+  - platform: cast
+    host: 192.168.1.215 # Kitchen Mini
+  - platform: cast
+    host: 192.168.1.216 # Master Bedroom Mini
+# ###### Roku
+#   - platform: roku
+#     host: 192.168.1. # Family Room TV
+#   - platform: roku
+#     host: 192.168.1. # Master Bedroom TV
+
+
 group:
   ###### Visibility Override
   media_disappear:

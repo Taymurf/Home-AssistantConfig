@@ -45,8 +45,8 @@ group:
 
   sensor_tab:
     name: Sensors
-    view: yes
     icon: mdi:gauge
+    view: yes
     entities:
       - group.weather
       - group.stock_prices
@@ -65,6 +65,19 @@ group:
       - group.systeminfo
       - group.hassctl
       - group.mini_fridge
+
+  synology:
+    icon: mdi:harddisk
+    name: Synology NAS
+    view: yes
+    entities:
+      - group.synology_info
+      - group.hdd_1
+      - group.hdd_2
+      - group.hdd_3
+      - group.hdd_4
+      - group.ssd_1
+      - group.ssd_2
 
   automations:
     name: Overrides

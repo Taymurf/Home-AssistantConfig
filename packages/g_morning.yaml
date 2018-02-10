@@ -14,10 +14,10 @@ homeassistant:
 script:
   good_morning:
     sequence:
-    - service: light.turn_on
-      data:
-        entity_id: light.side_table
-        brightness: 254
+    # - service: light.turn_on
+    #   data:
+    #     entity_id: light.side_table
+    #     brightness: 254
     - service: climate.set_temperature
       data:
         entity_id: climate.entryway
@@ -29,7 +29,7 @@ script:
     - service: media_player.volume_set
       data:
         entity_id: media_player.bedroom_mini
-        volume_level: '0.50'
+        volume_level: '0.40'
     - service: media_player.volume_set
       data:
         entity_id: media_player.master_bathroom_mini
@@ -48,6 +48,9 @@ script:
         volume_level: '0.80'
     - wait_template: "{{ states.binary_sensor.kitchen_motion.state == 'on' }}"
     - service: script.good_morning_tts
+    - service: input_boolean.turn_off
+      data:
+        entity_id: input_boolean.sleep
 
   good_morning_tts:
     sequence:

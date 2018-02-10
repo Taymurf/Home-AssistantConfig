@@ -1,0 +1,442 @@
+##############################################################
+### Packages / Synology DS918+ NAS                         ###
+##############################################################
+
+homeassistant:
+  customize:
+    sensor.network_down:
+      friendly_name: Download Speed
+      icon: mdi:download-network
+    sensor.network_up:
+      friendly_name: Upload Speed
+      icon: mdi:upload-network
+    sensor.memory_usage_real:
+      friendly_name: RAM % Used
+      unit_of_measurement: '%'
+      icon: mdi:chip
+    sensor.volume_used_volume_1:
+      friendly_name: Storage Used
+      unit_of_measurement: '%'
+      icon: mdi:harddisk
+    sensor.cpu_load_total:
+      friendly_name: CPU Load
+      unit_of_measurement: '%'
+      icon: mdi:desktop-tower
+    sensor.cpu_load_1_min:
+      friendly_name: CPU Load (1m)
+      unit_of_measurement: '%'
+      icon: mdi:worker
+    sensor.cpu_load_5_min:
+      friendly_name: CPU Load (5m)
+      unit_of_measurement: '%'
+      icon: mdi:worker
+    sensor.cpu_load_15_min:
+      friendly_name: CPU Load (15m)
+      unit_of_measurement: '%'
+      icon: mdi:worker
+    sensor.average_disk_temp_volume_1:
+      friendly_name: Average HDD Temp
+      icon: mdi:thermometer
+      unit_of_measurement: '°F'
+    sensor.maximum_disk_temp_volume_1:
+      friendly_name: Max HDD Temp
+      icon: mdi:thermometer
+      unit_of_measurement: '°F'
+    sensor.total_size_volume_1:
+      friendly_name: Total Size
+      icon: mdi:harddisk
+    sensor.used_space_volume_1:
+      friendly_name: Space Used
+      icon: mdi:harddisk
+    sensor.temperature_sda:
+      friendly_name: Temperature
+      icon: mdi:thermometer
+      unit_of_measurement: '°F'
+    sensor.temperature_sdb:
+      friendly_name: Temperature
+      icon: mdi:thermometer
+      unit_of_measurement: '°F'
+    sensor.temperature_sdc:
+      friendly_name: Temperature
+      icon: mdi:thermometer
+      unit_of_measurement: '°F'
+    sensor.temperature_sdd:
+      friendly_name: Temperature
+      icon: mdi:thermometer
+      unit_of_measurement: '°F'
+    sensor.temperature_nvme0n1:
+      friendly_name: Temperature
+      icon: mdi:thermometer
+      unit_of_measurement: '°F'
+    sensor.temperature_nvme1n1:
+      friendly_name: Temperature
+      icon: mdi:thermometer
+      unit_of_measurement: '°F'
+
+###### STATE CARD
+
+group:  
+  synology_info:
+    control: hidden
+    icon: mdi:sd
+    name: Synology NAS
+    entities:
+      - sensor.used_space_volume_1
+      - sensor.total_size_volume_1
+      - sensor.volume_used_volume_1
+      - sensor.memory_usage_real
+      - sensor.cpu_load_1_min
+      - sensor.cpu_load_5_min
+      - sensor.cpu_load_15_min
+      - sensor.average_disk_temp_volume_1
+      - sensor.maximum_disk_temp_volume_1
+      - sensor.network_down
+      - sensor.network_up
+      - sensor.external_ip
+  
+  hdd_1:
+    control: hidden
+    icon: mdi:harddisk
+    name: WD Red 4 TB (#1)
+    entities:
+      - sensor.temperature_sda
+      - sensor.hdd1_smart_status
+      - sensor.hdd1_remaining_life
+      - sensor.hdd1_bad_sectors
+  hdd_2:
+    control: hidden
+    icon: mdi:harddisk
+    name: WD Red 4 TB (#2)
+    entities:
+      - sensor.temperature_sdb
+      - sensor.hdd2_smart_status
+      - sensor.hdd2_remaining_life
+      - sensor.hdd2_bad_sectors
+  hdd_3:
+    control: hidden
+    icon: mdi:harddisk
+    name: HGST Deskstar 4 TB (#1)
+    entities:
+      - sensor.temperature_sdc
+      - sensor.hdd3_smart_status
+      - sensor.hdd3_remaining_life
+      - sensor.hdd3_bad_sectors
+  hdd_4:
+    control: hidden
+    icon: mdi:harddisk
+    name: HGST Deskstar 4 TB (#2)
+    entities:
+      - sensor.temperature_sdd
+      - sensor.hdd4_smart_status
+      - sensor.hdd4_remaining_life
+      - sensor.hdd4_bad_sectors
+  ssd_1:
+    control: hidden
+    icon: mdi:sd
+    name: SSD Cache 1
+    entities:
+      - sensor.temperature_nvme0n1
+      - sensor.ssd1_smart_status
+      - sensor.ssd1_remaining_life
+      - sensor.ssd1_bad_sectors
+  ssd_2:
+    control: hidden
+    icon: mdi:sd
+    name: SSD Cache 2
+    entities:
+      - sensor.temperature_nvme1n1
+      - sensor.ssd2_smart_status
+      - sensor.ssd2_remaining_life
+      - sensor.ssd2_bad_sectors
+
+
+sensor:
+  ###### Synology DS918+
+  - platform: synologydsm
+    host: !secret synology_host
+    username: !secret synology_user
+    password: !secret synology_pw
+    monitored_conditions:
+      - cpu_total_load
+      - cpu_user_load
+      - cpu_system_load
+      - memory_real_usage
+      - network_up
+      - network_down
+      - cpu_1min_load
+      - cpu_5min_load
+      - cpu_15min_load
+      - disk_name
+      - disk_smart_status
+      - disk_exceed_bad_sector_thr
+      - disk_below_remain_life_thr
+      - disk_temp
+      - volume_status
+      - volume_device_type
+      - volume_size_total
+      - volume_size_used
+      - volume_percentage_used
+      - volume_disk_temp_avg
+      - volume_disk_temp_max
+
+###### Disk Health
+  - platform: template
+    sensors:
+      hdd1_remaining_life:
+        friendly_name: "Lifespan"
+        value_template: >-
+          {% if is_state('sensor.below_min_remaining_life_sda', 'True') %}
+            Danger
+          {% else %}
+            Healthy
+          {% endif %}
+        icon_template: >-
+          {% if is_state('sensor.below_min_remaining_life_sda', 'True') %}
+            mdi:exclamation
+          {% else %}
+            mdi:check
+          {% endif %}
+      hdd2_remaining_life:
+        friendly_name: "Lifespan"
+        value_template: >-
+          {% if is_state('sensor.below_min_remaining_life_sdb', 'True') %}
+            Danger
+          {% else %}
+            Healthy
+          {% endif %}
+        icon_template: >-
+          {% if is_state('sensor.below_min_remaining_life_sdb', 'True') %}
+            mdi:exclamation
+          {% else %}
+            mdi:check
+          {% endif %}
+      hdd3_remaining_life:
+        friendly_name: "Lifespan"
+        value_template: >-
+          {% if is_state('sensor.below_min_remaining_life_sdc', 'True') %}
+            Danger
+          {% else %}
+            Healthy
+          {% endif %}
+        icon_template: >-
+          {% if is_state('sensor.below_min_remaining_life_sdc', 'True') %}
+            mdi:exclamation
+          {% else %}
+            mdi:check
+          {% endif %}
+      hdd4_remaining_life:
+        friendly_name: "Lifespan"
+        value_template: >-
+          {% if is_state('sensor.below_min_remaining_life_sdd', 'True') %}
+            Danger
+          {% else %}
+            Healthy
+          {% endif %}
+        icon_template: >-
+          {% if is_state('sensor.below_min_remaining_life_sdd', 'True') %}
+            mdi:exclamation
+          {% else %}
+            mdi:check
+          {% endif %}
+      ssd1_remaining_life:
+        friendly_name: "Lifespan"
+        value_template: >-
+          {% if is_state('sensor.below_min_remaining_life_nvme0n1', 'True') %}
+            Danger
+          {% else %}
+            Healthy
+          {% endif %}
+        icon_template: >-
+          {% if is_state('sensor.below_min_remaining_life_nvme0n1', 'True') %}
+            mdi:exclamation
+          {% else %}
+            mdi:check
+          {% endif %}
+      ssd2_remaining_life:
+        friendly_name: "Lifespan"
+        value_template: >-
+          {% if is_state('sensor.below_min_remaining_life_nvme1n1', 'True') %}
+            Danger
+          {% else %}
+            Healthy
+          {% endif %}
+        icon_template: >-
+          {% if is_state('sensor.below_min_remaining_life_nvme1n1', 'True') %}
+            mdi:exclamation
+          {% else %}
+            mdi:check
+          {% endif %}
+###### Bad Sectors
+  - platform: template
+    sensors:
+      hdd1_bad_sectors:
+        friendly_name: "Bad Sector Check"
+        value_template: >-
+          {% if is_state('sensor.exceeded_max_bad_sectors_sda', 'True') %}
+            Danger
+          {% else %}
+            Healthy
+          {% endif %}
+        icon_template: >-
+          {% if is_state('sensor.exceeded_max_bad_sectors_sda', 'True') %}
+            mdi:exclamation
+          {% else %}
+            mdi:check
+          {% endif %}
+      hdd2_bad_sectors:
+        friendly_name: "Bad Sector Check"
+        value_template: >-
+          {% if is_state('sensor.exceeded_max_bad_sectors_sdb', 'True') %}
+            Danger
+          {% else %}
+            Healthy
+          {% endif %}
+        icon_template: >-
+          {% if is_state('sensor.exceeded_max_bad_sectors_sdb', 'True') %}
+            mdi:exclamation
+          {% else %}
+            mdi:check
+          {% endif %}
+      hdd3_bad_sectors:
+        friendly_name: "Bad Sector Check"
+        value_template: >-
+          {% if is_state('sensor.exceeded_max_bad_sectors_sdc', 'True') %}
+            Danger
+          {% else %}
+            Healthy
+          {% endif %}
+        icon_template: >-
+          {% if is_state('sensor.exceeded_max_bad_sectors_sdc', 'True') %}
+            mdi:exclamation
+          {% else %}
+            mdi:check
+          {% endif %}
+      hdd4_bad_sectors:
+        friendly_name: "Bad Sector Check"
+        value_template: >-
+          {% if is_state('sensor.exceeded_max_bad_sectors_sdd', 'True') %}
+            Danger
+          {% else %}
+            Healthy
+          {% endif %}
+        icon_template: >-
+          {% if is_state('sensor.exceeded_max_bad_sectors_sdd', 'True') %}
+            mdi:exclamation
+          {% else %}
+            mdi:check
+          {% endif %}
+      ssd1_bad_sectors:
+        friendly_name: "Bad Sector Check"
+        value_template: >-
+          {% if is_state('sensor.exceeded_max_bad_sectors_nvme0n1', 'True') %}
+            Danger
+          {% else %}
+            Healthy
+          {% endif %}
+        icon_template: >-
+          {% if is_state('sensor.exceeded_max_bad_sectors_nvme0n1', 'True') %}
+            mdi:exclamation
+          {% else %}
+            mdi:check
+          {% endif %}
+      ssd2_bad_sectors:
+        friendly_name: "Bad Sector Check"
+        value_template: >-
+          {% if is_state('sensor.exceeded_max_bad_sectors_nvme1n1', 'True') %}
+            Danger
+          {% else %}
+            Healthy
+          {% endif %}
+        icon_template: >-
+          {% if is_state('sensor.exceeded_max_bad_sectors_nvme1n1', 'True') %}
+            mdi:exclamation
+          {% else %}
+            mdi:check
+          {% endif %}
+###### S.M.A.R.T. Status
+  - platform: template
+    sensors:
+      hdd1_smart_status:
+        friendly_name: "S.M.A.R.T. Status"
+        value_template: >-
+          {% if is_state('sensor.status_smart_sda', 'normal') %}
+            Healthy
+          {% else %}
+            Danger
+          {% endif %}
+        icon_template: >-
+          {% if is_state('sensor.status_smart_sda', 'normal') %}
+            mdi:check
+          {% else %}
+            mdi:exclamation
+          {% endif %}
+      hdd2_smart_status:
+        friendly_name: "S.M.A.R.T. Status"
+        value_template: >-
+          {% if is_state('sensor.status_smart_sdb', 'normal') %}
+            Healthy
+          {% else %}
+            Danger
+          {% endif %}
+        icon_template: >-
+          {% if is_state('sensor.status_smart_sdb', 'normal') %}
+            mdi:check
+          {% else %}
+            mdi:exclamation
+          {% endif %}
+      hdd3_smart_status:
+        friendly_name: "S.M.A.R.T. Status"
+        value_template: >-
+          {% if is_state('sensor.status_smart_sdc', 'normal') %}
+            Healthy
+          {% else %}
+            Danger
+          {% endif %}
+        icon_template: >-
+          {% if is_state('sensor.status_smart_sdc', 'normal') %}
+            mdi:check
+          {% else %}
+            mdi:exclamation
+          {% endif %}
+      hdd4_smart_status:
+        friendly_name: "S.M.A.R.T. Status"
+        value_template: >-
+          {% if is_state('sensor.status_smart_sdd', 'normal') %}
+            Healthy
+          {% else %}
+            Danger
+          {% endif %}
+        icon_template: >-
+          {% if is_state('sensor.status_smart_sdd', 'normal') %}
+            mdi:check
+          {% else %}
+            mdi:exclamation
+          {% endif %}
+      ssd1_smart_status:
+        friendly_name: "S.M.A.R.T. Status"
+        value_template: >-
+          {% if is_state('sensor.status_smart_nvme0n1', 'normal') %}
+            Healthy
+          {% else %}
+            Danger
+          {% endif %}
+        icon_template: >-
+          {% if is_state('sensor.status_smart_nvme0n1', 'normal') %}
+            mdi:check
+          {% else %}
+            mdi:exclamation
+          {% endif %}
+      ssd2_smart_status:
+        friendly_name: "S.M.A.R.T. Status"
+        value_template: >-
+          {% if is_state('sensor.status_smart_nvme1n1', 'normal') %}
+            Healthy
+          {% else %}
+            Danger
+          {% endif %}
+        icon_template: >-
+          {% if is_state('sensor.status_smart_nvme1n1', 'normal') %}
+            mdi:check
+          {% else %}
+            mdi:exclamation
+          {% endif %}

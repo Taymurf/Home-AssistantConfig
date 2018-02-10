@@ -111,6 +111,11 @@ group:
       - sensor.blink_backyard_battery
 
 
+blink:
+  username: !secret blink_user
+  password: !secret blink_pw
+
+
 # # services for automations
 # - service: 
 # - blink.arm_system

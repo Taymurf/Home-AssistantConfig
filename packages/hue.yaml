@@ -226,6 +226,12 @@ group:
       - automation.forgot_lights
 
 
+hue:
+  bridges:
+    - host: 192.168.1.202
+      allow_unreachable: True
+
+
 ###### BINARY SENSORS ------------------------------------------
 
 binary_sensor:
@@ -253,12 +259,23 @@ binary_sensor:
     scan_interval: 1
     name: 'Patio Motion'
 
+  - platform: rest
+    resource: !secret hue_sensor_39
+    value_template: '{{ value_json.state.presence }}'
+    scan_interval: 1
+    name: 'Family Room Motion'
+
+  - platform: rest
+    resource: !secret hue_sensor_43
+    value_template: '{{ value_json.state.presence }}'
+    scan_interval: 1
+    name: 'Master Bedroom Motion'
+
 
 ###### SENSORS -------------------------------------------------
 sensor:
   ### Hue API ###
   # - platform: hue
-
 
   ### Kitchen Motion Sensor ###
   - platform: rest
@@ -282,7 +299,6 @@ sensor:
     scan_interval: 1800
     name: 'Kitchen Motion Sensor Battery Level'
 
-
   ### Master Bathroom Motion Sensor ###
   - platform: rest
     resource: !secret hue_sensor_7
@@ -304,7 +320,6 @@ sensor:
     unit_of_measurement: '%'
     scan_interval: 1800
     name: 'Master Bathroom Motion Sensor Battery Level'
-
 
   ### Garage Motion Sensor ##
   - platform: rest
@@ -328,7 +343,6 @@ sensor:
     scan_interval: 1800
     name: 'Garage Motion Sensor Battery Level'
 
-
   ### Patio Motion Sensor ##
   - platform: rest
     resource: !secret hue_sensor_10
@@ -351,3 +365,46 @@ sensor:
     scan_interval: 1800
     name: 'Patio Motion Sensor Battery Level'
 
+  ### Family Room Motion Sensor ##
+  - platform: rest
+    resource: !secret hue_sensor_44
+    value_template: "{{(10 ** (float (value_json.state.lightlevel) / 10000) -1) | round (1)}} "
+    unit_of_measurement: Lux
+    name: 'Family Room Lux'
+    scan_interval: 600
+
+  - platform: rest
+    resource: !secret hue_sensor_42
+    value_template: '{{ (value_json.state.temperature | float / 100) | round(1) }}'
+    unit_of_measurement: °C
+    name: 'Family Room Temperature'
+    scan_interval: 120
+
+  - platform: rest
+    resource: !secret hue_sensor_43
+    value_template: '{{ value_json.config.battery }}'
+    unit_of_measurement: '%'
+    scan_interval: 1800
+    name: 'Family Room Motion Sensor Battery Level'
+
+  ### Master Bedroom Motion Sensor ##
+  - platform: rest
+    resource: !secret hue_sensor_40
+    value_template: "{{(10 ** (float (value_json.state.lightlevel) / 10000) -1) | round (1)}} "
+    unit_of_measurement: Lux
+    name: 'Master Bedroom Lux'
+    scan_interval: 600
+
+  - platform: rest
+    resource: !secret hue_sensor_38
+    value_template: '{{ (value_json.state.temperature | float / 100) | round(1) }}'
+    unit_of_measurement: °C
+    name: 'Master Bedroom Temperature'
+    scan_interval: 120
+
+  - platform: rest
+    resource: !secret hue_sensor_39
+    value_template: '{{ value_json.config.battery }}'
+    unit_of_measurement: '%'
+    scan_interval: 1800
+    name: 'Master Bedroom Motion Sensor Battery Level'

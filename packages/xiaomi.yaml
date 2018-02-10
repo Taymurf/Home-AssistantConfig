@@ -40,6 +40,16 @@ group:
       - sensor.patio_door_state
 
 
+xiaomi_aqara:
+  discovery_retry: 5
+  gateways:
+    - key: !secret xiaomi_key
+
+# vacuum:
+#   - platform: xiaomi_miio
+#     host: 192.168.1.221
+#     token: !secret vac_token
+
 
 sensor:
   - platform: template
@@ -136,6 +146,26 @@ automation:
       - service: script.turn_on
         entity_id: script.good_morning
 
+  - alias: turn_on_nap_script
+    trigger:
+      - platform: event
+        event_type: click
+        event_data:
+          entity_id: binary_sensor.switch_158d0001f3b1e6
+          click_type: single
+      - platform: event
+        event_type: click
+        event_data:
+          entity_id: binary_sensor.switch_158d0001f3b1e6
+          click_type: long_click_press
+    condition:
+      - condition: time
+        after: '11:00:00'
+        before: '21:00:00'
+    action:
+      - service: script.turn_on
+        entity_id: script.nap
+
   ##### Example of Button automations to be adapted
   # - alias: Let a dog bark on long press
   #   trigger:
@@ -174,6 +204,8 @@ automation:
       - condition: state
         entity_id: input_boolean.away
         state: 'off'
+        for:
+          minutes: 45
     action:
       - service: media_player.volume_set
         data:
@@ -209,6 +241,8 @@ automation:
       - condition: state
         entity_id: input_boolean.away
         state: 'off'
+        for:
+          minutes: 45
     action:
       - service: media_player.volume_set
         data:

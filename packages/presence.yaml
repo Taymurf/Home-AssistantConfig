@@ -45,6 +45,7 @@ group:
       - group.marisa
       - input_boolean.guest
       - input_boolean.away
+      - input_boolean.sleep
       - sensor.holiday
   taylor:
     name: Taylor
@@ -476,3 +477,6 @@ input_boolean:
   marisa:
     name: Marisa
     icon: mdi:account
+  sleep:
+    name: Sleep
+    icon: mdi:sleep
