@@ -49,7 +49,7 @@ group:
     view: yes
     entities:
       - group.weather
-      - group.stock_prices
+      - group.bitcoin
       - group.server_status
       - group.motion_sensors
       - group.lux

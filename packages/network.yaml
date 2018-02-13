@@ -8,7 +8,9 @@ homeassistant:
     sensor.external_ip:
       friendly_name: External IP
       icon: mdi:earth
-
+    script.update_speedtest:
+      friendly_name: Update Speedtest
+      icon: mdi:speedometer
 
 ###### STATE CARD
 group:

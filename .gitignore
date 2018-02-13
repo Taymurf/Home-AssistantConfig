@@ -6,6 +6,7 @@
 .cloud
 deps
 icloud
+packages/apc_ups.yaml.noload
 packages/device_status.yaml.noload
 packages/first_morning.yaml.noload
 packages/good_morning.yaml.noload
@@ -23,6 +24,7 @@ www
 .ios.conf
 .tile.conf
 .uuid
+entity_registry.yaml
 fedexdeliverymanager_cookies.pickle
 google_calendars.yaml
 gpmpd.conf

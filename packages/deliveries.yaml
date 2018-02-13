@@ -83,38 +83,38 @@ sensor:
     password: !secret ups_pw
     scan_interval: 1800
   
-  - platform: fedex
-    username: !secret fedex_user
-    password: !secret fedex_pw
-    scan_interval: 1800
+  # - platform: fedex
+  #   username: !secret fedex_user
+  #   password: !secret fedex_pw
+  #   scan_interval: 1800
   
-  - platform: template
-    sensors:
-      packages_in_transit:
-        friendly_name: "Fedex/UPS Packages OTW"
-        value_template: >
-          {% macro in_transit(sensor) %}
-            {{sensor.state|int - delivered(sensor)|int}}
-          {% endmacro %}
-          {% macro delivered(sensor) %}
-            {% if 'delivered' in sensor.attributes %}
-              {{sensor.attributes.delivered}}
-            {% else %}
-               0
-            {% endif %}
-          {% endmacro %}
-          {{in_transit(states.sensor.ups)|int + in_transit(states.sensor.fedex)|int}}
-      deliveries_today:
-        friendly_name: "Today's Deliveries"
-        value_template: >
-          {% macro delivered(sensor) %}
-            {% if 'out_for_delivery' in sensor.attributes %}
-              {{sensor.attributes.out_for_delivery}}
-            {% else %}
-               0
-            {% endif %}
-          {% endmacro %}
-          {{delivered(states.sensor.ups)|int + delivered(states.sensor.fedex)|int}}
+  # - platform: template
+  #   sensors:
+  #     packages_in_transit:
+  #       friendly_name: "Fedex/UPS Packages OTW"
+  #       value_template: >
+  #         {% macro in_transit(sensor) %}
+  #           {{sensor.state|int - delivered(sensor)|int}}
+  #         {% endmacro %}
+  #         {% macro delivered(sensor) %}
+  #           {% if 'delivered' in sensor.attributes %}
+  #             {{sensor.attributes.delivered}}
+  #           {% else %}
+  #              0
+  #           {% endif %}
+  #         {% endmacro %}
+  #         {{in_transit(states.sensor.ups)|int + in_transit(states.sensor.fedex)|int}}
+  #     deliveries_today:
+  #       friendly_name: "Today's Deliveries"
+  #       value_template: >
+  #         {% macro delivered(sensor) %}
+  #           {% if 'out_for_delivery' in sensor.attributes %}
+  #             {{sensor.attributes.out_for_delivery}}
+  #           {% else %}
+  #              0
+  #           {% endif %}
+  #         {% endmacro %}
+  #         {{delivered(states.sensor.ups)|int + delivered(states.sensor.fedex)|int}}
 ############################################################
 
 

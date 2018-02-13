@@ -45,10 +45,11 @@ xiaomi_aqara:
   gateways:
     - key: !secret xiaomi_key
 
-# vacuum:
-#   - platform: xiaomi_miio
-#     host: 192.168.1.221
-#     token: !secret vac_token
+vacuum:
+  - platform: xiaomi_miio
+    host: 192.168.1.221
+    token: !secret vac_token
+    name: Sparky
 
 
 sensor:
@@ -216,7 +217,7 @@ automation:
           entity_id: media_player.family_room_home
           message: "Front door open!"
 
-  - alias: front_door_open_tts
+  - alias: front_door_open_tts_not_home
     trigger:
       - platform: state
         entity_id: binary_sensor.door_window_sensor_158d0001e72c11
@@ -253,7 +254,7 @@ automation:
           entity_id: media_player.family_room_home
           message: "Garage door open!"
 
-  - alias: garage_door_open_tts
+  - alias: garage_door_open_tts_not_home
     trigger:
       - platform: state
         entity_id: binary_sensor.door_window_sensor_158d0001e72bef
@@ -288,7 +289,7 @@ automation:
           entity_id: media_player.family_room_home
           message: "Patio door open!"
 
-  - alias: patio_door_open_tts
+  - alias: patio_door_open_tts_not_home
     trigger:
       - platform: state
         entity_id: binary_sensor.door_window_sensor_158d0002025b91

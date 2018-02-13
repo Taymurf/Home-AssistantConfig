@@ -6,7 +6,7 @@ homeassistant:
   customize:
     #TP-Link 110
     switch.mini_fridge:
-      friendly_name: 'Mini Fridge'
+      friendly_name: 'Office Gadgets'
     sensor.mini_fridge_amps:
       friendly_name: 'Amps'
       icon: mdi:clipboard-flow
@@ -38,15 +38,15 @@ group:
       - group.mini_fridge
 
   mini_fridge:
-    name: Mini Fridge Consumption
+    name: Office Gadgets Consumption
     icon: mdi:fridge-filled
     entities:
       - sensor.mini_fridge_state
       - sensor.mini_fridge_watts
       - sensor.mini_fridge_today_kwh
-      - sensor.mini_fridge_cost_today
+      # - sensor.mini_fridge_cost_today
       - sensor.mini_fridge_total_kwh
-      - sensor.mini_fridge_cost_total
+      # - sensor.mini_fridge_cost_total
       - sensor.mini_fridge_amps
       - sensor.mini_fridge_volts
 
@@ -94,14 +94,14 @@ sensor:
             mdi:power-plug-off
           {% endif %}
 
-  - platform: template
-    sensors:
-      mini_fridge_cost_today:
-        value_template: '{{ (states.switch.mini_fridge.attributes.today_energy_kwh | multiply(0.098)) | round(2) | int }}'
-        unit_of_measurement: '$'
+  # - platform: template
+  #   sensors:
+  #     mini_fridge_cost_today:
+  #       value_template: '{{ (states.switch.mini_fridge.attributes.today_energy_kwh | multiply(0.098)) | round(2) | int }}'
+  #       unit_of_measurement: '$'
 
-  - platform: template
-    sensors:
-      mini_fridge_cost_total:
-        value_template: '{{ (states.sensor.mini_fridge_total_kwh.state | multiply(0.098)) | round(2) | int }}'
-        unit_of_measurement: '$'
+  # - platform: template
+  #   sensors:
+  #     mini_fridge_cost_total:
+  #       value_template: '{{ (states.sensor.mini_fridge_total_kwh.state | multiply(0.098)) | round(2) | int }}'
+  #       unit_of_measurement: '$'

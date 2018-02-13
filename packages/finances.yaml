@@ -1,0 +1,79 @@
+################################################################
+## Packages / Market Tracking
+################################################################
+
+homeassistant:
+  customize:
+    sensor.miners_revenue_2:
+      friendly_name: Miners Revenue (USD)
+      icon: mdi:currency-usd
+    sensor.miners_revenue:
+      friendly_name: Miners Revenue (BTC)
+      icon: mdi:currency-btc
+    sensor.mined:
+      friendly_name: BTC Mined
+      icon: mdi:currency-btc
+    sensor.exchange_rate_1_btc:
+      friendly_name: Current Value
+      icon: mdi:currency-usd
+      unit_of_measurement: '$'
+    sensor.trade_volume:
+      friendly_name: Trade Volume
+    sensor.total_sent:
+      friendly_name: Total BTC Sent
+    sensor.est_transaction_volume:
+      friendly_name: Estimated Transaction Volume
+
+group:
+  bitcoin:
+    name: Bitcoin
+    icon: mdi:currency-btc
+    entities:
+      - sensor.exchange_rate_1_btc
+      - sensor.trade_volume
+      - sensor.miners_revenue_2
+      - sensor.mined
+      - sensor.trade_volume
+      - sensor.total_sent
+      - sensor.est_transaction_volume
+
+  # stock_prices:
+  #   name: Stock Prices
+  #   icon: mdi:currency-usd
+  #   entities:
+  #     - sensor.bitcoin
+  #     - sensor.sp_500
+  #     - sensor.dow_jones
+  #     - sensor.nasdaq
+
+
+sensor:
+  - platform: bitcoin
+    display_options:
+      - exchangerate
+      - trade_volume_btc
+      - miners_revenue_usd
+      - btc_mined
+      - total_btc_sent
+      - estimated_transaction_volume_usd
+      - miners_revenue_btc
+
+  # - platform: alpha_vantage
+  #   api_key: !secret av_api
+  #   symbols:
+  #     - name: S&P 500
+  #       currency: USD
+  #       symbol: INX
+  #     - name: Dow Jones
+  #       currency: USD
+  #       symbol: DJI
+  #     - name: Nasdaq
+  #       currency: USD
+  #       symbol: IXIC
+  #     - name: Vanguard Fund
+  #       currency: USD
+  #       symbol: VTSAX
+  #   foreign_exchange:
+  #     - from: BTC
+  #       to: USD
+  #       name: Bitcoin

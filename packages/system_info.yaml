@@ -70,6 +70,8 @@ homeassistant:
     sensor.sent_eno1:
       friendly_name: Data Sent
       icon: mdi:upload-network
+    sensor.ha_version:
+      friendly_name: HA Version
 
 ###### STATE CARD
 
@@ -137,15 +139,11 @@ sensor:
       - type: process
         arg: sshd
       - type: process
-        arg: dhcpd
-      - type: process
         arg: autossh
       - type: process
         arg: mosquitto
       - type: process
         arg: pi-hole
-      - type: process
-        arg: homebridge
 
   - platform: command_line
     name: CPU Temperature

@@ -83,11 +83,11 @@ automation:
         to: 'on'
       - platform: numeric_state
         entity_id: 'sensor.master_bedroom_lux'
-        below: 105
+        below: 500
     condition:
       - condition: numeric_state
         entity_id: 'sensor.master_bedroom_lux'
-        below: 105
+        below: 500
       - condition: state
         entity_id: input_boolean.sleep
         state: 'off'
@@ -122,11 +122,11 @@ automation:
         to: 'on'
       - platform: numeric_state
         entity_id: 'sensor.master_bedroom_lux'
-        below: 105
+        below: 500
     condition:
       - condition: numeric_state
         entity_id: 'sensor.master_bedroom_lux'
-        below: 105
+        below: 500
       - condition: state
         entity_id: input_boolean.sleep
         state: 'off'
@@ -161,11 +161,11 @@ automation:
         to: 'on'
       - platform: numeric_state
         entity_id: 'sensor.master_bedroom_lux'
-        below: 105
+        below: 500
     condition:
       - condition: numeric_state
         entity_id: 'sensor.master_bedroom_lux'
-        below: 105
+        below: 500
       - condition: state
         entity_id: input_boolean.sleep
         state: 'on'
@@ -196,11 +196,11 @@ automation:
         to: 'on'
       - platform: numeric_state
         entity_id: 'sensor.master_bedroom_lux'
-        below: 105
+        below: 500
     condition:
       - condition: numeric_state
         entity_id: 'sensor.master_bedroom_lux'
-        below: 105
+        below: 500
       - condition: state
         entity_id: input_boolean.sleep
         state: 'on'

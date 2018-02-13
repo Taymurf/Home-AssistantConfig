@@ -353,11 +353,11 @@ automation:
         entity_id: binary_sensor.family_room_motion
         to: 'on'
       - platform: numeric_state
-        entity_id: 'sensor.family_room_lux'
+        entity_id: 'sensor.kitchen_lux'
         below: 105
     condition:
       - condition: numeric_state
-        entity_id: 'sensor.family_room_lux'
+        entity_id: 'sensor.kitchen_lux'
         below: 105
       - condition: state
         entity_id: binary_sensor.family_room_motion
@@ -389,11 +389,11 @@ automation:
         entity_id: binary_sensor.family_room_motion
         to: 'on'
       - platform: numeric_state
-        entity_id: 'sensor.family_room_lux'
+        entity_id: 'sensor.kitchen_lux'
         below: 105
     condition:
       - condition: numeric_state
-        entity_id: 'sensor.family_room_lux'
+        entity_id: 'sensor.kitchen_lux'
         below: 105
       - condition: state
         entity_id: binary_sensor.family_room_motion
