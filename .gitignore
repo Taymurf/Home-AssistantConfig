@@ -4,12 +4,15 @@
 *.crt
 *.key
 .cloud
+certs
 deps
 icloud
 packages/apc_ups.yaml.noload
 packages/device_status.yaml.noload
+packages/energy_monitoring.yaml.noload
 packages/first_morning.yaml.noload
 packages/good_morning.yaml.noload
+packages/google_calendar.yaml.noload
 packages/googlehome.yaml.noload
 packages/ha_podcast.yaml.noload
 packages/life360.yaml.noload
@@ -34,7 +37,9 @@ home-assistant_v2.db
 html5_push_registrations.conf
 known_devices.yaml
 nest.conf
+plex.conf.noload
 phue.conf
+phue.conf.noload
 phue-0017887de967.conf
 secrets.yaml
 upsmychoice_cookies.pickle

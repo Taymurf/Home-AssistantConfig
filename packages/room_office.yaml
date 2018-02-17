@@ -33,66 +33,132 @@ group:
       - sensor.office_dimmer_switch_battery
 
 
-sensor:
-##### Office Dimmer Switch ###
-  - platform: rest
-    resource: !secret hue_sensor_22
-    value_template: '{{ value_json.state.buttonevent }}'
-    scan_interval: 2
-    name: 'Office Dimmer State'
-  - platform: template
-    sensors:
-      office_dimmer_state:
-        friendly_name: 'Office Dimmer Last Button Push'
-        value_template: >-
-                      {% if states('sensor.office_dimmer_state_2')[0] == "1" %}
-                        on
-                      {% elif states('sensor.office_dimmer_state_2')[0] == "4" %}
-                        off
-                      {% else %}
-                        None
-                      {% endif %}
+# sensor:
+# ##### Office Dimmer Switch ###
+#   - platform: rest
+#     resource: !secret hue_sensor_22
+#     value_template: '{{ value_json.state.buttonevent }}'
+#     scan_interval: 2
+#     name: 'Office Dimmer State'
+#   - platform: template
+#     sensors:
+#       office_dimmer_state:
+#         friendly_name: 'Office Dimmer Last Button Push'
+#         value_template: >-
+#                       {% if states('sensor.office_dimmer_state_2')[0] == "1" %}
+#                         on
+#                       {% elif states('sensor.office_dimmer_state_2')[0] == "4" %}
+#                         off
+#                       {% else %}
+#                         None
+#                       {% endif %}
 
-  - platform: rest
-    resource: !secret hue_sensor_22
-    value_template: '{{ value_json.state.lastupdated }}'
-    scan_interval: 10
-    name: 'Office Dimmer Last Update'
+#   - platform: rest
+#     resource: !secret hue_sensor_22
+#     value_template: '{{ value_json.state.lastupdated }}'
+#     scan_interval: 10
+#     name: 'Office Dimmer Last Update'
 
-  - platform: template
-    sensors:
-      office_dimmer_last_update:
-        friendly_name: 'Office Last Used'
-        value_template: >-
-          {{ as_timestamp(strptime(states('sensor.office_dimmer_last_update_2')[:19], "%Y-%m-%dT%X"))|timestamp_custom("%a, %B %d")}}
+#   - platform: template
+#     sensors:
+#       office_dimmer_last_update:
+#         friendly_name: 'Office Last Used'
+#         value_template: >-
+#           {{ as_timestamp(strptime(states('sensor.office_dimmer_last_update_2')[:19], "%Y-%m-%dT%X"))|timestamp_custom("%a, %B %d")}}
 
-  - platform: rest
-    resource: !secret hue_sensor_22
-    value_template: '{{ value_json.config.battery }}'
-    unit_of_measurement: '%'
-    scan_interval: 1800
-    name: 'Office Dimmer Battery'
+#   - platform: rest
+#     resource: !secret hue_sensor_22
+#     value_template: '{{ value_json.config.battery }}'
+#     unit_of_measurement: '%'
+#     scan_interval: 1800
+#     name: 'Office Dimmer Battery'
 
+automation:
+  ### Turn On Lights w/ Motion
+###### Lights Off
+  - alias: 'office_lights_on_daytime'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.office_motion
+        to: 'on'
+    condition:
+      - condition: state
+        entity_id: light.office
+        state: 'off'
+    action:
+      - service: light.turn_on
+        data:
+          entity_id: light.office
+          brightness: 179
+      - service: light.turn_on
+###### Light off after 10 minutes
+  # - alias: 'office_light_off'
+  #   initial_state: 'on'
+  #   trigger:
+  #     - platform: state
+  #       entity_id: binary_sensor.office_motion
+  #       to: 'off'
+  #       for:
+  #         hours: 0
+  #         minutes: 10
+  #         seconds: 0
+  #   action:
+  #     - service: light.turn_off
+  #       data:
+  #         entity_id: light.office
 
-# automation:
-#   - alias: 'office_morning_weather_report'
-#     initial_state: 'on'
-#     trigger:
-#       - platform: state
-#         entity_id: sensor.office_dimmer_state
-#         from: 'off'
-#         to: 'on'
-#     condition:
-#       - condition: time
-#         after: '05:00:00'
-#         before: '09:00:00'
-#     action:
-#       - service: script.turn_on
-#         entity_id: script.weather_report
-#       - service: automation.turn_off
-#         data:
-#           entity_id: automation.office_morning_weather_report
-#       - delay: '04:00:00'
-#       - service: automation.turn_on
-#         data:
-#           entity_id: automation.office_morning_weather_report
+  ### Energy saving
+###### Energy saving during work
+  - alias: 'most_lights_off_when_working'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.office_motion
+        to: 'on'
+    condition:
+      # - condition: or
+      #   conditions:
+      #     - condition: state
+      #       entity_id: 'input_boolean.taylor'
+      #       state: 'off'
+      #     - condition: state
+      #       entity_id: 'input_boolean.marisa'
+      #       state: 'off'
+      # - condition: state
+      #   entity_id: 'input_boolean.away'
+      #   state: 'off'
+      - condition: state
+        entity_id: 'binary_sensor.kitchen_motion'
+        state: 'off'
+        for:
+            minutes: 12
+      - condition: state
+        entity_id: 'binary_sensor.family_room_motion'
+        state: 'off'
+        for:
+            minutes: 12
+      - condition: state
+        entity_id: 'binary_sensor.master_bedroom_motion'
+        state: 'off'
+        for:
+            minutes: 12
+      - condition: state
+        entity_id: 'binary_sensor.master_bathroom_motion'
+        state: 'off'
+        for:
+            minutes: 12
+      - condition: state
+        entity_id: 'binary_sensor.garage_motion'
+        state: 'off'
+        for:
+            minutes: 12
+      - condition: state
+        entity_id: 'binary_sensor.patio_motion'
+        state: 'off'
+        for:
+            minutes: 12
+    action:
+      - service: light.turn_off
+        data:
+          entity_id: light.all_except_officelampentryway

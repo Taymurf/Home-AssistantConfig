@@ -50,11 +50,10 @@ group:
     entities:
       - group.weather
       - group.bitcoin
-      - group.server_status
       - group.motion_sensors
       - group.lux
-      - group.all_temps
-      - group.sensor_battery_levels
+      - group.indoor_temps
+      - group.outdoor_temps
 
   system_view:
     name: System Info
@@ -64,6 +63,7 @@ group:
       - group.network
       - group.systeminfo
       - group.hassctl
+      - group.docker_containers
       - group.mini_fridge
 
   synology:

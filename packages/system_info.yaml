@@ -28,53 +28,41 @@ homeassistant:
     sensor.cpu_temperature:
       friendly_name: CPU Temperature
       icon: mdi:thermometer
-    sensor.average_load_1m:
+    sensor.load_1m:
       friendly_name: CPU Load (1m)
       icon: mdi:worker
-    sensor.average_load_5m:
+    sensor.load_5m:
       friendly_name: CPU Load (5m)
       icon: mdi:worker
-    sensor.average_load_15m:
+    sensor.load_15m:
       friendly_name: CPU Load (15m)
       icon: mdi:worker
-    sensor.cpu_used:
+    sensor.processor_use:
       friendly_name: CPU Used
       icon: mdi:desktop-tower
-    sensor.disk_used_:
+    sensor.disk_use_:
       friendly_name: Harddrive Used
       icon: mdi:harddisk
-    sensor.disk_used__2:
+    sensor.disk_use_percent_:
       friendly_name: Harddrive % Used
       icon: mdi:harddisk
     sensor.disk_free_:
       friendly_name: Harddrive Free
       icon: mdi:harddisk
-    sensor.ram_free:
+    sensor.memory_free:
       friendly_name: RAM Free
       icon: mdi:chip
-    sensor.ram_used:
+    sensor.memory_use_percent:
       friendly_name: RAM % Used
       icon: mdi:chip
     sensor.ram_used_2:
       friendly_name: RAM Used
       icon: mdi:chip
-    sensor.ipv4_address_eno1:
-      friendly_name: IPv4 Address
-      icon: mdi:server-network
-    sensor.ipv6_address_eno1:
-      friendly_name: IPv4 Address
-      icon: mdi:server-network
-    sensor.received_eno1:
-      friendly_name: Data Received
-      icon: mdi:download-network
-    sensor.sent_eno1:
-      friendly_name: Data Sent
-      icon: mdi:upload-network
     sensor.ha_version:
       friendly_name: HA Version
 
-###### STATE CARD
 
+###### STATE CARD
 group:
   systeminfo:
     control: hidden
@@ -85,24 +73,17 @@ group:
       - sensor.ha_uptime_human
       - sensor.uname
       - sensor.cpu_temperature
-      - sensor.cpu_used
-      - sensor.average_load_1m
-      - sensor.average_load_5m
-      - sensor.average_load_15m
-      # - sensor.disk_used_
-      - sensor.disk_used__2
+      - sensor.processor_use
+      - sensor.load_1m
+      - sensor.load_5m
+      - sensor.load_15m
+      # - sensor.disk_use_
+      - sensor.disk_use_percent
       # - sensor.disk_free_
-      # - sensor.swap_free
-      # - sensor.swap_used
-      - sensor.swap_used_2
-      # - sensor.ram_free
-      - sensor.ram_used
+      # - sensor.memory_free
+      - sensor.memory_use_percent
       # - sensor.ram_used_2
       # - sensor.ipv4_address_eno1
-      - sensor.mosquitto_state
-      - sensor.sshd_state
-      - sensor.pihole_state
-      - sensor.homebridge_state
 
 
 weblink:
@@ -143,7 +124,7 @@ sensor:
       - type: process
         arg: mosquitto
       - type: process
-        arg: pi-hole
+        arg: docker
 
   - platform: command_line
     name: CPU Temperature
@@ -263,70 +244,6 @@ sensor:
            {%- endmacro %}
            {{ human_time(states.sensor.ha_uptime_in_seconds.state | int ) }}
 
-  - platform: template
-    sensors:
-      mosquitto_state:
-        friendly_name: "Mosquitto"
-        value_template: >-
-          {% if is_state('sensor.process_mosquitto', 'on') %}
-            Running
-          {% else %}
-            Disabled
-          {% endif %}
-        icon_template: >-
-          {% if is_state('sensor.process_mosquitto', 'on') %}
-            mdi:checkbox-marked
-          {% else %}
-            mdi:checkbox-blank-outline
-          {% endif %}
 
-  - platform: template
-    sensors:
-      sshd_state:
-        friendly_name: "SSHD"
-        value_template: >-
-          {% if is_state('sensor.process_sshd', 'on') %}
-            Running
-          {% else %}
-            Disabled
-          {% endif %}
-        icon_template: >-
-          {% if is_state('sensor.process_sshd', 'on') %}
-            mdi:checkbox-marked
-          {% else %}
-            mdi:checkbox-blank-outline
-          {% endif %}
 
-  # - platform: template
-  #   sensors:
-  #     pihole_state:
-  #       friendly_name: "Pi-hole State"
-  #       value_template: >-
-  #         {% if is_state('sensor.process_pihole', 'on') %}
-  #           Running
-  #         {% else %}
-  #           Disabled
-  #         {% endif %}
-  #       icon_template: >-
-  #         {% if is_state('sensor.process_pihole', 'on') %}
-  #           mdi:checkbox-marked
-  #         {% else %}
-  #           mdi:checkbox-blank-outline
-  #         {% endif %}
 
-  # - platform: template
-  #   sensors:
-  #     homebridge_state:
-  #       friendly_name: "Homebridge State"
-  #       value_template: >-
-  #         {% if is_state('sensor.process_homebridge', 'on') %}
-  #           Running
-  #         {% else %}
-  #           Disabled
-  #         {% endif %}
-  #       icon_template: >-
-  #         {% if is_state('sensor.process_homebridge', 'on') %}
-  #           mdi:checkbox-marked
-  #         {% else %}
-  #           mdi:checkbox-blank-outline
-  #         {% endif %}

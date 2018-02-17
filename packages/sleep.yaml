@@ -1,0 +1,37 @@
+################################################################
+## Packages / Sleep Boolean
+################################################################
+
+
+input_boolean:
+  sleep:
+    name: Sleep
+    icon: mdi:sleep
+
+automation:
+###### Boolean Control
+  - alias: 'sleep_mode_off'
+    initial_state: 'on'
+    trigger:
+      - platform: time
+        at: '09:00:00'
+    action:
+      - service: input_boolean.turn_off
+        data:
+          entity_id: input_boolean.sleep
+
+  - alias: 'sleep_mode_on'
+    initial_state: 'on'
+    trigger:
+      - platform: time
+        at: '23:00:00'
+    condition:
+      - condition: state
+        entity_id: 'binary_sensor.office_motion'
+        state: 'off'
+        for:
+            minutes: 10
+    action:
+      - service: input_boolean.turn_on
+        data:
+          entity_id: input_boolean.sleep

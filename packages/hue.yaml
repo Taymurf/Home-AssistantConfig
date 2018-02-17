@@ -6,8 +6,8 @@
 homeassistant:
   customize:
     #philips hue motion sensors
-    ### Kitchen ###
-    sensor.kitchen_motion:
+### Kitchen ###
+    binary_sensor.kitchen_motion:
       friendly_name: "Kitchen"
       icon: mdi:run
     sensor.kitchen_lux:
@@ -18,9 +18,20 @@ homeassistant:
     sensor.kitchen_motion_sensor_battery_level:
       friendly_name: Kitchen Sensor
       icon: mdi:battery
-
-    ### Master Bathroom ###
-    sensor.master_bathroom_motion:
+### Master Bedroom ###
+    binary_sensor.master_bedroom_motion:
+      friendly_name: "Master Bedroom"
+      icon: mdi:run
+    sensor.master_bedroom_lux:
+      icon: mdi:theme-light-dark
+    sensor.master_bedroom_temperature:
+      icon: mdi:thermometer
+      friendly_name: Master Bedroom
+    sensor.master_bedroom_motion_sensor_battery_level:
+      friendly_name: Master Bedroom Sensor
+      icon: mdi:battery
+### Master Bathroom ###
+    binary_sensor.master_bathroom_motion:
       friendly_name: "Master Bathroom"
       icon: mdi:run
     sensor.master_bathroom_lux:
@@ -31,9 +42,8 @@ homeassistant:
     sensor.master_bathroom_motion_sensor_battery_level:
       friendly_name: Master Bathroom Sensor
       icon: mdi:battery
-
-    ### Garage ###
-    sensor.garage_motion:
+### Garage ###
+    binary_sensor.garage_motion:
       friendly_name: "Garage"
       icon: mdi:run
     sensor.garage_lux:
@@ -44,9 +54,8 @@ homeassistant:
     sensor.garage_motion_sensor_battery_level:
       friendly_name: Garage Sensor
       icon: mdi:battery
-
-    ### Patio ###
-    sensor.patio_motion:
+### Patio ###
+    binary_sensor.patio_motion:
       friendly_name: "Patio"
       icon: mdi:run
     sensor.patio_lux:
@@ -56,6 +65,30 @@ homeassistant:
       friendly_name: Patio
     sensor.patio_motion_sensor_battery_level:
       friendly_name: Patio Sensor
+      icon: mdi:battery
+### Family Room ###
+    binary_sensor.family_room_motion:
+      friendly_name: "Family Room"
+      icon: mdi:run
+    sensor.family_room_lux:
+      icon: mdi:theme-light-dark
+    sensor.family_room_temperature:
+      icon: mdi:thermometer
+      friendly_name: Family Room
+    sensor.family_room_motion_sensor_battery_level:
+      friendly_name: Family Room Sensor
+      icon: mdi:battery
+### Office ###
+    binary_sensor.office_motion:
+      friendly_name: "Office"
+      icon: mdi:run
+    sensor.office_lux:
+      icon: mdi:theme-light-dark
+    sensor.office_temperature:
+      icon: mdi:thermometer
+      friendly_name: Office
+    sensor.office_motion_sensor_battery_level:
+      friendly_name: Office Sensor
       icon: mdi:battery
 
     ############ DIMMERS #################
@@ -108,7 +141,6 @@ group:
       - light.office
       - light.patio
       - light.garage_2
-
   hue_color_bulbs:
     name: Lights (Color)
     icon: mdi:lightbulb-on
@@ -120,14 +152,12 @@ group:
       - light.kitchen_lightstrip_2
       - light.lamp
       - light.side_table
-
   kitchen_lightstrips_only:
     name: Kitchen Lightstrips
     icon: mdi:lightbulb_on
     entities:
       - light.kitchen_lightstrip
       - light.kitchen_lightstrip_2
-      
   dimmers_status_card:
     name: Dimmers
     entities:
@@ -141,67 +171,67 @@ group:
       - sensor.office_dimmer_last_update
       - sensor.family_room_dimmer_state
       - sensor.family_room_dimmer_last_update
-
   kitchen_motion_sensor:
     name: Kitchen Sensor
     icon: mdi:instagram
     entities:
-      - binary_sensor.kitchen_motion
+      - sensor.kitchen_motion_state
       - sensor.kitchen_lux
       - sensor.kitchen_temperature
       - sensor.kitchen_motion_sensor_battery_level
-
   master_bedroom_motion_sensor:
     name: Master Bedroom Sensor
     icon: mdi:instagram
     entities:
-      - binary_sensor.master_bedroom_motion
+      - sensor.master_bedroom_motion_state
       - sensor.master_bedroom_lux
       - sensor.master_bedroom_temperature
       - sensor.master_bedroom_motion_sensor_battery_level
-
   master_bathroom_motion_sensor:
     name: Master Bathroom Sensor
     icon: mdi:instagram
     entities:
-      - binary_sensor.master_bathroom_motion
+      - sensor.master_bathroom_motion_state
       - sensor.master_bathroom_lux
       - sensor.master_bathroom_temperature
-
   family_room_motion_sensor:
     name: Family Room Sensor
     icon: mdi:instagram
     entities:
-      - binary_sensor.family_room_motion
+      - sensor.family_room_motion_state
       - sensor.family_room_lux
       - sensor.family_room_temperature
-
   garage_motion_sensor:
     name: Garage Sensor
     icon: mdi:instagram
     entities:
-      - binary_sensor.garage_motion
+      - sensor.garage_motion_state
       - sensor.garage_lux
       - sensor.garage_temperature
-
   patio_motion_sensor:
     name: Patio Sensor
     icon: mdi:instagram
     entities:
-      - binary_sensor.patio_motion
+      - sensor.patio_motion_state
       - sensor.patio_lux
       - sensor.patio_temperature
-
+  office_motion_sensor:
+    name: Office Sensor
+    icon: mdi:instagram
+    entities:
+      - sensor.office_motion_state
+      - sensor.office_lux
+      - sensor.office_temperature
   motion_sensors:
     name: Motion Sensors
     entities:
-     - binary_sensor.kitchen_motion
-     - binary_sensor.family_room_motion
-     - binary_sensor.master_bedroom_motion
-     - binary_sensor.master_bathroom_motion
-     - binary_sensor.garage_motion
-     - binary_sensor.patio_motion
-
+     - sensor.kitchen_motion_state
+     - sensor.master_bedroom_motion_state
+     - sensor.master_bathroom_motion_state
+     - sensor.office_motion_state
+     - sensor.family_room_motion_state
+     - sensor.patio_motion_state
+     - sensor.garage_motion_state
   sensor_battery_levels:
     name: Battery Levels
     entities:
@@ -219,15 +249,17 @@ group:
      - sensor.office_dimmer_battery
      - sensor.family_room_dimmer_battery
      - sensor.family_room_motion_sensor_battery_level
-
+     - sensor.office_motion_sensor_battery_level
   lux:
     name: Light Level
     entities:
       - sensor.kitchen_lux
+      - sensor.master_bedroom_lux
       - sensor.master_bathroom_lux
+      - sensor.family_room_lux
       - sensor.garage_lux
       - sensor.patio_lux
-
+      - sensor.office_lux
   light_automations:
     name: Light Automations
     icon: mdi:auto-fix
@@ -243,11 +275,13 @@ hue:
   bridges:
     - host: 192.168.1.202
       allow_unreachable: True
+      filename: phue.conf
 
 
 ###### BINARY SENSORS ------------------------------------------
 
 binary_sensor:
+  ### Motion Sensors ###
   - platform: rest
     resource: !secret hue_sensor_12
     value_template: '{{ value_json.state.presence }}'
@@ -284,6 +318,12 @@ binary_sensor:
     scan_interval: 1
     name: 'Master Bedroom Motion'
 
+  - platform: rest
+    resource: !secret hue_sensor_47
+    value_template: '{{ value_json.state.presence }}'
+    scan_interval: 1
+    name: 'Office Motion'
+
 
 ###### SENSORS -------------------------------------------------
 sensor:
@@ -298,126 +338,262 @@ sensor:
     name: 'Kitchen Lux'
     scan_interval: 80
 
-  - platform: rest
-    resource: !secret hue_sensor_11
-    value_template: '{{ (value_json.state.temperature | float / 100 + 1.6) | round(1) }}'
-    unit_of_measurement: °C
-    name: 'Kitchen Temperature'
-    scan_interval: 120
+  # - platform: rest
+  #   resource: !secret hue_sensor_11
+  #   value_template: '{{ (value_json.state.temperature | float / 100 + 1.6) | round(1) }}'
+  #   unit_of_measurement: °C
+  #   name: 'Kitchen Temperature'
+  #   scan_interval: 120
 
-  - platform: rest
-    resource: !secret hue_sensor_12
-    value_template: '{{ value_json.config.battery }}'
-    unit_of_measurement: '%'
-    scan_interval: 1800
-    name: 'Kitchen Motion Sensor Battery Level'
+  # - platform: rest
+  #   resource: !secret hue_sensor_12
+  #   value_template: '{{ value_json.config.battery }}'
+  #   unit_of_measurement: '%'
+  #   scan_interval: 1800
+  #   name: 'Kitchen Motion Sensor Battery Level'
 
   ### Master Bathroom Motion Sensor ###
-  - platform: rest
-    resource: !secret hue_sensor_7
-    value_template: "{{(10 ** (float (value_json.state.lightlevel) / 10000) -1) | round (1)}} "
-    unit_of_measurement: Lux
-    name: 'Master Bathroom Lux'
-    scan_interval: 600
+  # - platform: rest
+  #   resource: !secret hue_sensor_7
+  #   value_template: "{{(10 ** (float (value_json.state.lightlevel) / 10000) -1) | round (1)}} "
+  #   unit_of_measurement: Lux
+  #   name: 'Master Bathroom Lux'
+  #   scan_interval: 600
 
-  - platform: rest
-    resource: !secret hue_sensor_5
-    value_template: '{{ (value_json.state.temperature | float / 100 + 0.35) | round(1) }}'
-    unit_of_measurement: °C
-    name: 'Master Bathroom Temperature'
-    scan_interval: 120
+  # - platform: rest
+  #   resource: !secret hue_sensor_5
+  #   value_template: '{{ (value_json.state.temperature | float / 100 + 0.35) | round(1) }}'
+  #   unit_of_measurement: °C
+  #   name: 'Master Bathroom Temperature'
+  #   scan_interval: 120
 
-  - platform: rest
-    resource: !secret hue_sensor_6
-    value_template: '{{ value_json.config.battery }}'
-    unit_of_measurement: '%'
-    scan_interval: 1800
-    name: 'Master Bathroom Motion Sensor Battery Level'
+  # - platform: rest
+  #   resource: !secret hue_sensor_6
+  #   value_template: '{{ value_json.config.battery }}'
+  #   unit_of_measurement: '%'
+  #   scan_interval: 1800
+  #   name: 'Master Bathroom Motion Sensor Battery Level'
 
   ### Garage Motion Sensor ##
-  - platform: rest
-    resource: !secret hue_sensor_4
-    value_template: "{{(10 ** (float (value_json.state.lightlevel) / 10000) -1) | round (1)}} "
-    unit_of_measurement: Lux
-    name: 'Garage Lux'
-    scan_interval: 600
+  # - platform: rest
+  #   resource: !secret hue_sensor_4
+  #   value_template: "{{(10 ** (float (value_json.state.lightlevel) / 10000) -1) | round (1)}} "
+  #   unit_of_measurement: Lux
+  #   name: 'Garage Lux'
+  #   scan_interval: 600
 
-  - platform: rest
-    resource: !secret hue_sensor_2
-    value_template: '{{ (value_json.state.temperature | float / 100) | round(1) }}'
-    unit_of_measurement: °C
-    name: 'Garage Temperature'
-    scan_interval: 120
+  # - platform: rest
+  #   resource: !secret hue_sensor_2
+  #   value_template: '{{ (value_json.state.temperature | float / 100) | round(1) }}'
+  #   unit_of_measurement: °C
+  #   name: 'Garage Temperature'
+  #   scan_interval: 120
 
-  - platform: rest
-    resource: !secret hue_sensor_3
-    value_template: '{{ value_json.config.battery }}'
-    unit_of_measurement: '%'
-    scan_interval: 1800
-    name: 'Garage Motion Sensor Battery Level'
+  # - platform: rest
+  #   resource: !secret hue_sensor_3
+  #   value_template: '{{ value_json.config.battery }}'
+  #   unit_of_measurement: '%'
+  #   scan_interval: 1800
+  #   name: 'Garage Motion Sensor Battery Level'
 
-  ### Patio Motion Sensor ##
+  ## Patio Motion Sensor ##
   - platform: rest
     resource: !secret hue_sensor_10
     value_template: "{{(10 ** (float (value_json.state.lightlevel) / 10000) -1) | round (1)}} "
     unit_of_measurement: Lux
     name: 'Patio Lux'
-    scan_interval: 600
+    scan_interval: 200
 
-  - platform: rest
-    resource: !secret hue_sensor_8
-    value_template: '{{ (value_json.state.temperature | float / 100) | round(1) }}'
-    unit_of_measurement: °C
-    name: 'Patio Temperature'
-    scan_interval: 120
+  # - platform: rest
+  #   resource: !secret hue_sensor_8
+  #   value_template: '{{ (value_json.state.temperature | float / 100) | round(1) }}'
+  #   unit_of_measurement: °C
+  #   name: 'Patio Temperature'
+  #   scan_interval: 120
 
-  - platform: rest
-    resource: !secret hue_sensor_9
-    value_template: '{{ value_json.config.battery }}'
-    unit_of_measurement: '%'
-    scan_interval: 1800
-    name: 'Patio Motion Sensor Battery Level'
+  # - platform: rest
+  #   resource: !secret hue_sensor_9
+  #   value_template: '{{ value_json.config.battery }}'
+  #   unit_of_measurement: '%'
+  #   scan_interval: 1800
+  #   name: 'Patio Motion Sensor Battery Level'
 
   ### Family Room Motion Sensor ##
-  - platform: rest
-    resource: !secret hue_sensor_44
-    value_template: "{{(10 ** (float (value_json.state.lightlevel) / 10000) -1) | round (1)}} "
-    unit_of_measurement: Lux
-    name: 'Family Room Lux'
-    scan_interval: 600
+  # - platform: rest
+  #   resource: !secret hue_sensor_44
+  #   value_template: "{{(10 ** (float (value_json.state.lightlevel) / 10000) -1) | round (1)}} "
+  #   unit_of_measurement: Lux
+  #   name: 'Family Room Lux'
+  #   scan_interval: 600
 
-  - platform: rest
-    resource: !secret hue_sensor_42
-    value_template: '{{ (value_json.state.temperature | float / 100) | round(1) }}'
-    unit_of_measurement: °C
-    name: 'Family Room Temperature'
-    scan_interval: 120
+  # - platform: rest
+  #   resource: !secret hue_sensor_42
+  #   value_template: '{{ (value_json.state.temperature | float / 100) | round(1) }}'
+  #   unit_of_measurement: °C
+  #   name: 'Family Room Temperature'
+  #   scan_interval: 120
 
-  - platform: rest
-    resource: !secret hue_sensor_43
-    value_template: '{{ value_json.config.battery }}'
-    unit_of_measurement: '%'
-    scan_interval: 1800
-    name: 'Family Room Motion Sensor Battery Level'
+  # - platform: rest
+  #   resource: !secret hue_sensor_43
+  #   value_template: '{{ value_json.config.battery }}'
+  #   unit_of_measurement: '%'
+  #   scan_interval: 1800
+  #   name: 'Family Room Motion Sensor Battery Level'
 
   ### Master Bedroom Motion Sensor ##
-  - platform: rest
-    resource: !secret hue_sensor_40
-    value_template: "{{(10 ** (float (value_json.state.lightlevel) / 10000) -1) | round (1)}} "
-    unit_of_measurement: Lux
-    name: 'Master Bedroom Lux'
-    scan_interval: 600
+  # - platform: rest
+  #   resource: !secret hue_sensor_40
+  #   value_template: "{{(10 ** (float (value_json.state.lightlevel) / 10000) -1) | round (1)}} "
+  #   unit_of_measurement: Lux
+  #   name: 'Master Bedroom Lux'
+  #   scan_interval: 600
 
-  - platform: rest
-    resource: !secret hue_sensor_38
-    value_template: '{{ (value_json.state.temperature | float / 100) | round(1) }}'
-    unit_of_measurement: °C
-    name: 'Master Bedroom Temperature'
-    scan_interval: 120
+  # - platform: rest
+  #   resource: !secret hue_sensor_38
+  #   value_template: '{{ (value_json.state.temperature | float / 100) | round(1) }}'
+  #   unit_of_measurement: °C
+  #   name: 'Master Bedroom Temperature'
+  #   scan_interval: 120
 
-  - platform: rest
-    resource: !secret hue_sensor_39
-    value_template: '{{ value_json.config.battery }}'
-    unit_of_measurement: '%'
-    scan_interval: 1800
-    name: 'Master Bedroom Motion Sensor Battery Level'
+  # - platform: rest
+  #   resource: !secret hue_sensor_39
+  #   value_template: '{{ value_json.config.battery }}'
+  #   unit_of_measurement: '%'
+  #   scan_interval: 1800
+  #   name: 'Master Bedroom Motion Sensor Battery Level'
+
+  ### Office Motion Sensor ###
+  # - platform: rest
+  #   resource: !secret hue_sensor_48
+  #   value_template: "{{(10 ** (float (value_json.state.lightlevel) / 10000) -1) | round (1)}} "
+  #   unit_of_measurement: Lux
+  #   name: 'Office Lux'
+  #   scan_interval: 600
+
+  # - platform: rest
+  #   resource: !secret hue_sensor_46
+  #   value_template: '{{ (value_json.state.temperature | float / 100 + 1.6) | round(1) }}'
+  #   unit_of_measurement: °C
+  #   name: 'Office Temperature'
+  #   scan_interval: 120
+
+  # - platform: rest
+  #   resource: !secret hue_sensor_47
+  #   value_template: '{{ value_json.config.battery }}'
+  #   unit_of_measurement: '%'
+  #   scan_interval: 1800
+  #   name: 'Office Motion Sensor Battery Level'
+
+###### Motion Sensor Changing Icon Templates
+  - platform: template
+    sensors:
+      kitchen_motion_state:
+        friendly_name: "Kitchen"
+        value_template: >-
+          {% if is_state('binary_sensor.kitchen_motion', 'on') %}
+            Detected!
+          {% else %}
+            N/A
+          {% endif %}
+        icon_template: >-
+          {% if is_state('binary_sensor.kitchen_motion', 'on') %}
+            mdi:run
+          {% else %}
+            mdi:run-fast
+          {% endif %}
+  - platform: template
+    sensors:
+      master_bedroom_motion_state:
+        friendly_name: "Master Bedroom"
+        value_template: >-
+          {% if is_state('binary_sensor.master_bedroom_motion', 'on') %}
+            Detected!
+          {% else %}
+            N/A
+          {% endif %}
+        icon_template: >-
+          {% if is_state('binary_sensor.master_bedroom_motion', 'on') %}
+            mdi:run
+          {% else %}
+            mdi:run-fast
+          {% endif %}
+  - platform: template
+    sensors:
+      master_bathroom_motion_state:
+        friendly_name: "Master Bathroom"
+        value_template: >-
+          {% if is_state('binary_sensor.master_bathroom_motion', 'on') %}
+            Detected!
+          {% else %}
+            N/A
+          {% endif %}
+        icon_template: >-
+          {% if is_state('binary_sensor.master_bathroom_motion', 'on') %}
+            mdi:run
+          {% else %}
+            mdi:run-fast
+          {% endif %}
+  - platform: template
+    sensors:
+      garage_motion_state:
+        friendly_name: "Garage"
+        value_template: >-
+          {% if is_state('binary_sensor.garage_motion', 'on') %}
+            Detected!
+          {% else %}
+            N/A
+          {% endif %}
+        icon_template: >-
+          {% if is_state('binary_sensor.garage_motion', 'on') %}
+            mdi:run
+          {% else %}
+            mdi:run-fast
+          {% endif %}
+  - platform: template
+    sensors:
+      patio_motion_state:
+        friendly_name: "Patio"
+        value_template: >-
+          {% if is_state('binary_sensor.patio_motion', 'on') %}
+            Detected!
+          {% else %}
+            N/A
+          {% endif %}
+        icon_template: >-
+          {% if is_state('binary_sensor.patio_motion', 'on') %}
+            mdi:run
+          {% else %}
+            mdi:run-fast
+          {% endif %}
+  - platform: template
+    sensors:
+      family_room_motion_state:
+        friendly_name: "Family Room"
+        value_template: >-
+          {% if is_state('binary_sensor.family_room_motion', 'on') %}
+            Detected!
+          {% else %}
+            N/A
+          {% endif %}
+        icon_template: >-
+          {% if is_state('binary_sensor.family_room_motion', 'on') %}
+            mdi:run
+          {% else %}
+            mdi:run-fast
+          {% endif %}
+  - platform: template
+    sensors:
+      office_motion_state:
+        friendly_name: "Office"
+        value_template: >-
+          {% if is_state('binary_sensor.office_motion', 'on') %}
+            Detected!
+          {% else %}
+            N/A
+          {% endif %}
+        icon_template: >-
+          {% if is_state('binary_sensor.office_motion', 'on') %}
+            mdi:run
+          {% else %}
+            mdi:run-fast
+          {% endif %}

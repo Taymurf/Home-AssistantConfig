@@ -12,11 +12,11 @@ automation:
         to: 'on'
       - platform: numeric_state
         entity_id: 'sensor.patio_lux'
-        below: 100
+        below: 120
     condition:
       - condition: numeric_state
         entity_id: 'sensor.patio_lux'
-        below: 100
+        below: 120
       - condition: state
         entity_id: binary_sensor.patio_motion
         state: 'on'
@@ -38,7 +38,7 @@ automation:
           seconds: 0
       - platform: numeric_state
         entity_id: 'sensor.patio_lux'
-        above: 100
+        above: 120
     action:
       - service: light.turn_off
         data:

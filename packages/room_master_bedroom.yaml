@@ -31,45 +31,45 @@ group:
       - sensor.bedroom_dimmer_battery
 
 
-sensor:
+# sensor:
 ###### Master Bedroom Dimmer Switch ###
-  - platform: rest
-    resource: !secret hue_sensor_18
-    value_template: '{{ value_json.state.buttonevent }}'
-    scan_interval: 2
-    name: 'Master Bedroom Dimmer State'
-  - platform: template
-    sensors:
-      master_bedroom_dimmer_state:
-        friendly_name: 'Master Bedroom Dimmer Last Button Push'
-        value_template: >-
-                      {% if states('sensor.master_bedroom_dimmer_state_2')[0] == "1" %}
-                        On
-                      {% elif states('sensor.master_bedroom_dimmer_state_2')[0] == "4" %}
-                        Off
-                      {% else %}
-                        None
-                      {% endif %}
+  # - platform: rest
+  #   resource: !secret hue_sensor_18
+  #   value_template: '{{ value_json.state.buttonevent }}'
+  #   scan_interval: 2
+  #   name: 'Master Bedroom Dimmer State'
+  # - platform: template
+  #   sensors:
+  #     master_bedroom_dimmer_state:
+  #       friendly_name: 'Master Bedroom Dimmer Last Button Push'
+  #       value_template: >-
+  #                     {% if states('sensor.master_bedroom_dimmer_state_2')[0] == "1" %}
+  #                       On
+  #                     {% elif states('sensor.master_bedroom_dimmer_state_2')[0] == "4" %}
+  #                       Off
+  #                     {% else %}
+  #                       None
+  #                     {% endif %}
 
-  - platform: rest
-    resource: !secret hue_sensor_18
-    value_template: '{{ value_json.state.lastupdated }}'
-    scan_interval: 10
-    name: 'Master Bedroom Dimmer Last Update'
+  # - platform: rest
+  #   resource: !secret hue_sensor_18
+  #   value_template: '{{ value_json.state.lastupdated }}'
+  #   scan_interval: 10
+  #   name: 'Master Bedroom Dimmer Last Update'
 
-  - platform: template
-    sensors:
-      master_bedroom_dimmer_last_update:
-        friendly_name: 'Master Bedroom Last Used'
-        value_template: >-
-          {{ as_timestamp(strptime(states('sensor.master_bedroom_dimmer_last_update_2')[:19], "%Y-%m-%dT%X"))|timestamp_custom("%a, %B %d")}}
+  # - platform: template
+  #   sensors:
+  #     master_bedroom_dimmer_last_update:
+  #       friendly_name: 'Master Bedroom Last Used'
+  #       value_template: >-
+  #         {{ as_timestamp(strptime(states('sensor.master_bedroom_dimmer_last_update_2')[:19], "%Y-%m-%dT%X"))|timestamp_custom("%a, %B %d")}}
 
-  - platform: rest
-    resource: !secret hue_sensor_18
-    value_template: '{{ value_json.config.battery }}'
-    unit_of_measurement: '%'
-    scan_interval: 1800
-    name: 'Master Bedroom Dimmer Battery'
+  # - platform: rest
+  #   resource: !secret hue_sensor_18
+  #   value_template: '{{ value_json.config.battery }}'
+  #   unit_of_measurement: '%'
+  #   scan_interval: 1800
+  #   name: 'Master Bedroom Dimmer Battery'
 
 
 automation:
@@ -81,19 +81,10 @@ automation:
       - platform: state
         entity_id: binary_sensor.master_bedroom_motion
         to: 'on'
-      - platform: numeric_state
-        entity_id: 'sensor.master_bedroom_lux'
-        below: 500
     condition:
-      - condition: numeric_state
-        entity_id: 'sensor.master_bedroom_lux'
-        below: 500
       - condition: state
         entity_id: input_boolean.sleep
         state: 'off'
-      - condition: state
-        entity_id: binary_sensor.master_bedroom_motion
-        state: 'on'
       - condition: state
         entity_id: light.master_bathroom
         state: 'off'
@@ -120,19 +111,10 @@ automation:
       - platform: state
         entity_id: binary_sensor.master_bedroom_motion
         to: 'on'
-      - platform: numeric_state
-        entity_id: 'sensor.master_bedroom_lux'
-        below: 500
     condition:
-      - condition: numeric_state
-        entity_id: 'sensor.master_bedroom_lux'
-        below: 500
       - condition: state
         entity_id: input_boolean.sleep
         state: 'off'
-      - condition: state
-        entity_id: binary_sensor.master_bedroom_motion
-        state: 'on'
       - condition: state
         entity_id: light.master_bathroom
         state: 'off'
@@ -159,18 +141,9 @@ automation:
       - platform: state
         entity_id: binary_sensor.master_bedroom_motion
         to: 'on'
-      - platform: numeric_state
-        entity_id: 'sensor.master_bedroom_lux'
-        below: 500
     condition:
-      - condition: numeric_state
-        entity_id: 'sensor.master_bedroom_lux'
-        below: 500
       - condition: state
         entity_id: input_boolean.sleep
-        state: 'on'
-      - condition: state
-        entity_id: binary_sensor.master_bedroom_motion
         state: 'on'
       - condition: state
         entity_id: light.master_bathroom
@@ -194,18 +167,9 @@ automation:
       - platform: state
         entity_id: binary_sensor.master_bedroom_motion
         to: 'on'
-      - platform: numeric_state
-        entity_id: 'sensor.master_bedroom_lux'
-        below: 500
     condition:
-      - condition: numeric_state
-        entity_id: 'sensor.master_bedroom_lux'
-        below: 500
       - condition: state
         entity_id: input_boolean.sleep
-        state: 'on'
-      - condition: state
-        entity_id: binary_sensor.master_bedroom_motion
         state: 'on'
       - condition: state
         entity_id: light.master_bathroom

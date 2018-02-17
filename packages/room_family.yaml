@@ -111,45 +111,45 @@ group:
      - light.kitchen_sink
 
 
-sensor:
-###### Family Room Dimmer Switch ###
-  - platform: rest
-    resource: !secret hue_sensor_14
-    value_template: '{{ value_json.state.buttonevent }}'
-    scan_interval: 2
-    name: 'Family Room Dimmer State'
-  - platform: template
-    sensors:
-      family_room_dimmer_state:
-        friendly_name: 'Family Room Dimmer Last Button Push'
-        value_template: >-
-                      {% if states('sensor.family_room_dimmer_state_2')[0] == "1" %}
-                        On
-                      {% elif states('sensor.family_room_dimmer_state_2')[0] == "4" %}
-                        Off
-                      {% else %}
-                        None
-                      {% endif %}
+# sensor:
+# ###### Family Room Dimmer Switch ###
+#   - platform: rest
+#     resource: !secret hue_sensor_14
+#     value_template: '{{ value_json.state.buttonevent }}'
+#     scan_interval: 2
+#     name: 'Family Room Dimmer State'
+#   - platform: template
+#     sensors:
+#       family_room_dimmer_state:
+#         friendly_name: 'Family Room Dimmer Last Button Push'
+#         value_template: >-
+#                       {% if states('sensor.family_room_dimmer_state_2')[0] == "1" %}
+#                         On
+#                       {% elif states('sensor.family_room_dimmer_state_2')[0] == "4" %}
+#                         Off
+#                       {% else %}
+#                         None
+#                       {% endif %}
 
-  - platform: rest
-    resource: !secret hue_sensor_14
-    value_template: '{{ value_json.state.lastupdated }}'
-    scan_interval: 10
-    name: 'Family Room Dimmer Last Update'
+#   - platform: rest
+#     resource: !secret hue_sensor_14
+#     value_template: '{{ value_json.state.lastupdated }}'
+#     scan_interval: 10
+#     name: 'Family Room Dimmer Last Update'
 
-  - platform: template
-    sensors:
-      family_room_dimmer_last_update:
-        friendly_name: 'Family Room Last Used'
-        value_template: >-
-          {{ as_timestamp(strptime(states('sensor.family_room_dimmer_last_update_2')[:19], "%Y-%m-%dT%X"))|timestamp_custom("%a, %B %d")}}
+#   - platform: template
+#     sensors:
+#       family_room_dimmer_last_update:
+#         friendly_name: 'Family Room Last Used'
+#         value_template: >-
+#           {{ as_timestamp(strptime(states('sensor.family_room_dimmer_last_update_2')[:19], "%Y-%m-%dT%X"))|timestamp_custom("%a, %B %d")}}
 
-  - platform: rest
-    resource: !secret hue_sensor_14
-    value_template: '{{ value_json.config.battery }}'
-    unit_of_measurement: '%'
-    scan_interval: 1800
-    name: 'Family Room Dimmer Battery'
+#   - platform: rest
+#     resource: !secret hue_sensor_14
+#     value_template: '{{ value_json.config.battery }}'
+#     unit_of_measurement: '%'
+#     scan_interval: 1800
+#     name: 'Family Room Dimmer Battery'
 
 
 # light:
@@ -417,29 +417,29 @@ automation:
           entity_id: light.living_room
           brightness: 125
 
-# ###### Light off after 10 minutes
-#   - alias: 'family_room_light_off'
-#     initial_state: 'on'
-#     trigger:
-#       - platform: state
-#         entity_id: binary_sensor.family_room_motion
-#         to: 'off'
-#         for:
-#           hours: 0
-#           minutes: 10
-#           seconds: 0
-#     # condition:
-#     #   - condition: state
-#     #     entity_id: sensor.bedroom_switch
-#     #     state: '[OFF_STATE_HERE]'
-#     #     for:
-#     #       hours: 0
-#     #       minutes: 45
-#     #       seconds: 0
-#     action:
-#       - service: light.turn_off
-#         data:
-#           entity_id: light.family_room
+###### Light off after 10 minutes
+  - alias: 'family_room_light_off'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.family_room_motion
+        to: 'off'
+        for:
+          hours: 0
+          minutes: 10
+          seconds: 0
+    # condition:
+    #   - condition: state
+    #     entity_id: sensor.bedroom_switch
+    #     state: '[OFF_STATE_HERE]'
+    #     for:
+    #       hours: 0
+    #       minutes: 45
+    #       seconds: 0
+    action:
+      - service: light.turn_off
+        data:
+          entity_id: light.family_room
 
 
   #   - alias: 'light_living_room_sunset'

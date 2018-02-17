@@ -33,45 +33,45 @@ group:
 
 
 
-sensor:
-##### Kitchen Dimmer Switch ###
-  - platform: rest
-    resource: !secret hue_sensor_16
-    value_template: '{{ value_json.state.buttonevent }}'
-    scan_interval: 2
-    name: 'Kitchen Dimmer State'
-  - platform: template
-    sensors:
-      kitchen_dimmer_state:
-        friendly_name: 'Kitchen Dimmer Last Button Push'
-        value_template: >-
-                      {% if states('sensor.kitchen_dimmer_state_2')[0] == "1" %}
-                        On
-                      {% elif states('sensor.kitchen_dimmer_state_2')[0] == "4" %}
-                        Off
-                      {% else %}
-                        None
-                      {% endif %}
+# sensor:
+# ##### Kitchen Dimmer Switch ###
+#   - platform: rest
+#     resource: !secret hue_sensor_16
+#     value_template: '{{ value_json.state.buttonevent }}'
+#     scan_interval: 2
+#     name: 'Kitchen Dimmer State'
+#   - platform: template
+#     sensors:
+#       kitchen_dimmer_state:
+#         friendly_name: 'Kitchen Dimmer Last Button Push'
+#         value_template: >-
+#                       {% if states('sensor.kitchen_dimmer_state_2')[0] == "1" %}
+#                         On
+#                       {% elif states('sensor.kitchen_dimmer_state_2')[0] == "4" %}
+#                         Off
+#                       {% else %}
+#                         None
+#                       {% endif %}
 
-  - platform: rest
-    resource: !secret hue_sensor_16
-    value_template: '{{ value_json.state.lastupdated }}'
-    scan_interval: 10
-    name: 'Kitchen Dimmer Last Update'
+#   - platform: rest
+#     resource: !secret hue_sensor_16
+#     value_template: '{{ value_json.state.lastupdated }}'
+#     scan_interval: 10
+#     name: 'Kitchen Dimmer Last Update'
 
-  - platform: template
-    sensors:
-      kitchen_dimmer_last_update:
-        friendly_name: 'Kitchen Last Used'
-        value_template: >-
-          {{ as_timestamp(strptime(states('sensor.kitchen_dimmer_last_update_2')[:19], "%Y-%m-%dT%X"))|timestamp_custom("%a, %B %d")}}
+#   - platform: template
+#     sensors:
+#       kitchen_dimmer_last_update:
+#         friendly_name: 'Kitchen Last Used'
+#         value_template: >-
+#           {{ as_timestamp(strptime(states('sensor.kitchen_dimmer_last_update_2')[:19], "%Y-%m-%dT%X"))|timestamp_custom("%a, %B %d")}}
 
-  - platform: rest
-    resource: !secret hue_sensor_16
-    value_template: '{{ value_json.config.battery }}'
-    unit_of_measurement: '%'
-    scan_interval: 1800
-    name: 'Kitchen Dimmer Battery'
+#   - platform: rest
+#     resource: !secret hue_sensor_16
+#     value_template: '{{ value_json.config.battery }}'
+#     unit_of_measurement: '%'
+#     scan_interval: 1800
+#     name: 'Kitchen Dimmer Battery'
 
 
 

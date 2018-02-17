@@ -21,13 +21,6 @@ homeassistant:
       friendly_name: 'Current Temperature'
     sensor.dark_sky_daily_summary:
       friendly_name: 'Daily Summary'
-    # UV
-    sensor.dark_sky_uv_index:
-      friendly_name: 'UV Index'
-      icon: mdi:white-balance-sunny
-    sensor.uv_burn_time:
-      friendly_name: 'Burn Time'
-      icon: mdi:fire
     # WEATHER report
     script.weather_report:
       friendly_name: 'Weather Report'
@@ -45,8 +38,6 @@ group:
       - sensor.dark_sky_daily_high_apparent_temperature
       - sensor.dark_sky_daily_low_apparent_temperature
       - sensor.dark_sky_precip_probability
-      - sensor.dark_sky_uv_index
-      - sensor.uv_burn_time
       - camera.radar
 
 ###### OPEN WEATHER COMPONENT
@@ -105,6 +96,7 @@ sensor:
       - apparent_temperature_max
       - apparent_temperature_min
       - precip_intensity_max
+      - precip_probability
       - uv_index
 
 # ###### wunderground

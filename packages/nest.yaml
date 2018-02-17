@@ -25,12 +25,12 @@ group:
   thermostat:
     name: Thermostat
     entities:
-     - climate.entryway
-     - sensor.entrywaythermostat
-     - binary_sensor.entryway_thermostat_fan
-     - script.fan
-     - sensor.entryway_thermostat_hvac_state
-     - sensor.entryway_thermostat_operation_mode
+      - climate.entryway
+      - sensor.entrywaythermostat
+      - binary_sensor.entryway_thermostat_fan
+      - script.fan
+      - sensor.entryway_thermostat_hvac_state
+      - sensor.entryway_thermostat_operation_mode
 
   climate:
     name: Climate
@@ -44,13 +44,33 @@ group:
   all_temps:
     name: Temperature
     entities:
-     - sensor.dark_sky_temperature
-     - sensor.entryway_thermostat_temperature
-     - sensor.kitchen_temperature
-     - sensor.master_bathroom_temperature
-     - sensor.garage_temperature
-     - sensor.patio_temperature
-     - sensor.average_whole_home
+      - sensor.dark_sky_temperature
+      - sensor.entryway_thermostat_temperature
+      - sensor.kitchen_temperature
+      - sensor.master_bathroom_temperature
+      - sensor.garage_temperature
+      - sensor.patio_temperature
+      - sensor.average_whole_home
+
+  indoor_temps:
+    name: Indoor Temperature
+    entities:
+      - sensor.average_whole_home
+      - sensor.entryway_thermostat_temperature
+      - sensor.kitchen_temperature
+      - sensor.master_bathroom_temperature
+      - sensor.master_bedroom_temperature
+      - sensor.family_room_temperature
+      - sensor.office_temperature
+      - sensor.garage_temperature
+
+  outdoor_temps:
+    name: Outdoor Temperature
+    entities:
+      - sensor.dark_sky_temperature
+      - sensor.patio_temperature
+      - sensor.blink_front_door_temperature
+      - sensor.blink_backyard_temperature
 
   sun_and_moon:
     name: Quick Facts
@@ -75,9 +95,9 @@ sensor:
       - sensor.entryway_thermostat_temperature
       - sensor.kitchen_temperature
       - sensor.master_bathroom_temperature
-      # - sensor.garage_temperature
-      # - sensor.patio_temperature
-
+      - sensor.master_bedroom_temperature
+      - sensor.family_room_temperature
+      - sensor.office_temperature
 
 script:
   fan:

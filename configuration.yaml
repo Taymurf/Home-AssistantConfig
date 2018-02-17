@@ -80,7 +80,7 @@ google_assistant:
     - switch
 
 influxdb:
-  host: 127.0.0.1
+  host: !secret influxdb_host
 
 ios:
 

@@ -11,6 +11,19 @@ homeassistant:
     script.update_speedtest:
       friendly_name: Update Speedtest
       icon: mdi:speedometer
+    sensor.ipv4_address_eno1:
+      friendly_name: IPv4 Address
+      icon: mdi:server-network
+    sensor.ipv6_address_eno1:
+      friendly_name: IPv6 Address
+      icon: mdi:server-network
+    sensor.received_eno1:
+      friendly_name: Data Received
+      icon: mdi:download-network
+    sensor.sent_eno1:
+      friendly_name: Data Sent
+      icon: mdi:upload-network
+
 
 ###### STATE CARD
 group:
@@ -18,16 +31,17 @@ group:
     name: Network
     entities:
       # - sensor.hassuptime
-      - sensor.ipv6_address_eno1
-      - sensor.external_ip
       - sensor.speedtest_ping
       - sensor.speedtest_download
       - sensor.speedtest_upload
+      - script.update_speedtest
+      - sensor.ipv4_address_eno1
+      - sensor.ipv6_address_eno1
+      - sensor.external_ip
       - sensor.packets_received_eno1
       - sensor.packets_sent_eno1
       - sensor.received_eno1
       - sensor.sent_eno1
-      - script.update_speedtest
       
 
 sensor:

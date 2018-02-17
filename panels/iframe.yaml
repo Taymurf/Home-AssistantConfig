@@ -1,24 +1,29 @@
+####################################
+# Packages: Panel iFrame
+####################################
+
+
 # pihole:
 #   title: Pi-hole
 #   icon: mdi:block-helper
-#   url: http://192.168.1.200:80/admin
+#   url: !secret panel_pihole
 
 # nodered_flows:
 #   title: 'Node-RED Flows'
-#   url: 'https://taymurfhass.duckdns.org:1880'
+#   url: !secret panel_nodered
 #   icon: mdi:nodejs
 
 # nodered_ui:
 #   title: 'Node-RED Dashboard'
-#   url: 'https://taymurfhass.duckdns.org:1880/ui'
+#   url: !secret panel_nodered_ui
 #   icon: mdi:nodejs
 
-#router:
-#  title: 'Router'
-#  url: 192.168.1.1 # Preferably https address
+# synology_nas:
+#  title: NAS
+#  url: !secret panel_nas
 #  icon: mdi:router-wireless
 
-# configurator:
-#   title: Configurator
+# portainer:
+#   title: Portainer
 #   icon: mdi:wrench
-#   url: https://taymurfhass.duckdns.org:3218
+#   url: !secret panel_portainer

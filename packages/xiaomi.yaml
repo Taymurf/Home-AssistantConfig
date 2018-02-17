@@ -45,11 +45,11 @@ xiaomi_aqara:
   gateways:
     - key: !secret xiaomi_key
 
-vacuum:
-  - platform: xiaomi_miio
-    host: 192.168.1.221
-    token: !secret vac_token
-    name: Sparky
+# vacuum:
+#   - platform: xiaomi_miio
+#     host: 192.168.1.221
+#     token: !secret vac_token
+#     name: Sparky
 
 
 sensor:
