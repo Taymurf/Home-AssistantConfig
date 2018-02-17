@@ -66,18 +66,18 @@ google:
   client_id: !secret g_cal_id
   client_secret: !secret g_cal_secret
 
-google_assistant:
-  project_id: !secret g_proj_id
-  client_id: !secret g_client
-  access_token: !secret g_token
-  agent_user_id: !secret g_user
-  api_key: !secret g_api
-  exposed_domains:
-    - script
-    # - media_player
-    # - group
-    # - climate
-    - switch
+# google_assistant:
+#   project_id: !secret g_proj_id
+#   client_id: !secret g_client
+#   access_token: !secret g_token
+#   agent_user_id: !secret g_user
+#   api_key: !secret g_api
+#   exposed_domains:
+#     - script
+#     # - media_player
+#     # - group
+#     # - climate
+#     - switch
 
 influxdb:
   host: !secret influxdb_host
