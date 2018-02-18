@@ -86,6 +86,7 @@ group:
 
 
 automation:
+###### House
   - alias: house_mode_away
     initial_state: 'on'
     trigger:
@@ -109,6 +110,8 @@ automation:
            {% elif states.input_boolean.away.state == 'on' and states.input_boolean.guest.state == 'off' %} Nobody Home, Alarm Activated
            {% endif %}
 
+
+###### Taylor
   - alias: house_mode_user_taylor
     initial_state: 'on'
     trigger:
@@ -167,11 +170,73 @@ automation:
           - condition: state
             entity_id: device_tracker.taylorsiphone_2
             state: 'not_home'
+      - condition: state
+        entity_id: input_boolean.taylor
+        state: 'on'
     action:
       - service: input_boolean.turn_off
         data:
           entity_id: input_boolean.taylor
 
+  ### iCloud Tracking ###
+  - alias: taylor_update_icloud_when_leaving
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: device_tracker.taylor_bt_rpi3, device_tracker.taylors_iphone, device_tracker.taylorsiphone, device_tracker.taylorsiphone_2
+        to: 'not_home'
+        # for:
+        #     minutes: 1
+    action:
+      # - service: device_tracker.icloud_update
+      #   data:
+      #     account_name: taylors_icloud
+      # - delay: '00:01:00'
+      - service: device_tracker.icloud_set_interval
+        data:
+          account_name: taylors_icloud
+          interval: 1
+
+  - alias: taylor_update_icloud_when_gone_for_half_hour
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: group.taylor
+        to: 'off'
+        for:
+            minutes: 30
+    action:
+      - service: device_tracker.icloud_set_interval
+        data:
+          account_name: taylors_icloud
+          interval: 5
+
+  - alias: taylor_update_icloud_when_gone_for_hour
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: group.taylor
+        to: 'off'
+        for:
+            minutes: 60
+    action:
+      - service: device_tracker.icloud_set_interval
+        data:
+          account_name: taylors_icloud
+          interval: 10
+
+  - alias: taylor_update_icloud_when_home
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: device_tracker.taylor_bt_rpi3, device_tracker.taylors_iphone, device_tracker.tayloriphone_2
+        to: 'home'
+    action:
+      - service: script.turn_on
+        entity_id: script.icloud_snapshot_t
+
+
+###### Marisa
   - alias: house_mode_user_marisa
     initial_state: 'on'
     trigger:
@@ -230,13 +295,15 @@ automation:
           - condition: state
             entity_id: device_tracker.marisasiphone_2
             state: 'not_home'
+      - condition: state
+        entity_id: input_boolean.marisa
+        state: 'on'
     action:
       - service: input_boolean.turn_off
         data:
           entity_id: input_boolean.marisa
 
-  ### Update iCloud Tracking ###
-  ###### Marisa
+  ### iCloud Tracking ###
   - alias: marisa_update_icloud_when_leaving
     initial_state: 'on'
     trigger:
@@ -259,8 +326,8 @@ automation:
     initial_state: 'on'
     trigger:
       - platform: state
-        entity_id: device_tracker.marisa_bt_rpi3, device_tracker.marisas_iphone
-        to: 'not_home'
+        entity_id: group.marisa
+        to: 'off'
         for:
             minutes: 30
     action:
@@ -273,8 +340,8 @@ automation:
     initial_state: 'on'
     trigger:
       - platform: state
-        entity_id: device_tracker.marisa_bt_rpi3, device_tracker.marisas_iphone
-        to: 'not_home'
+        entity_id: group.marisa
+        to: 'off'
         for:
             minutes: 60
     action:
@@ -293,62 +360,7 @@ automation:
       - service: script.turn_on
         entity_id: script.icloud_snapshot_m
 
-  ###### Taylor
-  - alias: taylor_update_icloud_when_leaving
-    initial_state: 'on'
-    trigger:
-      - platform: state
-        entity_id: device_tracker.taylor_bt_rpi3, device_tracker.taylors_iphone, device_tracker.taylorsiphone, device_tracker.taylorsiphone_2
-        to: 'not_home'
-        # for:
-        #     minutes: 1
-    action:
-      # - service: device_tracker.icloud_update
-      #   data:
-      #     account_name: taylors_icloud
-      # - delay: '00:01:00'
-      - service: device_tracker.icloud_set_interval
-        data:
-          account_name: taylors_icloud
-          interval: 1
 
-  - alias: taylor_update_icloud_when_gone_for_half_hour
-    initial_state: 'on'
-    trigger:
-      - platform: state
-        entity_id: device_tracker.taylor_bt_rpi3, device_tracker.taylors_iphone
-        to: 'not_home'
-        for:
-            minutes: 30
-    action:
-      - service: device_tracker.icloud_set_interval
-        data:
-          account_name: taylors_icloud
-          interval: 5
-
-  - alias: taylor_update_icloud_when_gone_for_hour
-    initial_state: 'on'
-    trigger:
-      - platform: state
-        entity_id: device_tracker.taylor_bt_rpi3, device_tracker.taylors_iphone
-        to: 'not_home'
-        for:
-            minutes: 60
-    action:
-      - service: device_tracker.icloud_set_interval
-        data:
-          account_name: taylors_icloud
-          interval: 10
-
-  - alias: taylor_update_icloud_when_home
-    initial_state: 'on'
-    trigger:
-      - platform: state
-        entity_id: device_tracker.taylor_bt_rpi3, device_tracker.taylors_iphone, device_tracker.tayloriphone_2
-        to: 'home'
-    action:
-      - service: script.turn_on
-        entity_id: script.icloud_snapshot_t
 
 ###### Track Phones
   - alias: Marisa is home
@@ -357,6 +369,19 @@ automation:
       entity_id: device_tracker.marisa_bt_rpi3, device_tracker.marisas_iphone, device_tracker.marisasiphone, device_tracker.marisasiphone_2
       zone: zone.home
       event: enter
+    condition:
+      condition: or
+      conditions:
+        - condition: state
+          entity_id: group.taylor
+          state: 'on'
+          for:
+            minutes: 20
+        - condition: state
+          entity_id: group.taylor
+          state: 'off'
+          for:
+            minutes: 20          
     action:
       service: notify.ios_taylors_iphone
       data:
@@ -370,8 +395,10 @@ automation:
       event: leave
     condition:
       condition: state
-      entity_id: input_boolean.away
-      state: 'on'
+      entity_id: group.taylor
+      state: 'off'
+      for:
+        minutes: 15
     action:
       service: notify.ios_taylors_iphone
       data:
@@ -383,6 +410,19 @@ automation:
       entity_id: device_tracker.marisa_bt_rpi3, device_tracker.marisas_iphone, device_tracker.marisasiphone, device_tracker.marisasiphone_2
       zone: zone.school
       event: enter
+    condition:
+      condition: or
+      conditions:
+        - condition: state
+          entity_id: group.taylor
+          state: 'on'
+          for:
+            minutes: 20
+        - condition: state
+          entity_id: group.taylor
+          state: 'off'
+          for:
+            minutes: 40
     action:
       service: notify.ios_taylors_iphone
       data:
@@ -394,6 +434,19 @@ automation:
       entity_id: device_tracker.marisa_bt_rpi3, device_tracker.marisas_iphone, device_tracker.marisasiphone, device_tracker.marisasiphone_2
       zone: zone.school
       event: leave
+    condition:
+      condition: or
+      conditions:
+        - condition: state
+          entity_id: group.taylor
+          state: 'on'
+          for:
+            minutes: 20
+        - condition: state
+          entity_id: group.taylor
+          state: 'off'
+          for:
+            minutes: 20        
     action:
       - service: notify.ios_taylors_iphone
         data:
@@ -407,6 +460,31 @@ automation:
       entity_id: device_tracker.marisa_bt_rpi3, device_tracker.marisas_iphone, device_tracker.marisasiphone, device_tracker.marisasiphone_2
       zone: zone.nemours
       event: enter
+    condition:
+      - condition: or
+        conditions:
+          - condition: state
+            entity_id: group.taylor
+            state: 'on'
+            for:
+              minutes: 20
+          - condition: state
+            entity_id: group.taylor
+            state: 'off'
+            for:
+              minutes: 15
+      - condition: and
+        conditions:
+          - condition: state
+            entity_id: device_tracker.marisas_iphone
+            state: 'not_home'
+            for:
+              minutes: 7
+          - condition: state
+            entity_id: device_tracker.marisasiphone
+            state: 'not_home'
+            for:
+              minutes: 7
     action:
       service: notify.ios_taylors_iphone
       data:
@@ -418,6 +496,19 @@ automation:
       entity_id: device_tracker.marisa_bt_rpi3, device_tracker.marisas_iphone, device_tracker.marisasiphone, device_tracker.marisasiphone_2
       zone: zone.nemours
       event: leave
+    condition:
+      condition: or
+      conditions:
+        - condition: state
+          entity_id: group.taylor
+          state: 'on'
+          for:
+            minutes: 20
+        - condition: state
+          entity_id: group.taylor
+          state: 'off'
+          for:
+            minutes: 15
     action:
       - service: notify.ios_taylors_iphone
         data:
@@ -449,7 +540,7 @@ automation:
       - service: script.turn_on
         entity_id: script.m_scan_interval_2
 
-  ### Welcome Home ###
+###### Welcome Home 
   - alias: 'welcome_home'
     initial_state: 'on'
     trigger:
@@ -473,24 +564,6 @@ automation:
         data_template:
           entity_id: media_player.family_room_home
           message: "Alarm disarmed, welcome Home"
-
-  ### Entryway Light on when someone arrives home at night
-  - alias: 'entry_way_light_night_arrival'
-    initial_state: 'on'
-    trigger:
-      - platform: state
-        entity_id: input_boolean.taylor, input_boolean.marisa
-        to: 'on'
-    condition:
-      - condition: state
-        entity_id: sun.sun
-        state: 'below_horizon'
-    action:
-      - service: light.turn_on
-        data:
-          entity_id: light.entryway
-          brightness: 254
-          color_temp: 370
 
 
 script:

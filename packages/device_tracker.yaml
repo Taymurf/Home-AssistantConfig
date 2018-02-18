@@ -20,9 +20,9 @@ device_tracker:
   #- platform: owntracks_http
   #  max_gps_accuracy: 200
 
-  - platform: tile
-    username: !secret tile_user
-    password: !secret tile_pw
+  # - platform: tile
+  #   username: !secret tile_user
+  #   password: !secret tile_pw
 
   # - platform: bluetooth_tracker
   #   interval_seconds: 15

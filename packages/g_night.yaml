@@ -15,6 +15,9 @@ script:
     - service: input_boolean.turn_on
       data:
         entity_id: input_boolean.sleep
+    - service: input_boolean.turn_off
+      data:
+        entity_id: input_boolean.lamp_color_loop
     - service: light.turn_off
       entity_id: light.all
     - service: climate.set_temperature

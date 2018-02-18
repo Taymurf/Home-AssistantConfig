@@ -91,7 +91,6 @@ automation:
         data:
           entity_id: light.office
           brightness: 179
-      - service: light.turn_on
 ###### Light off after 10 minutes
   # - alias: 'office_light_off'
   #   initial_state: 'on'

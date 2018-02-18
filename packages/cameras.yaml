@@ -89,7 +89,7 @@ group:
       - camera.front_door
       - sensor.blink_front_door_notifications
       - switch.alarm
-      - switch.front_door_alarm
+      # - switch.front_door_alarm
       - binary_sensor.blink_front_door_motion_enabled
       # - binary_sensor.blink_armed_status
       - sensor.blink_front_door_temperature
@@ -189,19 +189,19 @@ script:
       #   data:
       #     message: 'Alarm de-activated'
 
-  front_door_alarm_on_script:
-    sequence:
-      - service: blink.arm_camera
-        data:
-          friendly_name: "Front Door"
-          device_armed: "True"
+  # front_door_alarm_on_script:
+  #   sequence:
+  #     - service: blink.arm_camera
+  #       data:
+  #         friendly_name: "Front Door"
+  #         device_armed: "True"
 
-  front_door_alarm_off_script:
-    sequence:
-      - service: blink.arm_camera
-        data:
-          friendly_name: "Front Door"
-          device_armed: "False"
+  # front_door_alarm_off_script:
+  #   sequence:
+  #     - service: blink.arm_camera
+  #       data:
+  #         friendly_name: "Front Door"
+  #         device_armed: "False"
 
   blink_capture_inside_script:
     sequence:
