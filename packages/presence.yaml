@@ -133,7 +133,8 @@ automation:
     initial_state: 'on'
     trigger:
       - platform: state
-        entity_id: device_tracker.taylor_bt_rpi3, device_tracker.taylors_iphone, device_tracker.taylorsiphone_2, device_tracker.taylorsiphone
+        entity_id: device_tracker.taylor_bt_rpi3, device_tracker.taylors_iphone, device_tracker.taylorsiphone_2
+        from: 'not_home'
         to: 'home'
     condition:
       - condition: and
@@ -230,6 +231,7 @@ automation:
     trigger:
       - platform: state
         entity_id: device_tracker.taylor_bt_rpi3, device_tracker.taylors_iphone, device_tracker.tayloriphone_2
+        from: 'not_home'
         to: 'home'
     action:
       - service: script.turn_on
@@ -258,7 +260,8 @@ automation:
     initial_state: 'on'
     trigger:
       - platform: state
-        entity_id: device_tracker.marisa_bt_rpi3, device_tracker.marisas_iphone, device_tracker.marisasiphone_2, device_tracker.marisasiphone
+        entity_id: device_tracker.marisa_bt_rpi3, device_tracker.marisas_iphone, device_tracker.marisasiphone_2
+        from: 'not_home'
         to: 'home'
     condition:
       - condition: and
@@ -355,6 +358,7 @@ automation:
     trigger:
       - platform: state
         entity_id: device_tracker.marisa_bt_rpi3, device_tracker.marisas_iphone, device_tracker.marisasiphone_2
+        from: 'not_home'
         to: 'home'
     action:
       - service: script.turn_on

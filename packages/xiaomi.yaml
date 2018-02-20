@@ -206,7 +206,7 @@ automation:
         entity_id: input_boolean.away
         state: 'off'
         for:
-          minutes: 45
+          minutes: 25
     action:
       - service: media_player.volume_set
         data:
@@ -243,7 +243,7 @@ automation:
         entity_id: input_boolean.away
         state: 'off'
         for:
-          minutes: 45
+          minutes: 25
     action:
       - service: media_player.volume_set
         data:
