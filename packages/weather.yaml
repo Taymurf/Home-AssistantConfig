@@ -54,6 +54,7 @@ camera:
 
 sensor:
   # - platform: yr
+  - platform: moon
   ## Custom Weather Report
   - platform: template
     sensors:

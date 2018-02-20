@@ -283,30 +283,6 @@ automation:
           entity_id: light.living_room
           brightness: 125
 
-###### Light off after 10 minutes
-  - alias: 'family_room_light_off'
-    initial_state: 'on'
-    trigger:
-      - platform: state
-        entity_id: binary_sensor.family_room_motion
-        to: 'off'
-        for:
-          hours: 0
-          minutes: 10
-          seconds: 0
-    # condition:
-    #   - condition: state
-    #     entity_id: sensor.bedroom_switch
-    #     state: '[OFF_STATE_HERE]'
-    #     for:
-    #       hours: 0
-    #       minutes: 45
-    #       seconds: 0
-    action:
-      - service: light.turn_off
-        data:
-          entity_id: light.family_room
-
 
   #   - alias: 'light_living_room_sunset'
   #     initial_state: 'on'

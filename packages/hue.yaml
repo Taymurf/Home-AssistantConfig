@@ -375,12 +375,12 @@ sensor:
   #   name: 'Master Bathroom Motion Sensor Battery Level'
 
   ### Garage Motion Sensor ##
-  # - platform: rest
-  #   resource: !secret hue_sensor_4
-  #   value_template: "{{(10 ** (float (value_json.state.lightlevel) / 10000) -1) | round (1)}} "
-  #   unit_of_measurement: Lux
-  #   name: 'Garage Lux'
-  #   scan_interval: 600
+  - platform: rest
+    resource: !secret hue_sensor_4
+    value_template: "{{(10 ** (float (value_json.state.lightlevel) / 10000) -1) | round (1)}} "
+    unit_of_measurement: Lux
+    name: 'Garage Lux'
+    scan_interval: 600
 
   # - platform: rest
   #   resource: !secret hue_sensor_2

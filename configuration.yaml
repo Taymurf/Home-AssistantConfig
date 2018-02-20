@@ -23,32 +23,27 @@ homeassistant:
   packages: !include_dir_named packages
 
 config:
-python_script:
 conversation:
 map:
 updater:
+python_script:
 sun:
-sensor moon:
-  - platform: moon
 # discovery:
 automation: !include automations.yaml
 scene: !include scenes.yaml
 script: !include scripts.yaml
-panel_iframe: !include panels/iframe.yaml
 frontend:
   javascript_version: latest
   themes: !include themes.yaml
 
 http:
   api_password: !secret http_password
-  # ssl_certificate: !secret http_ssl_cert_old
-  ssl_certificate: !secret http_ssl_cert
-  # ssl_key: !secret http_ssl_key_old
-  ssl_key: !secret http_ssl_key
+  ssl_certificate: !secret http_ssl_cert_new
+  ssl_key: !secret http_ssl_key_new
   base_url: !secret http_base_url
   trusted_networks:
     - 192.168.1.0/24
-    - 172.0.0.1
+    - 127.0.0.1
   ip_ban_enabled: True
   login_attempts_threshold: 5
 
@@ -56,8 +51,19 @@ duckdns:
   domain: !secret duck_domain
   access_token: !secret duck_token
 
+# Discover some devices automatically
+discovery:
+
+# Weather prediction
+sensor:
+  - platform: yr
+
+# Text to speech
 tts:
   - platform: google
+
+influxdb:
+  host: 127.0.0.1
 
 ifttt:
   key: !secret iftt_key
@@ -65,22 +71,6 @@ ifttt:
 google:
   client_id: !secret g_cal_id
   client_secret: !secret g_cal_secret
-
-# google_assistant:
-#   project_id: !secret g_proj_id
-#   client_id: !secret g_client
-#   access_token: !secret g_token
-#   agent_user_id: !secret g_user
-#   api_key: !secret g_api
-#   exposed_domains:
-#     - script
-#     # - media_player
-#     # - group
-#     # - climate
-#     - switch
-
-influxdb:
-  host: !secret influxdb_host
 
 ios:
 

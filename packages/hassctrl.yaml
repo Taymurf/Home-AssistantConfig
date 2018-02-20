@@ -38,6 +38,7 @@ group:
       - script.hassctl_update
       - input_select.log_level
       - weblink.release_log
+      - script.backup_test
 #########################################################################
 script:
   hassctl_restart_ha:
@@ -55,15 +56,19 @@ script:
      sequence:
        - service: tts.clear_cache
        - service: shell_command.backup_config
+  backup_test:
+     sequence:
+       - service: shell_command.backup_test
   clear_tts_cache:
     sequence:
       - service: tts.clear_cache
 #########################################################################
 shell_command:
-  backup_config: 'sudo bash /home/hass/.homeassistant/shell/gitupdate.sh'
+  backup_config: 'cd /media/usbstick/config && zip -r "Home-Assistant-Backup-$(date +"%Y-%m-%d").zip" /home/hass/.homeassistant/ -x "*.log" -x "/*tts/*" -x "*.db" -x "/*deps/*" -x "/*.git/*"'
   hassctl_restart_ha: 'sudo hassctl restart'
   hassctl_update_ha: 'sudo bash /home/homeassistant/.homeassistant/shell/update_ha.sh </dev/null >> /home/homeassistant/.homeassistant/update_ha.log 2>&1 &'
   hassctl_update: 'sudo hassctl update-hassctl'
+  backup_test: touch /home/hass/.homeassistant/testfile
 #########################################################################
 sensor:
   ###### VERSIONS
