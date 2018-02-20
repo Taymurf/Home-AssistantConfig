@@ -18,10 +18,14 @@ homeassistant:
     sensor.hassctl_version:
       friendly_name: Hassctl Version
     script.backup_config:
-      friendly_name: Update GitHub
+      friendly_name: Backup Config
       icon: mdi:backup-restore
+    sensor.last_backup:
+      icon: mdi:usb
+    sensor.last_commit:
+      icon: mdi:git
     script.clear_tts_cache:
-      friendly_name: Clear TTS cache
+      friendly_name: Clear TTS Cache
       icon: mdi:shredder
 ###### STATE CARD #######################################################
 group:
@@ -30,20 +34,24 @@ group:
     control: hidden
     entities:
       - script.hassctl_restart_ha
-      - sensor.last_commit
-      - script.backup_config
       - sensor.ha_version
+      - sensor.last_commit
+      - sensor.last_backup
+      - script.backup_config
       - script.hassctl_update_ha
+      - script.clear_log
+      - script.clear_tts_cache
       - sensor.hassctl_version
       - script.hassctl_update
       - input_select.log_level
       - weblink.release_log
-      - script.backup_test
+      # - script.backup_test
 #########################################################################
 script:
   hassctl_restart_ha:
     sequence:
       - service: tts.clear_cache
+      - service: shell_command.del_log
       - service: shell_command.hassctl_restart_ha
   hassctl_update_ha:
     sequence:
@@ -62,13 +70,26 @@ script:
   clear_tts_cache:
     sequence:
       - service: tts.clear_cache
+  clear_log:
+     sequence:
+       - service: shell_command.del_log
 #########################################################################
 shell_command:
   backup_config: 'cd /media/usbstick/config && zip -r "Home-Assistant-Backup-$(date +"%Y-%m-%d").zip" /home/hass/.homeassistant/ -x "*.log" -x "/*tts/*" -x "*.db" -x "/*deps/*" -x "/*.git/*"'
   hassctl_restart_ha: 'sudo hassctl restart'
-  hassctl_update_ha: 'sudo bash /home/homeassistant/.homeassistant/shell/update_ha.sh </dev/null >> /home/homeassistant/.homeassistant/update_ha.log 2>&1 &'
+  hassctl_update_ha: 'sudo bash /home/hass/.homeassistant/shell/update_ha.sh </dev/null >> /home/hass/.homeassistant/update_ha.log 2>&1 &'
   hassctl_update: 'sudo hassctl update-hassctl'
-  backup_test: touch /home/hass/.homeassistant/testfile
+  del_log: 'sudo rm /home/hass/.homeassistant/home-assistant.log && touch /home/hass/.homeassistant/home-assistant.log && chown -R -v hass:hass /home/hass/.homeassistant/home-assistant.log'
+  backup_test: 'touch /home/hass/.homeassistant/testfile'
+#########################################################################
+automation:
+  - alias: "Auto Backup"
+    initial_state: 'on'
+    trigger:
+      platform: template
+      value_template: "{{ states('sensor.last_commit') > states('sensor.last_backup') }}"
+    action:
+      - service: script.backup_config
 #########################################################################
 sensor:
   ###### VERSIONS
@@ -95,4 +116,9 @@ sensor:
   - platform: command_line
     command: "python /home/hass/.homeassistant/python_scripts/latest_commit.py"
     name: 'Last Commit'
+    scan_interval: 60
+  ###### Latest config backup
+  - platform: command_line
+    command: "python /home/hass/.homeassistant/python_scripts/latest_backup.py"
+    name: 'Last Backup'
     scan_interval: 60
