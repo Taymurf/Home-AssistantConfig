@@ -8,4 +8,16 @@
     entities:
       group.all_lights:
        state: off
-      
+
+  - name: 'plex_play'
+    entities:
+      light.all_except_officelampentryway: off
+      light.lamp:
+        state: On
+        brightness: 80
+
+  - name: 'plex_pause'
+    entities:
+      light.all_except_officelampentryway:
+        state: On
+        brightness: 170

@@ -201,12 +201,12 @@ automation:
         entity_id: binary_sensor.door_window_sensor_158d0001e72c11
         from: 'off'
         to: 'on'
-    condition:
-      - condition: state
-        entity_id: input_boolean.away
-        state: 'off'
-        for:
-          minutes: 25
+    # condition:
+    #   - condition: state
+    #     entity_id: input_boolean.away
+    #     state: 'off'
+    #     for:
+    #       minutes: 3
     action:
       - service: media_player.volume_set
         data:
@@ -238,12 +238,12 @@ automation:
         entity_id: binary_sensor.door_window_sensor_158d0001e72bef
         from: 'off'
         to: 'on'
-    condition:
-      - condition: state
-        entity_id: input_boolean.away
-        state: 'off'
-        for:
-          minutes: 25
+    # condition:
+      # - condition: state
+      #   entity_id: input_boolean.away
+      #   state: 'off'
+      #   for:
+      #     minutes: 3
     action:
       - service: media_player.volume_set
         data:
@@ -275,10 +275,10 @@ automation:
         entity_id: binary_sensor.door_window_sensor_158d0002025b91
         from: 'off'
         to: 'on'
-    condition:
-      - condition: state
-        entity_id: input_boolean.away
-        state: 'off'
+    # condition:
+    #   - condition: state
+    #     entity_id: input_boolean.away
+    #     state: 'off'
     action:
       - service: media_player.volume_set
         data:

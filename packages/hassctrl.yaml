@@ -50,19 +50,19 @@ group:
 script:
   hassctl_restart_ha:
     sequence:
-      - service: tts.clear_cache
-      - service: shell_command.del_log
+      # - service: tts.clear_cache
+      # - service: shell_command.del_log
       - service: shell_command.hassctl_restart_ha
   hassctl_update_ha:
     sequence:
-      - service: tts.clear_cache
+      # - service: tts.clear_cache
       - service: shell_command.hassctl_update_ha
   hassctl_update:
     sequence:
       - service: shell_command.hassctl_update
   backup_config:
      sequence:
-       - service: tts.clear_cache
+      #  - service: tts.clear_cache
        - service: shell_command.backup_config
   backup_test:
      sequence:

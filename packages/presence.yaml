@@ -129,55 +129,55 @@ automation:
           {% endif %}
         entity_id: input_boolean.taylor
 
-  - alias: house_mode_user_taylor_home
-    initial_state: 'on'
-    trigger:
-      - platform: state
-        entity_id: device_tracker.taylor_bt_rpi3, device_tracker.taylors_iphone, device_tracker.taylorsiphone_2
-        from: 'not_home'
-        to: 'home'
-    condition:
-      - condition: and
-        conditions:
-          - condition: state
-            entity_id: device_tracker.taylor_bt_rpi3
-            state: 'home'
-          # - condition: state
-          #   entity_id: device_tracker.taylors_iphone
-          #   state: 'home'
-          - condition: state
-            entity_id: device_tracker.taylorsiphone_2
-            state: 'home'
-    action:
-      - service: input_boolean.turn_on
-        data:
-          entity_id: input_boolean.taylor
+  # - alias: house_mode_user_taylor_home
+  #   initial_state: 'on'
+  #   trigger:
+  #     - platform: state
+  #       entity_id: device_tracker.taylor_bt_rpi3, device_tracker.taylors_iphone, device_tracker.taylorsiphone_2
+  #       from: 'not_home'
+  #       to: 'home'
+  #   condition:
+  #     - condition: and
+  #       conditions:
+  #         - condition: state
+  #           entity_id: device_tracker.taylor_bt_rpi3
+  #           state: 'home'
+  #         # - condition: state
+  #         #   entity_id: device_tracker.taylors_iphone
+  #         #   state: 'home'
+  #         - condition: state
+  #           entity_id: device_tracker.taylorsiphone_2
+  #           state: 'home'
+  #   action:
+  #     - service: input_boolean.turn_on
+  #       data:
+  #         entity_id: input_boolean.taylor
 
-  - alias: house_mode_user_taylor_away
-    initial_state: 'on'
-    trigger:
-      - platform: state
-        entity_id: device_tracker.taylor_bt_rpi3, device_tracker.taylors_iphone, device_tracker.taylorsiphone_2
-        to: 'not_home'
-    condition:
-      - condition: and
-        conditions:
-          - condition: state
-            entity_id: device_tracker.taylor_bt_rpi3
-            state: 'not_home'
-          # - condition: state
-          #   entity_id: device_tracker.taylors_iphone
-          #   state: 'not_home'
-          - condition: state
-            entity_id: device_tracker.taylorsiphone_2
-            state: 'not_home'
-      - condition: state
-        entity_id: input_boolean.taylor
-        state: 'on'
-    action:
-      - service: input_boolean.turn_off
-        data:
-          entity_id: input_boolean.taylor
+  # - alias: house_mode_user_taylor_away
+  #   initial_state: 'on'
+  #   trigger:
+  #     - platform: state
+  #       entity_id: device_tracker.taylor_bt_rpi3, device_tracker.taylors_iphone, device_tracker.taylorsiphone_2
+  #       to: 'not_home'
+  #   condition:
+  #     - condition: and
+  #       conditions:
+  #         - condition: state
+  #           entity_id: device_tracker.taylor_bt_rpi3
+  #           state: 'not_home'
+  #         # - condition: state
+  #         #   entity_id: device_tracker.taylors_iphone
+  #         #   state: 'not_home'
+  #         - condition: state
+  #           entity_id: device_tracker.taylorsiphone_2
+  #           state: 'not_home'
+  #     - condition: state
+  #       entity_id: input_boolean.taylor
+  #       state: 'on'
+  #   action:
+  #     - service: input_boolean.turn_off
+  #       data:
+  #         entity_id: input_boolean.taylor
 
   ### iCloud Tracking ###
   - alias: taylor_update_icloud_when_leaving
@@ -256,55 +256,55 @@ automation:
           {% endif %}
         entity_id: input_boolean.marisa
 
-  - alias: house_mode_user_marisa_home
-    initial_state: 'on'
-    trigger:
-      - platform: state
-        entity_id: device_tracker.marisa_bt_rpi3, device_tracker.marisas_iphone, device_tracker.marisasiphone_2
-        from: 'not_home'
-        to: 'home'
-    condition:
-      - condition: and
-        conditions:
-          - condition: state
-            entity_id: device_tracker.marisa_bt_rpi3
-            state: 'home'
-          # - condition: state
-          #   entity_id: device_tracker.marisas_iphone
-          #   state: 'home'
-          - condition: state
-            entity_id: device_tracker.marisasiphone_2
-            state: 'home'
-    action:
-      - service: input_boolean.turn_on
-        data:
-          entity_id: input_boolean.marisa
+  # - alias: house_mode_user_marisa_home
+  #   initial_state: 'on'
+  #   trigger:
+  #     - platform: state
+  #       entity_id: device_tracker.marisa_bt_rpi3, device_tracker.marisas_iphone, device_tracker.marisasiphone_2
+  #       from: 'not_home'
+  #       to: 'home'
+  #   condition:
+  #     - condition: and
+  #       conditions:
+  #         - condition: state
+  #           entity_id: device_tracker.marisa_bt_rpi3
+  #           state: 'home'
+  #         # - condition: state
+  #         #   entity_id: device_tracker.marisas_iphone
+  #         #   state: 'home'
+  #         - condition: state
+  #           entity_id: device_tracker.marisasiphone_2
+  #           state: 'home'
+  #   action:
+  #     - service: input_boolean.turn_on
+  #       data:
+  #         entity_id: input_boolean.marisa
 
-  - alias: house_mode_user_marisa_away
-    initial_state: 'on'
-    trigger:
-      - platform: state
-        entity_id: device_tracker.marisa_bt_rpi3, device_tracker.marisas_iphone, device_tracker.marisasiphone_2
-        to: 'not_home'
-    condition:
-      - condition: and
-        conditions:
-          - condition: state
-            entity_id: device_tracker.marisa_bt_rpi3
-            state: 'not_home'
-          # - condition: state
-          #   entity_id: device_tracker.marisas_iphone
-          #   state: 'not_home'
-          - condition: state
-            entity_id: device_tracker.marisasiphone_2
-            state: 'not_home'
-      - condition: state
-        entity_id: input_boolean.marisa
-        state: 'on'
-    action:
-      - service: input_boolean.turn_off
-        data:
-          entity_id: input_boolean.marisa
+  # - alias: house_mode_user_marisa_away
+  #   initial_state: 'on'
+  #   trigger:
+  #     - platform: state
+  #       entity_id: device_tracker.marisa_bt_rpi3, device_tracker.marisas_iphone, device_tracker.marisasiphone_2
+  #       to: 'not_home'
+  #   condition:
+  #     - condition: and
+  #       conditions:
+  #         - condition: state
+  #           entity_id: device_tracker.marisa_bt_rpi3
+  #           state: 'not_home'
+  #         # - condition: state
+  #         #   entity_id: device_tracker.marisas_iphone
+  #         #   state: 'not_home'
+  #         - condition: state
+  #           entity_id: device_tracker.marisasiphone_2
+  #           state: 'not_home'
+  #     - condition: state
+  #       entity_id: input_boolean.marisa
+  #       state: 'on'
+  #   action:
+  #     - service: input_boolean.turn_off
+  #       data:
+  #         entity_id: input_boolean.marisa
 
   ### iCloud Tracking ###
   - alias: marisa_update_icloud_when_leaving

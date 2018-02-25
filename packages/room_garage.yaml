@@ -11,16 +11,6 @@ automation:
       - platform: state
         entity_id: binary_sensor.garage_motion
         to: 'on'
-      - platform: numeric_state
-        entity_id: 'sensor.garage_lux'
-        below: 45
-    condition:
-      - condition: numeric_state
-        entity_id: 'sensor.garage_lux'
-        below: 45
-      - condition: state
-        entity_id: binary_sensor.garage_motion
-        state: 'on'
     action:
       - service: light.turn_on
         data:

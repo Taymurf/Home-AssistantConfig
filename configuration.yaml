@@ -28,7 +28,6 @@ map:
 updater:
 python_script:
 sun:
-# discovery:
 automation: !include automations.yaml
 scene: !include scenes.yaml
 script: !include scripts.yaml
@@ -44,6 +43,7 @@ http:
   trusted_networks:
     - 192.168.1.0/24
     - 127.0.0.1
+    - ::1
   ip_ban_enabled: True
   login_attempts_threshold: 5
 
@@ -52,15 +52,12 @@ duckdns:
   access_token: !secret duck_token
 
 # Discover some devices automatically
-discovery:
+# discovery:
+# configurator:
 
-# Weather prediction
-sensor:
-  - platform: yr
-
-# Text to speech
 tts:
   - platform: google
+    time_memory: 57000
 
 influxdb:
   host: 127.0.0.1
