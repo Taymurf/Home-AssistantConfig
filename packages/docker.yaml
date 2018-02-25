@@ -19,6 +19,8 @@ homeassistant:
       icon: mdi:plex
     switch.plexpy:
       icon: mdi:plex
+    switch.watchtower:
+      icon: mdi:update
 
 
 group:
@@ -33,6 +35,7 @@ group:
       - switch.weavescope
       - switch.grafana
       - switch.glances
+      - switch.watchtower
 
 
 sensor:
@@ -81,6 +84,13 @@ switch:
   - platform: rest
     resource: !secret docker_plexpy
     name: PlexPy
+    body_on: '{"state": "start"}'
+    body_off: '{"state": "stop"}'
+    is_on_template: '{{ value_json is not none and value_json.state == "running" }}'
+
+  - platform: rest
+    resource: !secret docker_watchtower
+    name: Watch Tower
     body_on: '{"state": "start"}'
     body_off: '{"state": "stop"}'
     is_on_template: '{{ value_json is not none and value_json.state == "running" }}'
