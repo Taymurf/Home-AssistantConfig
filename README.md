@@ -21,7 +21,7 @@ This is my [Home Assistant](https://home-assistant.io/) configuration running on
 * [Sonarr](https://hub.docker.com/r/linuxserver/sonarr/)
 
 ## Devices in Use:
-* [Netgear Orbi (RBK50)](https://smile.amazon.com/gp/product/B01K4CZOBS/ref=oh_aui_detailpage_o00_s00?ie=UTF8&psc=1) - [DD-WRT Firmware](ftp://ftp.dd-wrt.com/betas/2018/)
+* [Netgear Orbi (RBK50)](https://smile.amazon.com/gp/product/B01K4CZOBS/ref=oh_aui_detailpage_o00_s00?ie=UTF8&psc=1)
 * [Nest Thermostat E](https://www.bestbuy.com/site/nest-thermostat-e-white/6051016.p?skuId=6051016)
 * [Synology DS918+ NAS](https://smile.amazon.com/gp/product/B075N1Z9LT/ref=oh_aui_detailpage_o06_s01?ie=UTF8&psc=1)
 * [Google Home](http://www.bestbuy.ca/en-CA/product/-/10721100.aspx?icmp=Homepage_SectionA_Mainfeature_googlehome_Shop)
