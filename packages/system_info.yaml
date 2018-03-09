@@ -6,7 +6,7 @@
 ##############################################################
 homeassistant:
   customize:
-  ###### NUC i5
+  ###### NUC i7
     sensor.uname:
       icon: mdi:linux
       friendly_name: OS
@@ -80,10 +80,11 @@ group:
   systeminfo:
     control: hidden
     icon: mdi:ethernet-cable
-    name: NUC i5
+    name: Skull Canyon NUC i7
     entities:
       - sensor.host_uptime_human
       - sensor.ha_uptime_human
+      # - sensor.hassuptime
       - sensor.uname
       - sensor.cpu_temperature
       - sensor.processor_use
@@ -110,7 +111,7 @@ weblink:
 
 
 sensor:
-###### NUC i5
+###### NUC i7
   - platform: systemmonitor
     resources:
       - type: disk_use_percent
@@ -135,6 +136,15 @@ sensor:
       - type: ipv6_address
         arg: eno1
 
+###### SQL Database Size
+  - platform: sql
+    db_url: !secret mysql_db_url
+    queries:
+      - name: mysql_homeassistant_size
+        query: 'SELECT table_schema "database", Round(Sum(data_length + index_length) / 1024 / 1024, 1) "value" FROM information_schema.tables WHERE table_schema="homeassistant" GROUP BY table_schema;'
+        column: 'value'
+        unit_of_measurement: MiB
+
 ###### System Processes
   - platform: command_line
     name: "Mosquitto Status"
@@ -158,7 +168,7 @@ sensor:
 
   - platform: command_line
     name: CPU Temperature
-    command: "cat /sys/class/thermal/thermal_zone1/temp"
+    command: "cat /sys/class/thermal/thermal_zone2/temp"
     unit_of_measurement: "°F"
     value_template: '{{ (value | multiply(0.001)) | multiply(1.8) + 32 | round(1) | int }}'
 
@@ -171,7 +181,7 @@ sensor:
 
   - platform: template
     sensors:
-
+###### NUC
       host_uptime_human:
         value_template: >-
            {% macro human_time(second) -%}

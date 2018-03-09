@@ -8,10 +8,10 @@
 
 
 notify:
-  - name: Chrome Push
-    platform: html5
-    gcm_api_key: !secret html5_key
-    gcm_sender_id: !secret html5_id
+  # - name: Chrome Push
+  #   platform: html5
+  #   gcm_api_key: !secret html5_key
+  #   gcm_sender_id: !secret html5_id
     
   - platform: pushbullet
     name: taylor
@@ -33,7 +33,7 @@ automation:
       - condition: template
         value_template: "{% if trigger.from_state and trigger.to_state %} True {% else %} False {% endif %}"
     action:
-      - service: notify.html5
+      - service: notify.taylor
         data_template:
           message: "Your External IP changed from {{ trigger.from_state.state }} to {{ trigger.to_state.state }}"
 
@@ -44,7 +44,7 @@ automation:
       - platform: event
         event_type: device_tracker_new_device
     action:
-      - service: notify.html5
+      - service: notify.taylor
         data_template:
           message: >
             New entity ID {{ trigger.event.data.entity_id }} and hostname {{ trigger.event.data.host_name }}

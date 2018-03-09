@@ -17,11 +17,12 @@ homeassistant:
       icon: mdi:desktop-tower
     switch.plex:
       icon: mdi:plex
-    switch.plexpy:
+    switch.tautulli:
       icon: mdi:plex
     switch.watchtower:
       icon: mdi:update
-
+    switch.emby:
+      icon: mdi:emby
 
 group:
   docker_containers:
@@ -29,13 +30,14 @@ group:
     control: hidden
     entities:
       - sensor.docker_status
-      - switch.plex
-      - switch.plexpy
+      # - switch.plex
+      - switch.tautulli
       - switch.portainer
       - switch.weavescope
       - switch.grafana
       - switch.glances
-      - switch.watchtower
+      - switch.emby
+      # - switch.watchtower
 
 
 sensor:
@@ -67,12 +69,12 @@ switch:
     body_off: '{"state": "stop"}'
     is_on_template: '{{ value_json is not none and value_json.state == "running" }}'
 
-  - platform: rest
-    resource: !secret docker_plex
-    name: Plex
-    body_on: '{"state": "start"}'
-    body_off: '{"state": "stop"}'
-    is_on_template: '{{ value_json is not none and value_json.state == "running" }}'
+  # - platform: rest
+  #   resource: !secret docker_plex
+  #   name: Plex
+  #   body_on: '{"state": "start"}'
+  #   body_off: '{"state": "stop"}'
+  #   is_on_template: '{{ value_json is not none and value_json.state == "running" }}'
 
   - platform: rest
     resource: !secret docker_weavescope
@@ -82,15 +84,22 @@ switch:
     is_on_template: '{{ value_json is not none and value_json.state == "running" }}'
 
   - platform: rest
-    resource: !secret docker_plexpy
-    name: PlexPy
+    resource: !secret docker_tautulli
+    name: Tautulli
     body_on: '{"state": "start"}'
     body_off: '{"state": "stop"}'
     is_on_template: '{{ value_json is not none and value_json.state == "running" }}'
 
+  # - platform: rest
+  #   resource: !secret docker_watchtower
+  #   name: Watchtower
+  #   body_on: '{"state": "start"}'
+  #   body_off: '{"state": "stop"}'
+  #   is_on_template: '{{ value_json is not none and value_json.state == "running" }}'
+
   - platform: rest
-    resource: !secret docker_watchtower
-    name: Watch Tower
+    resource: !secret docker_emby
+    name: Emby
     body_on: '{"state": "start"}'
     body_off: '{"state": "stop"}'
     is_on_template: '{{ value_json is not none and value_json.state == "running" }}'
@@ -101,7 +110,7 @@ automation:
     initial_state: 'on'
     trigger:
       - platform: state
-        entity_id: switch.grafana, switch.plex
+        entity_id: switch.grafana, switch.portainer, switch.tautulli
         to: 'off'
         for:
           minutes: 5

@@ -32,7 +32,7 @@ automation: !include automations.yaml
 scene: !include scenes.yaml
 script: !include scripts.yaml
 frontend:
-  javascript_version: latest
+  # javascript_version: latest
   themes: !include themes.yaml
 
 http:
@@ -43,7 +43,6 @@ http:
   trusted_networks:
     - 192.168.1.0/24
     - 127.0.0.1
-    - ::1
   ip_ban_enabled: True
   login_attempts_threshold: 5
 

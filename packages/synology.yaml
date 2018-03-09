@@ -93,7 +93,7 @@ group:
   hdd_1:
     control: hidden
     icon: mdi:harddisk
-    name: WD Red 4 TB (#1)
+    name: WD Red 8 TB (#1)
     entities:
       - sensor.temperature_sda
       - sensor.hdd1_smart_status
@@ -102,7 +102,7 @@ group:
   hdd_2:
     control: hidden
     icon: mdi:harddisk
-    name: WD Red 4 TB (#2)
+    name: WD Red 8 TB (#2)
     entities:
       - sensor.temperature_sdb
       - sensor.hdd2_smart_status
@@ -111,7 +111,7 @@ group:
   hdd_3:
     control: hidden
     icon: mdi:harddisk
-    name: HGST Deskstar 4 TB (#1)
+    name: WD Red 8 TB (#3)
     entities:
       - sensor.temperature_sdc
       - sensor.hdd3_smart_status
@@ -120,7 +120,7 @@ group:
   hdd_4:
     control: hidden
     icon: mdi:harddisk
-    name: HGST Deskstar 4 TB (#2)
+    name: WD Red 8 TB (#4)
     entities:
       - sensor.temperature_sdd
       - sensor.hdd4_smart_status
@@ -129,7 +129,7 @@ group:
   ssd_1:
     control: hidden
     icon: mdi:sd
-    name: SSD Cache 1
+    name: SSD Cache (Samsung 960 EVO)
     entities:
       - sensor.temperature_nvme0n1
       - sensor.ssd1_smart_status

@@ -94,8 +94,8 @@ automation:
         entity_id: group.taylor, group.marisa, input_boolean.guest
     action:
       - service_template: >
-          {% if states.group.taylor.state == 'off' and states.group.marisa.state == 'off' and states.input_boolean.guest.state == 'off' and states.input_boolean.away.state == 'off' %} homeassistant.turn_on
-          {% elif states.group.taylor.state == 'on' or states.group.marisa.state == 'on' or states.input_boolean.guest.state == 'on' and states.input_boolean.away.state == 'on' %} homeassistant.turn_off
+          {% if states.group.taylor.state == 'off' and states.group.marisa.state == 'off' and states.input_boolean.guest.state == 'off' and states.input_boolean.away.state == 'off' %} input_boolean.turn_on
+          {% elif states.group.taylor.state == 'on' or states.group.marisa.state == 'on' or states.input_boolean.guest.state == 'on' and states.input_boolean.away.state == 'on' %} input_boolean.turn_off
           {% endif %}
         entity_id: input_boolean.away
       - service_template: >
@@ -455,92 +455,6 @@ automation:
       - service: notify.ios_taylors_iphone
         data:
           message: "Marisa left school"
-      - service: script.turn_on
-        entity_id: script.m_scan_interval_2
-      
-  - alias: Marisa is at nemours
-    trigger:
-      platform: zone
-      entity_id: device_tracker.marisa_bt_rpi3, device_tracker.marisas_iphone, device_tracker.marisasiphone, device_tracker.marisasiphone_2
-      zone: zone.nemours
-      event: enter
-    condition:
-      - condition: or
-        conditions:
-          - condition: state
-            entity_id: group.taylor
-            state: 'on'
-            for:
-              minutes: 20
-          - condition: state
-            entity_id: group.taylor
-            state: 'off'
-            for:
-              minutes: 15
-      - condition: and
-        conditions:
-          - condition: state
-            entity_id: device_tracker.marisas_iphone
-            state: 'not_home'
-            for:
-              minutes: 7
-          - condition: state
-            entity_id: device_tracker.marisasiphone
-            state: 'not_home'
-            for:
-              minutes: 7
-    action:
-      service: notify.ios_taylors_iphone
-      data:
-        message: "Marisa is at Nemour's"
-
-  - alias: Marisa leaves nemours
-    trigger:
-      platform: zone
-      entity_id: device_tracker.marisa_bt_rpi3, device_tracker.marisas_iphone, device_tracker.marisasiphone, device_tracker.marisasiphone_2
-      zone: zone.nemours
-      event: leave
-    condition:
-      condition: or
-      conditions:
-        - condition: state
-          entity_id: group.taylor
-          state: 'on'
-          for:
-            minutes: 20
-        - condition: state
-          entity_id: group.taylor
-          state: 'off'
-          for:
-            minutes: 15
-    action:
-      - service: notify.ios_taylors_iphone
-        data:
-          message: "Marisa left Nemour's"
-      - service: script.turn_on
-        entity_id: script.m_scan_interval_2
-
-  - alias: Marisa is at knights clinic
-    trigger:
-      platform: zone
-      entity_id: device_tracker.marisa_bt_rpi3, device_tracker.marisas_iphone, device_tracker.marisasiphone, device_tracker.marisasiphone_2
-      zone: zone.knights_clinic
-      event: enter
-    action:
-      service: notify.ios_taylors_iphone
-      data:
-        message: "Marisa is at KNIGHTs Clinic"
-
-  - alias: Marisa leaves knights clinic
-    trigger:
-      platform: zone
-      entity_id: device_tracker.marisa_bt_rpi3, device_tracker.marisas_iphone, device_tracker.marisasiphone, device_tracker.marisasiphone_2
-      zone: zone.knights_clinic
-      event: leave
-    action:
-      - service: notify.ios_taylors_iphone
-        data:
-          message: "Marisa left KNIGHTs Clinic"
       - service: script.turn_on
         entity_id: script.m_scan_interval_2
 

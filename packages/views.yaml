@@ -9,7 +9,6 @@ group:
     view: yes
     entities:
       - group.hue_light_bulbs
-      - group.blink
       - group.hue_color_bulbs
       - group.thermostat
       - group.presence
