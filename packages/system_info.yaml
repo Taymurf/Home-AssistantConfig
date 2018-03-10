@@ -60,6 +60,10 @@ homeassistant:
       icon: mdi:chip
     sensor.ha_version:
       friendly_name: HA Version
+    sensor.cert_expiry_ha:
+      friendly_name: HA Certificate Expiration
+    sensor.mysql_homeassistant_size:
+      friendly_name: Home Assistant DB Size
 
     sensor.mosquitto_status:
       friendly_name: Mosquitto Server
@@ -88,6 +92,7 @@ group:
       - sensor.uname
       - sensor.cpu_temperature
       - sensor.processor_use
+      - sensor.nuc_i7_speed
       - sensor.load_1m
       - sensor.load_5m
       - sensor.load_15m
@@ -98,6 +103,8 @@ group:
       - sensor.memory_use_percent
       # - sensor.ram_used_2
       # - sensor.ipv4_address_eno1
+      - sensor.cert_expiry_ha
+      - sensor.mysql_homeassistant_size
       - sensor.mosquitto_status
       - sensor.smbd_status
       - sensor.sshd_status
@@ -136,14 +143,43 @@ sensor:
       - type: ipv6_address
         arg: eno1
 
+  - platform: glances
+    host: 192.168.1.200
+    resources:
+      # - 'disk_use_percent'
+      # - 'disk_use'
+      # - 'disk_free'
+      # - 'memory_use_percent'
+      # - 'memory_use'
+      # - 'memory_free'
+      # - 'swap_use_percent'
+      # - 'swap_use'
+      # - 'swap_free'
+      - 'processor_load'
+      - 'process_running'
+      - 'process_total'
+      - 'process_thread'
+      - 'process_sleeping'
+      - 'cpu_temp'
+
+###### CPU Speed
+  - platform: cpuspeed
+    name: NUC i7 Speed
+
 ###### SQL Database Size
-  - platform: sql
-    db_url: !secret mysql_db_url
-    queries:
-      - name: mysql_homeassistant_size
-        query: 'SELECT table_schema "database", Round(Sum(data_length + index_length) / 1024 / 1024, 1) "value" FROM information_schema.tables WHERE table_schema="homeassistant" GROUP BY table_schema;'
-        column: 'value'
-        unit_of_measurement: MiB
+  # - platform: sql
+  #   db_url: !secret mysql_db_url
+  #   queries:
+  #     - name: mysql_homeassistant_size
+  #       query: 'SELECT table_schema "database", Round(Sum(data_length + index_length) / 1024 / 1024, 1) "value" FROM information_schema.tables WHERE table_schema="homeassistant" GROUP BY table_schema;'
+  #       column: 'value'
+  #       unit_of_measurement: MiB
+
+###### Certificate Expiration (Let's Encrypt!)
+  - platform: cert_expiry
+    host: !secret cert_hass
+    port: !secret port_hass
+    name: cert_expiry_ha
 
 ###### System Processes
   - platform: command_line

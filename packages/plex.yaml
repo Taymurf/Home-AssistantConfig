@@ -1,0 +1,351 @@
+################################################################
+## Packages / Plex Media Server
+################################################################
+
+homeassistant:
+  customize:
+  ###### Plex Media Server
+    sensor.cert_expiry_plex:
+      icon: mdi:certificate
+      friendly_name: Plex Certificate Expiration
+
+
+
+media_player:
+  - platform: plex
+    entity_namespace: 'plex'
+    use_custom_entity_ids: true
+    use_episode_art: true
+    scan_interval: 2
+
+
+
+group:
+###### Plex Media Server
+  plex_info:
+    control: hidden
+    icon: mdi:plex
+    name: TaylorPlexMediaServer™
+    entities:
+      - sensor.cert_expiry_plex
+
+###### Tautulli Monitoring
+  tautulli:
+    control: hidden
+    icon: mdi:record-rec
+    name: Tautulli
+    entities:
+      - switch.tautulli # Set up in docker package to turn on/off
+      - sensor.tautulli_total
+      - sensor.tautulli_transcode
+      - sensor.tautulli_direct_play
+      - sensor.tautulli_direct_stream
+      - sensor.tautulli_total_bandwidth
+
+###### Groups to auto-hide media players when idle
+  plex_family_room:
+    name: Plex Family Room TV
+    entities:
+      - media_player.plex_family_room
+  plex_taylor_desktop_chrome:
+    name: Plex Windows 10 Desktop chrome
+    entities:
+      - media_player.plex_taylor_desktop_chrome
+  group.plex_plex_0956adf22e1e0abefed1ec047e6789c4:
+    name: Unknown Player 1
+    entities:
+      - media_player.plex_plex_0956adf22e1e0abefed1ec047e6789c4
+  group.plex_plex_a1d3e468_b75f_404a_a199_4609e3de0be9:
+    name: Unknown Player 2
+    entities:
+      - media_player.plex_plex_a1d3e468_b75f_404a_a199_4609e3de0be9
+  group.plex_plex_wlspcvi66ol8vicmky3yd5ry:
+    name: Unknown Player 3
+    entities:
+      - media_player.plex_plex_wlspcvi66ol8vicmky3yd5ry
+  group.plex_plex_ji7upnpzv7hh26b4vfjwe8ds:
+    name: Unknown Player 4
+    entities:
+      - media_player.plex_plex_ji7upnpzv7hh26b4vfjwe8ds
+  group.plex_plex_oo6kcywnoxhbdgcsb644jfta:
+    name: Unknown Player 5
+    entities:
+      - media_player.plex_plex_oo6kcywnoxhbdgcsb644jfta
+  group.plex_plex_x37hdom677xxtdobhubi3a97:
+    name: Unknown Player 6
+    entities:
+      - media_player.plex_plex_x37hdom677xxtdobhubi3a97
+
+
+
+###### Override visibility
+  plex_player_override:
+    name: Plex Players Override
+    icon: mdi:auto-fix
+    entities:
+      - automation.family_room_plex_visible_false
+      - automation.windows_10_desktop_chrome_plex_visible_false
+      - automation.plex_unknown_player_1_visible_false
+      - automation.plex_unknown_player_2_visible_false
+      - automation.plex_unknown_player_3_visible_false
+      - automation.plex_unknown_player_4_visible_false
+      - automation.plex_unknown_player_5_visible_false
+      - automation.plex_unknown_player_6_visible_false
+
+###### Override Light automations
+  plex_light_override:
+    name: Plex Lights Override
+    icon: mdi:auto-fix
+    entities:
+      - automation.plex_family_room_lights_on
+      - automation.plex_family_room_lights_off
+
+
+
+sensor:
+###### Certificate Expiration (Let's Encrypt!)
+  - platform: cert_expiry
+    host: !secret cert_plex
+    port: !secret port_plex
+    name: cert_expiry_plex
+
+###### Tautulli Server Monitoring
+  - platform: tautulli
+    host: !secret tautulli_host
+    ssl: false
+    verify_ssl: true
+    token: !secret tautulli_api
+    monitored_conditions:
+      - stream_count
+    ### Below are only compatible with Tautulli (not PlexPy)
+      - stream_count_transcode
+      - stream_count_direct_play
+      - stream_count_direct_stream
+      - total_bandwidth
+
+
+
+automation:
+###### Controlling the Lights (Hue Lights)
+  - alias: 'plex_family_room_lights_off'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: media_player.plex_family_room
+        to: 'playing'
+    condition: 
+      condition: time
+      after: '20:00:00'
+    action:
+      - service: scene.turn_on
+        entity_id: scene.plex_play
+
+  - alias: 'plex_family_room_lights_on'
+    initial_state: 'on'
+    trigger:
+      - platform: state
+        entity_id: media_player.plex_family_room
+        to: 'paused'
+    condition: 
+      condition: time
+      after: '20:00:00'
+    action:
+      - service: scene.turn_on
+        entity_id: scene.plex_pause
+
+###### Auto-hide media players when not in use
+  ### Family Room Plex ###
+  - alias: Family room plex visible true
+    trigger:
+      platform: template
+      value_template: "{{ not is_state('media_player.plex_family_room', 'off') }}"
+    action:
+      service: group.set_visibility
+      entity_id: group.plex_family_room
+      data:
+        visible: True
+
+  - alias: Family room plex visible false
+    trigger:
+      - platform: homeassistant
+        event: start
+      - platform: state
+        entity_id: media_player.plex_family_room
+        to: 'off'
+    action:
+      service: group.set_visibility
+      entity_id: group.plex_family_room
+      data:
+        visible: False
+
+  ### Windows 10 Desktop Chrome Plex ###
+  - alias: Windows 10 Desktop Chrome plex visible true
+    trigger:
+      platform: template
+      value_template: "{{ not is_state('media_player.plex_taylor_desktop_chrome', 'off') }}"
+    action:
+      service: group.set_visibility
+      entity_id: group.plex_taylor_desktop_chrome
+      data:
+        visible: True
+
+  - alias: Windows 10 Desktop Chrome plex visible false
+    trigger:
+      - platform: homeassistant
+        event: start
+      - platform: state
+        entity_id: media_player.plex_taylor_desktop_chrome
+        to: 'off'
+    action:
+      service: group.set_visibility
+      entity_id: group.plex_taylor_desktop_chrome
+      data:
+        visible: False
+
+  ### Unknown Player 1 Plex ###
+  - alias: plex Unknown Player 1 visible true
+    trigger:
+      platform: template
+      value_template: "{{ not is_state('media_player.plex_plex_0956adf22e1e0abefed1ec047e6789c4', 'off') }}"
+    action:
+      service: group.set_visibility
+      entity_id: group.plex_plex_0956adf22e1e0abefed1ec047e6789c4
+      data:
+        visible: True
+
+  - alias: plex Unknown Player 1 visible false
+    trigger:
+      - platform: homeassistant
+        event: start
+      - platform: state
+        entity_id: media_player.plex_plex_0956adf22e1e0abefed1ec047e6789c4
+        to: 'off'
+    action:
+      service: group.set_visibility
+      entity_id: group.plex_plex_0956adf22e1e0abefed1ec047e6789c4
+      data:
+        visible: False
+
+  ### Unknown Player 2 Plex ###
+  - alias: plex Unknown Player 2 visible true
+    trigger:
+      platform: template
+      value_template: "{{ not is_state('media_player.plex_plex_a1d3e468_b75f_404a_a199_4609e3de0be9', 'off') }}"
+    action:
+      service: group.set_visibility
+      entity_id: group.plex_plex_a1d3e468_b75f_404a_a199_4609e3de0be9
+      data:
+        visible: True
+
+  - alias: plex Unknown Player 2 visible false
+    trigger:
+      - platform: homeassistant
+        event: start
+      - platform: state
+        entity_id: media_player.plex_plex_a1d3e468_b75f_404a_a199_4609e3de0be9
+        to: 'off'
+    action:
+      service: group.set_visibility
+      entity_id: group.plex_plex_a1d3e468_b75f_404a_a199_4609e3de0be9
+      data:
+        visible: False
+
+  ### Unknown Player 3 Plex ###
+  - alias: plex Unknown Player 3 visible true
+    trigger:
+      platform: template
+      value_template: "{{ not is_state('media_player.plex_plex_wlspcvi66ol8vicmky3yd5ry', 'off') }}"
+    action:
+      service: group.set_visibility
+      entity_id: group.plex_plex_wlspcvi66ol8vicmky3yd5ry
+      data:
+        visible: True
+
+  - alias: plex Unknown Player 3 visible false
+    trigger:
+      - platform: homeassistant
+        event: start
+      - platform: state
+        entity_id: media_player.plex_plex_wlspcvi66ol8vicmky3yd5ry
+        to: 'off'
+    action:
+      service: group.set_visibility
+      entity_id: group.plex_plex_wlspcvi66ol8vicmky3yd5ry
+      data:
+        visible: False
+
+  ### Unknown Player 4 Plex ###
+  - alias: plex Unknown Player 4 visible true
+    trigger:
+      platform: template
+      value_template: "{{ not is_state('media_player.plex_plex_ji7upnpzv7hh26b4vfjwe8ds', 'off') }}"
+    action:
+      service: group.set_visibility
+      entity_id: group.plex_plex_ji7upnpzv7hh26b4vfjwe8ds
+      data:
+        visible: True
+
+  - alias: plex Unknown Player 4 visible false
+    trigger:
+      - platform: homeassistant
+        event: start
+      - platform: state
+        entity_id: media_player.plex_plex_ji7upnpzv7hh26b4vfjwe8ds
+        to: 'off'
+    action:
+      service: group.set_visibility
+      entity_id: group.plex_plex_ji7upnpzv7hh26b4vfjwe8ds
+      data:
+        visible: False
+
+  ### Unknown Player 5 Plex ###
+  - alias: plex Unknown Player 5 visible true
+    trigger:
+      platform: template
+      value_template: "{{ not is_state('media_player.plex_plex_oo6kcywnoxhbdgcsb644jfta', 'off') }}"
+    action:
+      service: group.set_visibility
+      entity_id: group.plex_plex_oo6kcywnoxhbdgcsb644jfta
+      data:
+        visible: True
+
+  - alias: plex Unknown Player 5 visible false
+    trigger:
+      - platform: homeassistant
+        event: start
+      - platform: state
+        entity_id: media_player.plex_plex_oo6kcywnoxhbdgcsb644jfta
+        to: 'off'
+    action:
+      service: group.set_visibility
+      entity_id: group.plex_plex_oo6kcywnoxhbdgcsb644jfta
+      data:
+        visible: False
+
+  ### Unknown Player 6 Plex ###
+  - alias: plex Unknown Player 6 visible true
+    trigger:
+      platform: template
+      value_template: "{{ not is_state('media_player.plex_plex_x37hdom677xxtdobhubi3a97', 'off') }}"
+    action:
+      service: group.set_visibility
+      entity_id: group.plex_plex_x37hdom677xxtdobhubi3a97
+      data:
+        visible: True
+
+  - alias: plex Unknown Player 6 visible false
+    trigger:
+      - platform: homeassistant
+        event: start
+      - platform: state
+        entity_id: media_player.plex_plex_x37hdom677xxtdobhubi3a97
+        to: 'off'
+    action:
+      service: group.set_visibility
+      entity_id: group.plex_plex_x37hdom677xxtdobhubi3a97
+      data:
+        visible: False
+
+
+
+

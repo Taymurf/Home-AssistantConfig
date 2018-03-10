@@ -63,7 +63,6 @@ group:
       - group.systeminfo
       - group.hassctl
       - group.docker_containers
-      - group.mini_fridge
 
   synology:
     icon: mdi:harddisk
@@ -77,6 +76,24 @@ group:
       - group.hdd_4
       - group.ssd_1
       - group.ssd_2
+
+  plex:
+    name: Plex
+    icon: mdi:plex
+    view: yes
+    entities:
+      - group.plex_info
+      - group.tautulli
+      - group.plex_player_override
+      - group.plex_light_override
+      - group.plex_family_room
+      - group.plex_taylor_desktop_chrome
+      - group.plex_plex_0956adf22e1e0abefed1ec047e6789c4
+      - group.plex_plex_a1d3e468_b75f_404a_a199_4609e3de0be9
+      - group.plex_plex_wlspcvi66ol8vicmky3yd5ry
+      - group.plex_plex_ji7upnpzv7hh26b4vfjwe8ds
+      - group.plex_plex_oo6kcywnoxhbdgcsb644jfta
+      - group.plex_plex_x37hdom677xxtdobhubi3a97
 
   automations:
     name: Overrides

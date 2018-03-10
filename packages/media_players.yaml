@@ -172,11 +172,9 @@ automation:
 
   ### Family Room Home ###
   - alias: Family room google home visible true
-
     trigger:
       platform: template
       value_template: "{{ not is_state('media_player.family_room_home', 'off') }}"
-
     action:
       service: group.set_visibility
       entity_id: group.family_room_home_main
@@ -184,14 +182,12 @@ automation:
         visible: True
 
   - alias: Family room google home visible false
-
     trigger:
       - platform: homeassistant
         event: start
       - platform: state
         entity_id: media_player.family_room_home
         to: 'off'
-
     action:
       service: group.set_visibility
       entity_id: group.family_room_home_main
@@ -201,11 +197,9 @@ automation:
 
   ### TV Chromecast Audio ###
   - alias: Family room TV chromecast audio visible true
-
     trigger:
       platform: template
       value_template: "{{ not is_state('media_player.family_room_speaker', 'off') }}"
-
     action:
       service: group.set_visibility
       entity_id: group.tv_speaker_main
@@ -213,28 +207,23 @@ automation:
         visible: True
 
   - alias: Family room TV chromecast audio visible false
-
     trigger:
       - platform: homeassistant
         event: start
       - platform: state
         entity_id: media_player.family_room_speaker
         to: 'off'
-
     action:
       service: group.set_visibility
       entity_id: group.tv_speaker_main
       data:
         visible: False
 
-
   ### Kitchen Mini ###
   - alias: Kitchen mini visible true
-
     trigger:
       platform: template
       value_template: "{{ not is_state('media_player.kitchen_mini', 'off') }}"
-
     action:
       service: group.set_visibility
       entity_id: group.kitchen_speaker_main
@@ -242,14 +231,12 @@ automation:
         visible: True
 
   - alias: Kitchen mini visible false
-
     trigger:
       - platform: homeassistant
         event: start
       - platform: state
         entity_id: media_player.kitchen_mini
         to: 'off'
-
     action:
       service: group.set_visibility
       entity_id: group.kitchen_speaker_main
@@ -258,11 +245,9 @@ automation:
 
 ###### Master Bathroom Mini Visibility ###
   - alias: Master bathroom mini visible true
-
     trigger:
       platform: template
       value_template: "{{ not is_state('media_player.master_bathroom_mini', 'off') }}"
-
     action:
       service: group.set_visibility
       entity_id: group.master_bathroom_speaker_main
@@ -270,14 +255,12 @@ automation:
         visible: True
 
   - alias: Master bathroom mini visible false
-
     trigger:
       - platform: homeassistant
         event: start
       - platform: state
         entity_id: media_player.master_bathroom_mini
         to: 'off'
-
     action:
       service: group.set_visibility
       entity_id: group.master_bathroom_speaker_main
@@ -286,11 +269,9 @@ automation:
 
   ### Our Room ###
   - alias: Our room visible true
-
     trigger:
       platform: template
       value_template: "{{ not is_state('media_player.our_room', 'off') }}"
-
     action:
       service: group.set_visibility
       entity_id: group.our_room_main
@@ -298,14 +279,12 @@ automation:
         visible: True
 
   - alias: Our room visible false
-
     trigger:
       - platform: homeassistant
         event: start
       - platform: state
         entity_id: media_player.our_room
         to: 'off'
-
     action:
       service: group.set_visibility
       entity_id: group.our_room_main
@@ -314,11 +293,9 @@ automation:
 
   ### Bedroom Mini ###
   - alias: Bedroom mini visible true
-
     trigger:
       platform: template
       value_template: "{{ not is_state('media_player.bedroom_mini', 'off') }}"
-
     action:
       service: group.set_visibility
       entity_id: group.bedroom_mini_main
@@ -326,14 +303,12 @@ automation:
         visible: True
 
   - alias: Bedroom mini visible false
-
     trigger:
       - platform: homeassistant
         event: start
       - platform: state
         entity_id: media_player.bedroom_mini
         to: 'off'
-
     action:
       service: group.set_visibility
       entity_id: group.bedroom_mini_main
@@ -342,11 +317,9 @@ automation:
 
   ### Bedroom Chromecast TV ###
   - alias: Bedroom chromecast visible true
-
     trigger:
       platform: template
       value_template: "{{ not is_state('media_player.bedroom_tv', 'off') }}"
-
     action:
       service: group.set_visibility
       entity_id: group.bedroom_chromecast_main
@@ -354,14 +327,12 @@ automation:
         visible: True
 
   - alias: Bedroom chromecast visible false
-
     trigger:
       - platform: homeassistant
         event: start
       - platform: state
         entity_id: media_player.bedroom_tv
         to: 'off'
-
     action:
       service: group.set_visibility
       entity_id: group.bedroom_chromecast_main
@@ -370,11 +341,9 @@ automation:
 
   ### Bedroom Roku TV ###
   - alias: Bedroom roku visible true
-
     trigger:
       platform: template
       value_template: "{{ not is_state('media_player.bedroom', 'off') }}"
-
     action:
       service: group.set_visibility
       entity_id: group.bedroom_roku_main
@@ -382,14 +351,12 @@ automation:
         visible: True
 
   - alias: Bedroom roku visible false
-
     trigger:
       - platform: homeassistant
         event: start
       - platform: state
         entity_id: media_player.bedroom
         to: 'off'
-
     action:
       service: group.set_visibility
       entity_id: group.bedroom_roku_main
@@ -398,11 +365,9 @@ automation:
         
   ### Office Mini ###
   - alias: Office mini visible true
-
     trigger:
       platform: template
       value_template: "{{ not is_state('media_player.office_mini', 'off') }}"
-
     action:
       service: group.set_visibility
       entity_id: group.office_speaker_main
@@ -410,28 +375,23 @@ automation:
         visible: True
 
   - alias: Office mini visible false
-
     trigger:
       - platform: homeassistant
         event: start
       - platform: state
         entity_id: media_player.office_mini
         to: 'off'
-
     action:
       service: group.set_visibility
       entity_id: group.office_speaker_main
       data:
         visible: False
 
-
   ### Family Room Chromecast TV ###
   - alias: Family room chromecast visible true
-
     trigger:
       platform: template
       value_template: "{{ not is_state('media_player.family_room_tv', 'off') }}"
-
     action:
       service: group.set_visibility
       entity_id: group.family_room_chromecast_main
@@ -439,28 +399,23 @@ automation:
         visible: True
 
   - alias: Family room chromecast visible false
-
     trigger:
       - platform: homeassistant
         event: start
       - platform: state
         entity_id: media_player.family_room_tv
         to: 'off'
-
     action:
       service: group.set_visibility
       entity_id: group.family_room_chromecast_main
       data:
         visible: False
 
-
   ### Family Room Roku TV ###
   - alias: Family room roku visible true
-
     trigger:
       platform: template
       value_template: "{{ not is_state('media_player.family_room', 'off') }}"
-
     action:
       service: group.set_visibility
       entity_id: group.family_room_roku_main
@@ -468,28 +423,23 @@ automation:
         visible: True
 
   - alias: Family room roku visible false
-
     trigger:
       - platform: homeassistant
         event: start
       - platform: state
         entity_id: media_player.family_room
         to: 'off'
-
     action:
       service: group.set_visibility
       entity_id: group.family_room_roku_main
       data:
         visible: False
 
-
   ### Google Play Music Desktop Player ###
   - alias: GPM desktop player visible true
-
     trigger:
       platform: template
       value_template: "{{ not is_state('media_player.gpm_desktop_player', 'off') }}"
-
     action:
       service: group.set_visibility
       entity_id: group.gpm_desktop_player_main
@@ -497,14 +447,12 @@ automation:
         visible: True
 
   - alias: GPM desktop player visible false
-
     trigger:
       - platform: homeassistant
         event: start
       - platform: state
         entity_id: media_player.gpm_desktop_player
         to: 'off'
-
     action:
       service: group.set_visibility
       entity_id: group.gpm_desktop_player_main
@@ -513,11 +461,9 @@ automation:
 
   ### All Speakers ###
   - alias: All speakers visible true
-
     trigger:
       platform: template
       value_template: "{{ not is_state('media_player.all_speakers', 'off') }}"
-
     action:
       service: group.set_visibility
       entity_id: group.all_speakers_main
@@ -525,14 +471,12 @@ automation:
         visible: True
 
   - alias: All speakers visible false
-
     trigger:
       - platform: homeassistant
         event: start
       - platform: state
         entity_id: media_player.all_speakers
         to: 'off'
-
     action:
       service: group.set_visibility
       entity_id: group.all_speakers_main
@@ -541,11 +485,9 @@ automation:
 
   ### Most Speakers ###
   - alias: Most speakers visible true
-
     trigger:
       platform: template
       value_template: "{{ not is_state('media_player.most_speakers', 'off') }}"
-
     action:
       service: group.set_visibility
       entity_id: group.most_speakers_main
@@ -553,14 +495,12 @@ automation:
         visible: True
 
   - alias: Most speakers visible false
-
     trigger:
       - platform: homeassistant
         event: start
       - platform: state
         entity_id: media_player.most_speakers
         to: 'off'
-
     action:
       service: group.set_visibility
       entity_id: group.most_speakers_main
@@ -569,11 +509,9 @@ automation:
 
   ### Living Room Speakers ###
   - alias: Living room speakers visible true
-
     trigger:
       platform: template
       value_template: "{{ not is_state('media_player.living_room_speakers', 'off') }}"
-
     action:
       service: group.set_visibility
       entity_id: group.living_room_speakers_main
@@ -581,14 +519,12 @@ automation:
         visible: True
 
   - alias: Living room speakers visible false
-
     trigger:
       - platform: homeassistant
         event: start
       - platform: state
         entity_id: media_player.living_room_speakers
         to: 'off'
-
     action:
       service: group.set_visibility
       entity_id: group.living_room_speakers_main

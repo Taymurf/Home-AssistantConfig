@@ -68,6 +68,8 @@ homeassistant:
       friendly_name: Temperature
       icon: mdi:thermometer
       unit_of_measurement: '°F'
+    sensor.cert_expiry_synology:
+      friendly_name: DSM Certificate Expiration
 
 ###### STATE CARD
 
@@ -88,6 +90,7 @@ group:
       - sensor.maximum_disk_temp_volume_1
       - sensor.network_down
       - sensor.network_up
+      - sensor.cert_expiry_synology
       - sensor.external_ip
   
   hdd_1:
@@ -165,6 +168,12 @@ sensor:
       - volume_percentage_used
       - volume_disk_temp_avg
       - volume_disk_temp_max
+
+###### Certificate Expiration (Let's Encrypt!)
+  - platform: cert_expiry
+    host: !secret cert_synology
+    port: !secret port_synology
+    name: cert_expiry_synology
 
 ###### Disk Health
   - platform: template

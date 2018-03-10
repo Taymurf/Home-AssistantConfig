@@ -32,7 +32,7 @@ automation: !include automations.yaml
 scene: !include scenes.yaml
 script: !include scripts.yaml
 frontend:
-  # javascript_version: latest
+  javascript_version: latest
   themes: !include themes.yaml
 
 http:
