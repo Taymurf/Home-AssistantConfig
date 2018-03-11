@@ -84,6 +84,9 @@ group:
     entities:
       - group.plex_info
       - group.tautulli
+      - group.nzbget
+      - group.sonarr
+      - group.radarr
       - group.plex_player_override
       - group.plex_light_override
       - group.plex_family_room
@@ -100,6 +103,7 @@ group:
     icon: mdi:auto-fix
     view: yes
     entities:
+      - group.all_automations
       - group.media_appear
       - group.media_disappear
       - group.light_automations

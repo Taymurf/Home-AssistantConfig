@@ -8,7 +8,23 @@ homeassistant:
     sensor.cert_expiry_plex:
       icon: mdi:certificate
       friendly_name: Plex Certificate Expiration
-
+    sensor.radarr_movies:
+      icon: mdi:movie
+      friendly_name: Movies Available
+    sensor.sonarr_series:
+      icon: mdi:television-box
+      friendly_name: Shows Avaible
+    sensor.nzbget_queue_size_gb:
+      icon: mdi:cloud-download
+    sensor.nzbget_speed:
+      icon: mdi:speedometer
+      friendly_name: Current Speed
+    sensor.nzbget_average_speed:
+      icon: mdi:format-align-middle
+      friendly_name: Average Speed
+    sensor.nzbget_article_cache:
+      icon: mdi:cached
+      friendly_name: Articles Cached
 
 
 media_player:
@@ -19,7 +35,6 @@ media_player:
     scan_interval: 2
 
 
-
 group:
 ###### Plex Media Server
   plex_info:
@@ -27,8 +42,11 @@ group:
     icon: mdi:plex
     name: TaylorPlexMediaServer™
     entities:
+      - sensor.radarr_movies
+      - sensor.sonarr_series
+      - sensor.volume_used_volume_1
       - sensor.cert_expiry_plex
-
+      
 ###### Tautulli Monitoring
   tautulli:
     control: hidden
@@ -41,6 +59,37 @@ group:
       - sensor.tautulli_direct_play
       - sensor.tautulli_direct_stream
       - sensor.tautulli_total_bandwidth
+
+###### Sonarr
+  sonarr:
+    control: hidden
+    icon: mdi:television-box
+    name: Sonarr
+    entities:
+      - sensor.sonarr_upcoming
+      - sensor.sonarr_commands
+
+###### Radarr
+  radarr:
+    control: hidden
+    icon: mdi:movie
+    name: Radarr
+    entities:
+      - sensor.radarr_status
+      - sensor.radarr_commands
+
+###### NZBget
+  nzbget:
+    control: hidden
+    icon: mdi:download
+    name: NZBget
+    entities:
+      - sensor.nzbget_pause_state
+      - sensor.nzbget_speed
+      # - sensor.nzbget_size
+      - sensor.nzbget_average_speed
+      - sensor.nzbget_queue_size
+      - sensor.nzbget_article_cache
 
 ###### Groups to auto-hide media players when idle
   plex_family_room:
@@ -122,6 +171,89 @@ sensor:
       - stream_count_direct_play
       - stream_count_direct_stream
       - total_bandwidth
+
+###### NZBget
+  - platform: nzbget
+    name: NZBget
+    host: !secret nzbget_host
+    port: !secret nzbget_port
+    username: !secret nzbget_user
+    password: !secret nzbget_pw
+    monitored_variables:
+      - article_cache
+      - download_rate
+      - download_size
+      - remaining_size
+      # - free_disk_space
+      - average_download_rate
+      - download_paused
+  # - platform: template
+  #   sensors:
+  #     nzbget_queue_size_gb:
+  #       friendly_name: Queue Size
+  #       unit_of_measurement: 'GB'
+  #       entity_id: sensor.nzbget_queue_size
+  #       value_template: '{{ states('sensor.nzbget_queue_size')|int * 0.001|round(1)|int }}'
+  - platform: template
+    sensors:
+      nzbget_pause_state:
+        friendly_name: "Current Status"
+        value_template: >-
+          {% if is_state('sensor.nzbget_download_paused', 'False') %}
+            Downloading
+          {% else %}
+            Paused
+          {% endif %}
+        icon_template: >-
+          {% if is_state('sensor.nzbget_download_paused', 'False') %}
+            mdi:play
+          {% else %}
+            mdi:pause
+          {% endif %}
+
+# ###### Deluge
+#   - platform: deluge
+#     name: DelugeVPN
+#     host: !secret deluge_host
+#     port: !secret deluge_port
+#     password: !secret deluge_pw
+#     monitored_variables:
+#       - 'current_status'
+#       - 'download_speed'
+#       - 'upload_speed'
+
+###### Radarr Movie Manager
+  # - platform: radarr
+  #   api_key: !secret radarr_api
+  #   host: !secret radarr_host
+  #   port: !secret radarr_port
+  #   monitored_conditions:
+  #     - movies
+  #     # - upcoming
+  #     - commands
+  #     - status
+
+###### Sonarr TV Show Manager
+  - platform: sonarr
+    api_key: !secret sonarr_api
+    host: !secret sonarr_host
+    port: !secret sonarr_port
+    monitored_conditions:
+      - series
+      - upcoming
+      # - wanted
+      # - queue
+      - commands
+    days: 3
+
+
+
+# switch:
+#   platform: deluge
+#   host: !secret deluge_host
+#   post: !secret deluge_port
+#   # username: USERNAME
+#   password: !secret deluge_pw
 
 
 
