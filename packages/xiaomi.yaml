@@ -25,9 +25,11 @@ group:
     name: All Xiaomi Sensors
     entities:
       - group.xiaomi_gateway
+      - group.sparky
+      - group.door_sensors
 
   xiaomi_gateway:
-    name: Xiaomi Gateway
+    name: Gateway Light
     entities:
       - light.gateway_light_7811dcb23ecf
       - sensor.illumination_7811dcb23ecf
@@ -37,7 +39,12 @@ group:
     entities:
       - sensor.front_door_state
       - sensor.garage_door_state
-      - sensor.patio_door_state
+      # - sensor.patio_door_state
+
+  sparky:
+    name: Sparky
+    entities:
+      - vacuum.sparky
 
 
 xiaomi_aqara:
@@ -46,11 +53,11 @@ xiaomi_aqara:
     - key: !secret xiaomi_key
 
 
-# vacuum:
-#   - platform: xiaomi_miio
-#     host: 192.168.1.221
-#     token: !secret vac_token
-#     name: Sparky
+vacuum:
+  - platform: xiaomi_miio
+    host: 192.168.1.221
+    token: !secret vac_token
+    name: Sparky
 
 
 sensor:

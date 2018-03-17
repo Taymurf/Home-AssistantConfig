@@ -170,10 +170,10 @@ sensor:
       - volume_disk_temp_max
 
 ###### Certificate Expiration (Let's Encrypt!)
-  - platform: cert_expiry
-    host: !secret cert_synology
-    port: !secret port_synology
-    name: cert_expiry_synology
+  # - platform: cert_expiry
+  #   host: !secret cert_synology
+  #   port: !secret port_synology
+  #   name: cert_expiry_synology
 
 ###### Disk Health
   - platform: template

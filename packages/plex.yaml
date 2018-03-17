@@ -13,7 +13,10 @@ homeassistant:
       friendly_name: Movies Available
     sensor.sonarr_series:
       icon: mdi:television-box
-      friendly_name: Shows Avaible
+      friendly_name: Shows Available
+    sensor.sonarr_upcoming:
+      icon: mdi:television-box
+      friendly_name: Shows Upcoming
     sensor.nzbget_queue_size_gb:
       icon: mdi:cloud-download
     sensor.nzbget_speed:
@@ -25,6 +28,9 @@ homeassistant:
     sensor.nzbget_article_cache:
       icon: mdi:cached
       friendly_name: Articles Cached
+    sensor.sonarr_disk_space:
+      icon: mdi:harddisk
+      friendly_name: Space Remaining
 
 
 media_player:
@@ -44,7 +50,9 @@ group:
     entities:
       - sensor.radarr_movies
       - sensor.sonarr_series
+      - sensor.sonarr_upcoming
       - sensor.volume_used_volume_1
+      - sensor.sonarr_disk_space
       - sensor.cert_expiry_plex
       
 ###### Tautulli Monitoring
@@ -200,7 +208,7 @@ sensor:
         friendly_name: "Current Status"
         value_template: >-
           {% if is_state('sensor.nzbget_download_paused', 'False') %}
-            Downloading
+            Not Paused
           {% else %}
             Paused
           {% endif %}
@@ -243,7 +251,11 @@ sensor:
       - upcoming
       # - wanted
       # - queue
-      - commands
+      # - commands
+      - diskspace
+    include_paths:
+      - /tv
+    unit: TB
     days: 3
 
 

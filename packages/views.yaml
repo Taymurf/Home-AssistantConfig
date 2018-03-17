@@ -12,7 +12,10 @@ group:
       - group.hue_color_bulbs
       - group.thermostat
       - group.presence
+      - group.weather
+      - group.motion_sensors
       - group.usps_mail_card
+      - group.sparky
       - group.google_calendars
       - group.all_speakers
       - group.most_speakers
@@ -41,18 +44,6 @@ group:
       - group.blink_backyard
       - group.ads_blocked
       - group.door_sensors
-
-  sensor_tab:
-    name: Sensors
-    icon: mdi:gauge
-    view: yes
-    entities:
-      - group.weather
-      - group.bitcoin
-      - group.motion_sensors
-      - group.lux
-      - group.indoor_temps
-      - group.outdoor_temps
 
   system_view:
     name: System Info
@@ -85,9 +76,8 @@ group:
       - group.plex_info
       - group.tautulli
       - group.nzbget
-      - group.sonarr
+      # - group.sonarr
       - group.radarr
-      - group.plex_player_override
       - group.plex_light_override
       - group.plex_family_room
       - group.plex_taylor_desktop_chrome
@@ -98,6 +88,18 @@ group:
       - group.plex_plex_oo6kcywnoxhbdgcsb644jfta
       - group.plex_plex_x37hdom677xxtdobhubi3a97
 
+  sensor_tab:
+    name: Sensors
+    icon: mdi:gauge
+    view: yes
+    entities:
+      - group.bitcoin
+      - group.stock_prices
+      - group.all_xiaomi
+      - group.lux
+      - group.indoor_temps
+      - group.outdoor_temps
+
   automations:
     name: Overrides
     icon: mdi:auto-fix
@@ -107,6 +109,7 @@ group:
       - group.media_appear
       - group.media_disappear
       - group.light_automations
+      - group.plex_player_override
       - group.theme_automations
       - group.presence_automations
   #    - group.motion_sensor_automations

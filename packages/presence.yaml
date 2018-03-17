@@ -473,10 +473,9 @@ automation:
         entity_id: script.arrive_home_at_night
       - service: script.turn_on
         entity_id: script.alarm_off_script
-      - service: climate.set_away_mode
+      - service: nest.set_mode
         data:
-          entity_id: climate.entryway
-          away_mode: 'false'
+          home_mode: 'home'
       - wait_template: "{{ states.sensor.front_door_state.state == 'open' }}"
       - service: tts.google_say
         data_template:
@@ -492,10 +491,9 @@ script:
           entity_id: light.all_except_entryway
       - service: script.turn_on
         entity_id: script.alarm_on_script
-      - service: climate.set_away_mode
+      - service: nest.set_mode
         data:
-          entity_id: climate.entryway
-          away_mode: 'true'
+          home_mode: 'away'
   
   icloud_snapshot_t:
     sequence:

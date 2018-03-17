@@ -11,10 +11,10 @@ homeassistant:
       icon: mdi:thermometer
     sensor.dark_sky_daily_high_apparent_temperature:
       friendly_name: 'Daily High'
-      icon: mdi:thermometer
+      icon: mdi:fire
     sensor.dark_sky_daily_low_apparent_temperature:
       friendly_name: 'Daily Low'
-      icon: mdi:thermometer
+      icon: mdi:snowflake
     sensor.dark_sky_humidity:
       friendly_name: 'Current Humidity'
     sensor.dark_sky_temperature:

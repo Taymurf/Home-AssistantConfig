@@ -46,11 +46,11 @@ script:
       data:
         entity_id: media_player.family_room_home
         volume_level: '0.80'
-    - wait_template: "{{ states.binary_sensor.office_motion.state == 'on' }}"
-    - service: script.good_morning_tts
-    - service: input_boolean.turn_off
-      data:
-        entity_id: input_boolean.sleep
+    # - wait_template: "{{ states.binary_sensor.office_motion.state == 'on' }}"
+    # - service: script.good_morning_tts
+    # - service: input_boolean.turn_off
+    #   data:
+    #     entity_id: input_boolean.sleep
 
   good_morning_tts:
     sequence:

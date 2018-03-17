@@ -99,6 +99,29 @@ sensor:
       - sensor.family_room_temperature
       - sensor.office_temperature
 
+  - platform: template
+    sensors:
+      entrywaythermostat: ### Entryway Thermostat ###
+        friendly_name: "Entryway Thermostat"
+        value_template: >-
+            {%- if states.climate.entryway != None -%}
+              {{ states.climate.entryway.attributes.operation_mode }}
+            {%- else -%}
+              unknown
+            {%- endif -%}
+        icon_template: >-
+          {%- if states.climate.entryway.attributes.operation_mode == "heat" -%}
+            mdi:fire
+          {%- elif states.climate.entryway.attributes.operation_mode == "cool" -%}
+            mdi:snowflake
+          {%- elif states.climate.entryway.attributes.operation_mode == "auto" -%}
+            mdi:format-align-middle
+          {%- elif states.climate.entryway.attributes.operation_mode == "eco" -%}
+            mdi:leaf
+          {%- else -%}
+            mdi:fan
+          {%- endif -%}
+
 script:
   fan:
     sequence:

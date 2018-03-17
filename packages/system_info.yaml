@@ -64,6 +64,8 @@ homeassistant:
       friendly_name: HA Certificate Expiration
     sensor.mysql_homeassistant_size:
       friendly_name: Home Assistant DB Size
+    sensor.nuc_i7_speed:
+      friendly_name: CPU Frequency
 
     sensor.mosquitto_status:
       friendly_name: Mosquitto Server
@@ -143,24 +145,24 @@ sensor:
       - type: ipv6_address
         arg: eno1
 
-  - platform: glances
-    host: 192.168.1.200
-    resources:
-      # - 'disk_use_percent'
-      # - 'disk_use'
-      # - 'disk_free'
-      # - 'memory_use_percent'
-      # - 'memory_use'
-      # - 'memory_free'
-      # - 'swap_use_percent'
-      # - 'swap_use'
-      # - 'swap_free'
-      - 'processor_load'
-      - 'process_running'
-      - 'process_total'
-      - 'process_thread'
-      - 'process_sleeping'
-      - 'cpu_temp'
+  # - platform: glances
+  #   host: 192.168.1.200
+  #   resources:
+  #     # - 'disk_use_percent'
+  #     # - 'disk_use'
+  #     # - 'disk_free'
+  #     # - 'memory_use_percent'
+  #     # - 'memory_use'
+  #     # - 'memory_free'
+  #     # - 'swap_use_percent'
+  #     # - 'swap_use'
+  #     # - 'swap_free'
+  #     - 'processor_load'
+  #     - 'process_running'
+  #     - 'process_total'
+  #     - 'process_thread'
+  #     - 'process_sleeping'
+  #     - 'cpu_temp'
 
 ###### CPU Speed
   - platform: cpuspeed
@@ -176,10 +178,10 @@ sensor:
   #       unit_of_measurement: MiB
 
 ###### Certificate Expiration (Let's Encrypt!)
-  - platform: cert_expiry
-    host: !secret cert_hass
-    port: !secret port_hass
-    name: cert_expiry_ha
+  # - platform: cert_expiry
+  #   host: !secret cert_hass
+  #   port: !secret port_hass
+  #   name: cert_expiry_ha
 
 ###### System Processes
   - platform: command_line
