@@ -58,22 +58,22 @@ sensor:
       - estimated_transaction_volume_usd
       - miners_revenue_btc
 
-  - platform: alpha_vantage
-    api_key: !secret av_api
-    symbols:
-      - name: S&P 500
-        currency: USD
-        symbol: INX
-      - name: Dow Jones
-        currency: USD
-        symbol: DJI
-      - name: Nasdaq
-        currency: USD
-        symbol: IXIC
-      # - name: Vanguard Fund
-      #   currency: USD
-      #   symbol: VTSAX
-    # foreign_exchange:
-    #   - from: BTC
-    #     to: USD
-    #     name: Bitcoin
+  # - platform: alpha_vantage
+  #   api_key: !secret av_api
+  #   symbols:
+  #     - name: S&P 500
+  #       currency: USD
+  #       symbol: INX
+  #     - name: Dow Jones
+  #       currency: USD
+  #       symbol: DJI
+  #     - name: Nasdaq
+  #       currency: USD
+  #       symbol: IXIC
+  #     # - name: Vanguard Fund
+  #     #   currency: USD
+  #     #   symbol: VTSAX
+  #   # foreign_exchange:
+  #   #   - from: BTC
+  #   #     to: USD
+  #   #     name: Bitcoin
