@@ -4,21 +4,30 @@ This is my [Home Assistant](https://home-assistant.io/) configuration running on
 
 ## Software on the server:
 * [Ubuntu Server 17.10](https://www.ubuntu.com/download/server)
+* [KVM (using MobaXTerm and virt-manager for VMs)](https://www.linux-kvm.org/page/HOWTO)
 * [Home Assistant](https://home-assistant.io/)
 * [Mosquitto](https://mosquitto.org/)
 * [Pi-Hole](https://pi-hole.net/)
 * [PiVPN](http://www.pivpn.io/)
 * [Docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
+* [Glances](https://nicolargo.github.io/glances/)
 
 ## Docker containers on the server:
+* [Caddy Web Server](https://github.com/abiosoft/caddy-docker)
+* [Organizr](https://hub.docker.com/r/lsiocommunity/organizr/)
+* [Watchtower](https://github.com/v2tec/watchtower)
 * [Weave Scope](https://github.com/weaveworks/scope)
-* [Glances](https://hub.docker.com/r/nicolargo/glances/)
+* [HA DockerMon](https://github.com/philhawthorne/ha-dockermon)
 * [Portainer](https://hub.docker.com/r/portainer/portainer/)
-* [Glances](https://nicolargo.github.io/glances/)
 * [Plex](https://github.com/plexinc/pms-docker/blob/master/README.md)
-* [PlexPy](https://hub.docker.com/r/linuxserver/plexpy/)
+* [Emby](https://hub.docker.com/r/emby/embyserver/)
+* [Tautulli (Used to be PlexPy)](https://hub.docker.com/r/shiggins8/tautulli/)
 * [Radarr](https://hub.docker.com/r/linuxserver/radarr/)
 * [Sonarr](https://hub.docker.com/r/linuxserver/sonarr/)
+* [Ombi V3](https://hub.docker.com/r/lsiodev/ombi-preview/)
+* [NZBget](https://hub.docker.com/r/linuxserver/nzbget/)
+* [NZBhydra2](https://hub.docker.com/r/linuxserver/hydra2/)
+* [Handbrake](https://github.com/jlesage/docker-handbrake)
 
 ## Devices in Use:
 * [Netgear Orbi (RBK50)](https://smile.amazon.com/gp/product/B01K4CZOBS/ref=oh_aui_detailpage_o00_s00?ie=UTF8&psc=1)

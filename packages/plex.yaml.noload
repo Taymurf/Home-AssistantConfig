@@ -48,6 +48,7 @@ group:
     icon: mdi:plex
     name: TaylorPlexMediaServer™
     entities:
+      - sensor.plex_status
       - sensor.radarr_movies
       - sensor.sonarr_series
       - sensor.sonarr_upcoming
